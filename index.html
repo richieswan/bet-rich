@@ -3,419 +3,230 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>The Form Guide — AI Race Intelligence</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Rajdhani:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet"/>
+<title>The Form Guide — AI Race Tips</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --gold:#d4a843;--gold-dim:#a07828;--gold-bright:#f5cc6a;--gold-glow:rgba(212,168,67,0.18);
-  --bg:#060810;--bg-card:#0b0d1a;--bg-lift:#10132000;--surface:#141628;--surface2:#1c1f35;
-  --border:#ffffff0f;--border-hi:#ffffff1c;--border-gold:#d4a84330;
-  --text:#ede4ce;--text-dim:#8890b0;--text-faint:#454870;
-  --green:#2ecc8a;--green-dim:#1a7a52;
-  --red:#e8504a;--red-dim:#8a2f2b;
-  --yellow:#f0c040;--yellow-dim:#7a6020;
-  --blue:#5090e8;
-  --font-display:'Playfair Display',serif;
-  --font-ui:'Rajdhani',sans-serif;
-  --font-body:'Source Sans 3',sans-serif;
+  --gold:#d4a843;--gold-d:#9a7620;--gold-l:#f5cc6a;--gold-glow:rgba(212,168,67,.15);
+  --bg:#07080f;--card:#0d0f1e;--surface:#141728;--surface2:#1c2038;
+  --border:#ffffff0e;--border2:#ffffff18;--border-gold:#d4a84328;
+  --text:#ece3cc;--muted:#8090b0;--faint:#404868;
+  --green:#2fd68a;--red:#e84848;--yellow:#f0c040;
+  --font-h:'Playfair Display',serif;
+  --font-ui:'Barlow Condensed',sans-serif;
+  --font-b:'Barlow',sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  font-family:var(--font-body);
-  color:var(--text);
-  min-height:100vh;
-  overflow-x:hidden;
-}
-/* subtle diagonal grain */
-body::after{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:repeating-linear-gradient(135deg,transparent,transparent 2px,rgba(255,255,255,.008) 2px,rgba(255,255,255,.008) 4px);
-}
-/* glowing orb bg */
-body::before{
-  content:'';position:fixed;
-  width:800px;height:800px;border-radius:50%;
-  background:radial-gradient(circle,rgba(180,130,30,.07) 0%,transparent 65%);
-  top:-200px;left:-200px;pointer-events:none;z-index:0;
-}
+body{background:var(--bg);font-family:var(--font-b);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 900px 600px at 20% -10%,rgba(180,130,30,.06),transparent),
+             radial-gradient(ellipse 600px 400px at 80% 100%,rgba(30,60,180,.04),transparent)}
 
-/* ━━ HEADER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.topbar{
-  position:sticky;top:0;z-index:200;
-  padding:0 36px;
-  background:rgba(6,8,16,.92);
-  border-bottom:1px solid var(--border-hi);
-  backdrop-filter:blur(16px);
-}
-.topbar-inner{
-  max-width:1160px;margin:0 auto;
-  display:flex;align-items:center;justify-content:space-between;
-  height:62px;gap:24px;
-}
-.brand{display:flex;align-items:center;gap:12px}
-.brand-icon{font-size:28px;line-height:1;filter:drop-shadow(0 0 8px rgba(212,168,67,.4))}
-.brand-name{
-  font-family:var(--font-display);font-size:22px;font-weight:900;
-  background:linear-gradient(135deg,var(--gold-bright),var(--gold));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  letter-spacing:.3px;
-}
-.brand-tag{
-  font-family:var(--font-ui);font-size:8.5px;letter-spacing:3.5px;
-  color:var(--text-faint);margin-top:1px;text-transform:uppercase;
-}
-.topbar-date{
-  font-family:var(--font-ui);font-size:11px;letter-spacing:2px;
-  color:var(--text-dim);
-  border:1px solid var(--border);padding:5px 14px;border-radius:4px;
-  background:var(--surface);flex-shrink:0;
-}
+/* ── TOPBAR ──────────────────────────────────────────── */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(7,8,15,.94);border-bottom:1px solid var(--border2);backdrop-filter:blur(14px);padding:0 28px}
+.topbar-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{font-size:26px;filter:drop-shadow(0 0 10px rgba(212,168,67,.5))}
+.logo-name{font-family:var(--font-h);font-size:21px;font-weight:900;background:linear-gradient(135deg,var(--gold-l),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-tag{font-family:var(--font-ui);font-size:8px;letter-spacing:3px;color:var(--faint);margin-top:1px}
+.hdr-date{font-family:var(--font-ui);font-size:11px;letter-spacing:1.5px;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:4px}
 
-/* ━━ LAYOUT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.wrap{max-width:1160px;margin:0 auto;padding:32px 36px 80px;position:relative;z-index:1}
+/* ── LAYOUT ──────────────────────────────────────────── */
+.wrap{max-width:1200px;margin:0 auto;padding:28px 28px 80px;position:relative;z-index:1}
 
-/* ━━ SEARCH ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.search-panel{
-  background:var(--bg-card);
-  border:1px solid var(--border-gold);
-  border-radius:16px;
-  padding:24px 28px;
-  margin-bottom:28px;
-  box-shadow:0 0 60px rgba(212,168,67,.06),0 4px 32px rgba(0,0,0,.5);
-}
-.search-row{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap}
-.field{display:flex;flex-direction:column;gap:7px}
-.field.grow{flex:1;min-width:200px}
-.field-label{
-  font-family:var(--font-ui);font-size:9.5px;letter-spacing:2.5px;
-  color:var(--text-faint);font-weight:700;text-transform:uppercase;
-}
-.inp{
-  background:rgba(255,255,255,.03);
-  border:1px solid var(--border-hi);
-  border-radius:9px;
-  color:var(--text);
-  padding:11px 16px;
-  font-family:var(--font-body);
-  font-size:15px;
-  outline:none;
-  width:100%;
-  transition:border-color .2s,box-shadow .2s;
-}
-.inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow)}
-.inp::placeholder{color:var(--text-faint)}
-input[type="date"].inp{color-scheme:dark}
-.btn-analyse{
-  padding:11px 32px;
-  background:linear-gradient(135deg,var(--gold),var(--gold-dim));
-  border:none;border-radius:9px;
-  color:#06080e;
-  font-family:var(--font-ui);font-size:15px;font-weight:700;letter-spacing:2px;
-  cursor:pointer;
-  transition:all .2s;white-space:nowrap;align-self:flex-end;
-  box-shadow:0 4px 20px rgba(212,168,67,.25);
-}
-.btn-analyse:hover{background:linear-gradient(135deg,var(--gold-bright),var(--gold));transform:translateY(-1px);box-shadow:0 6px 28px rgba(212,168,67,.4)}
-.btn-analyse:disabled{background:var(--surface2);color:var(--text-faint);cursor:not-allowed;transform:none;box-shadow:none}
+/* ── SEARCH ──────────────────────────────────────────── */
+.search-box{background:var(--card);border:1px solid var(--border-gold);border-radius:14px;padding:22px 24px;margin-bottom:22px;box-shadow:0 0 60px rgba(212,168,67,.05),0 8px 40px rgba(0,0,0,.5)}
+.search-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.sf{display:flex;flex-direction:column;gap:6px}
+.sf.grow{flex:1;min-width:200px}
+.slbl{font-family:var(--font-ui);font-size:9px;letter-spacing:2.5px;color:var(--faint);font-weight:700;text-transform:uppercase}
+.sinp{background:rgba(255,255,255,.03);border:1px solid var(--border2);border-radius:8px;color:var(--text);padding:10px 15px;font-family:var(--font-b);font-size:15px;outline:none;width:100%;transition:border-color .2s,box-shadow .2s}
+.sinp:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow)}
+.sinp::placeholder{color:var(--faint)}
+input[type="date"].sinp{color-scheme:dark}
+.btn-go{padding:10px 30px;background:linear-gradient(135deg,var(--gold),var(--gold-d));border:none;border-radius:8px;color:#07080f;font-family:var(--font-ui);font-size:14px;font-weight:800;letter-spacing:2px;cursor:pointer;white-space:nowrap;align-self:flex-end;transition:all .2s;box-shadow:0 4px 20px rgba(212,168,67,.25)}
+.btn-go:hover{background:linear-gradient(135deg,var(--gold-l),var(--gold));transform:translateY(-1px);box-shadow:0 6px 28px rgba(212,168,67,.4)}
+.btn-go:disabled{background:var(--surface2);color:var(--faint);cursor:not-allowed;transform:none;box-shadow:none}
 
-/* ━━ QUICK TRACKS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.section-lbl{
-  font-family:var(--font-ui);font-size:9.5px;letter-spacing:3px;
-  color:var(--text-faint);text-transform:uppercase;margin-bottom:12px;font-weight:700;
-}
-.tracks-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:36px}
-.trk-btn{
-  background:var(--bg-card);
-  border:1px solid var(--border);
-  border-radius:10px;padding:9px 16px;
-  cursor:pointer;transition:all .18s;
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-  min-width:92px;
-}
-.trk-btn:hover{border-color:var(--border-gold);background:var(--surface);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.4)}
-.trk-btn.active{border-color:var(--gold);background:linear-gradient(135deg,var(--gold-glow),var(--surface));box-shadow:0 0 20px rgba(212,168,67,.12)}
-.trk-name{font-family:var(--font-ui);font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--text)}
-.trk-state{font-family:var(--font-ui);font-size:9px;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase}
+/* ── QUICK TRACKS ─────────────────────────────────────── */
+.sec-lbl{font-family:var(--font-ui);font-size:9px;letter-spacing:3px;color:var(--faint);text-transform:uppercase;margin-bottom:10px;font-weight:700}
+.trk-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:30px}
+.trk-btn{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:8px 14px;cursor:pointer;transition:all .17s;min-width:86px;text-align:center}
+.trk-btn:hover{border-color:var(--border-gold);background:var(--surface);transform:translateY(-2px)}
+.trk-btn.active{border-color:var(--gold);background:linear-gradient(135deg,var(--gold-glow),var(--surface))}
+.trk-n{font-family:var(--font-ui);font-size:13px;font-weight:700;color:var(--text)}
+.trk-s{font-family:var(--font-ui);font-size:9px;color:var(--muted);margin-top:1px}
 
-/* ━━ LOADING ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.loading-wrap{
-  background:var(--bg-card);border:1px solid var(--border-gold);
-  border-radius:16px;padding:48px 36px;text-align:center;
-  box-shadow:0 0 60px rgba(212,168,67,.06);
-}
-.loading-horse{font-size:52px;animation:gallop .7s steps(2) infinite;display:inline-block}
-@keyframes gallop{0%{transform:scaleX(1) translateY(0)}50%{transform:scaleX(1) translateY(-6px)}100%{transform:scaleX(1) translateY(0)}}
-.loading-headline{
-  font-family:var(--font-display);font-size:22px;font-weight:700;
-  color:var(--gold-bright);margin:16px 0 6px;
-}
-.loading-sub{font-size:13px;color:var(--text-dim);margin-bottom:28px}
-.progress-track{
-  width:100%;max-width:500px;margin:0 auto 24px;
-  height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;
-}
-.progress-fill{
-  height:100%;
-  background:linear-gradient(90deg,var(--gold-dim),var(--gold),var(--gold-bright));
-  border-radius:2px;
-  transition:width .6s ease;
-  box-shadow:0 0 8px var(--gold);
-}
-.steps-list{display:flex;flex-direction:column;gap:6px;max-width:480px;margin:0 auto;text-align:left}
-.step-item{
-  font-family:var(--font-ui);font-size:12px;letter-spacing:.3px;
-  color:var(--text-faint);
-  padding:5px 12px;border-radius:5px;
-  border-left:2px solid transparent;
-  transition:all .3s;
-  display:flex;align-items:center;gap:8px;
-}
-.step-item.done{color:var(--green);border-left-color:var(--green);background:rgba(46,204,138,.06)}
-.step-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(212,168,67,.07)}
-.step-icon{font-size:13px;width:18px;text-align:center}
-.phase-badge{
-  display:inline-block;
-  font-family:var(--font-ui);font-size:10px;letter-spacing:2px;
-  background:var(--surface2);border:1px solid var(--border-gold);
-  color:var(--gold);border-radius:4px;padding:3px 10px;margin-bottom:16px;
-}
+/* ── LOADING ──────────────────────────────────────────── */
+.load-box{background:var(--card);border:1px solid var(--border-gold);border-radius:14px;padding:44px 32px;text-align:center}
+.load-icon{font-size:48px;display:inline-block;animation:bob .8s ease-in-out infinite alternate}
+@keyframes bob{from{transform:translateY(0)}to{transform:translateY(-10px)}}
+.load-phase{font-family:var(--font-ui);font-size:9px;letter-spacing:3px;color:var(--gold);background:rgba(212,168,67,.1);border:1px solid var(--border-gold);border-radius:20px;padding:3px 14px;display:inline-block;margin:14px 0 8px}
+.load-title{font-family:var(--font-h);font-size:20px;color:var(--gold-l);margin-bottom:6px}
+.load-sub{font-size:12.5px;color:var(--muted);margin-bottom:24px}
+.prog-rail{width:100%;max-width:460px;height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;margin:0 auto 28px}
+.prog-bar{height:100%;background:linear-gradient(90deg,var(--gold-d),var(--gold),var(--gold-l));border-radius:2px;transition:width .7s ease;box-shadow:0 0 8px var(--gold)}
+.steps-col{display:flex;flex-direction:column;gap:5px;max-width:440px;margin:0 auto;text-align:left}
+.step{font-family:var(--font-ui);font-size:12px;letter-spacing:.3px;padding:5px 10px;border-radius:5px;border-left:2px solid transparent;color:var(--faint);display:flex;align-items:center;gap:7px;transition:all .25s}
+.step.active{color:var(--gold);border-left-color:var(--gold);background:rgba(212,168,67,.06)}
+.step.done{color:var(--green);border-left-color:var(--green);background:rgba(47,214,138,.05)}
 
-/* ━━ ERROR ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.err-box{
-  background:rgba(232,80,74,.07);border:1px solid rgba(232,80,74,.25);
-  border-radius:12px;padding:22px 26px;
-}
-.err-title{font-family:var(--font-ui);font-size:15px;letter-spacing:1px;color:#ff8080;font-weight:700;margin-bottom:8px}
-.err-msg{font-size:13px;color:var(--red);line-height:1.6}
-.err-hint{font-size:12px;color:var(--text-dim);margin-top:10px;line-height:1.6;border-top:1px solid rgba(232,80,74,.15);padding-top:10px}
+/* ── ERROR ────────────────────────────────────────────── */
+.err-box{background:rgba(232,72,72,.07);border:1px solid rgba(232,72,72,.25);border-radius:12px;padding:20px 24px}
+.err-title{font-family:var(--font-ui);font-size:15px;letter-spacing:1px;color:#ff8a8a;font-weight:700;margin-bottom:8px}
+.err-body{font-size:13px;color:var(--red);line-height:1.6;margin-bottom:10px}
+.err-hint{font-size:12px;color:var(--muted);line-height:1.6;border-top:1px solid rgba(232,72,72,.15);padding-top:10px}
 
-/* ━━ RESULTS HEADER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.results-header{
-  background:var(--bg-card);border:1px solid var(--border-gold);
-  border-radius:16px;padding:22px 28px;margin-bottom:22px;
-  box-shadow:0 0 60px rgba(212,168,67,.06);
-  display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;
-}
-.res-track{font-family:var(--font-display);font-size:32px;font-weight:900;color:var(--gold-bright);line-height:1.1}
-.res-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
-.pill{
-  font-family:var(--font-ui);font-size:11px;letter-spacing:.8px;
-  background:var(--surface);border:1px solid var(--border-hi);
-  border-radius:20px;padding:4px 12px;color:var(--text-dim);
-}
+/* ── RESULTS HEADER ───────────────────────────────────── */
+.res-hdr{background:var(--card);border:1px solid var(--border-gold);border-radius:14px;padding:20px 24px;margin-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px;box-shadow:0 0 50px rgba(212,168,67,.05)}
+.res-track{font-family:var(--font-h);font-size:30px;font-weight:900;color:var(--gold-l);line-height:1.1}
+.res-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px;align-items:center}
+.pill{font-family:var(--font-ui);font-size:11px;letter-spacing:.5px;background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:3px 11px;color:var(--muted)}
 .pill.gold{color:var(--gold);border-color:var(--border-gold)}
-.pill.green{color:var(--green);border-color:rgba(46,204,138,.3)}
-.analyst-note{
-  font-size:12.5px;color:var(--text-dim);font-style:italic;
-  margin-top:12px;padding-top:12px;border-top:1px solid var(--border);
-  line-height:1.6;max-width:600px;
-}
-.stats-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.stat-card{
-  text-align:center;background:var(--surface);
-  border:1px solid var(--border);border-radius:10px;
-  padding:10px 18px;min-width:72px;
-}
-.stat-n{font-family:var(--font-display);font-size:26px;font-weight:700;color:var(--gold);line-height:1}
-.stat-l{font-family:var(--font-ui);font-size:9px;letter-spacing:1.5px;color:var(--text-faint);margin-top:3px;text-transform:uppercase}
+.pill.green{color:var(--green);border-color:rgba(47,214,138,.3)}
+.analyst-note{font-size:12px;color:var(--muted);font-style:italic;margin-top:11px;padding-top:11px;border-top:1px solid var(--border);line-height:1.6}
+.stats-row{display:flex;gap:10px;flex-wrap:wrap}
+.stat{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:9px 16px;min-width:68px}
+.stat-n{font-family:var(--font-h);font-size:24px;font-weight:700;color:var(--gold);line-height:1}
+.stat-l{font-family:var(--font-ui);font-size:8.5px;letter-spacing:1.5px;color:var(--faint);margin-top:2px;text-transform:uppercase}
 
-/* ━━ LEGEND ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.legend{
-  display:flex;flex-wrap:wrap;gap:18px;
-  padding:10px 18px;border-radius:8px;
-  background:var(--bg-card);border:1px solid var(--border);
-  margin-bottom:20px;font-size:11.5px;color:var(--text-dim);align-items:center;
-}
-.leg-dot{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:5px;vertical-align:middle}
+/* ── LEGEND ───────────────────────────────────────────── */
+.legend{display:flex;flex-wrap:wrap;gap:16px;padding:9px 16px;border-radius:8px;background:var(--card);border:1px solid var(--border);margin-bottom:18px;font-size:11px;color:var(--muted);align-items:center}
+.ld{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:4px;vertical-align:middle}
 
-/* ━━ RACE CARD ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.race-card{
-  background:var(--bg-card);border:1px solid var(--border);
-  border-radius:14px;overflow:hidden;margin-bottom:14px;
-  transition:border-color .2s,box-shadow .2s;
-}
-.race-card:hover{border-color:var(--border-hi);box-shadow:0 4px 32px rgba(0,0,0,.4)}
-.race-hdr{
-  display:flex;align-items:center;gap:14px;
-  padding:15px 22px;cursor:pointer;
-  transition:background .15s;user-select:none;
-}
+/* ── RACE CARD ────────────────────────────────────────── */
+.race-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:12px;transition:border-color .2s}
+.race-card:hover{border-color:var(--border2)}
+.race-hdr{display:flex;align-items:center;gap:12px;padding:13px 20px;cursor:pointer;transition:background .15s;user-select:none}
 .race-hdr:hover{background:rgba(255,255,255,.025)}
-.race-hdr.open{
-  background:linear-gradient(90deg,rgba(212,168,67,.07),transparent);
-  border-bottom:1px solid var(--border);
-}
-.rnum{
-  background:linear-gradient(135deg,var(--gold),var(--gold-dim));
-  color:#06080e;font-family:var(--font-ui);font-size:12px;font-weight:700;letter-spacing:.5px;
-  width:36px;height:36px;border-radius:9px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
+.race-hdr.open{background:linear-gradient(90deg,rgba(212,168,67,.07),transparent);border-bottom:1px solid var(--border)}
+.rnum-badge{background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#07080f;font-family:var(--font-ui);font-size:12px;font-weight:800;letter-spacing:.5px;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .rinfo{flex:1;min-width:0}
-.rname{
-  font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--text);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.rtime{font-family:var(--font-ui);font-size:11.5px;color:var(--text-dim);margin-right:8px;letter-spacing:.5px}
-.rsub{font-family:var(--font-ui);font-size:11px;color:var(--text-faint);margin-top:3px;letter-spacing:.3px}
+.rname{font-family:var(--font-h);font-size:16px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rtime-lbl{font-family:var(--font-ui);font-size:11px;color:var(--muted);margin-right:7px}
+.rsub{font-family:var(--font-ui);font-size:11px;color:var(--faint);margin-top:2px;letter-spacing:.3px}
 
-/* RSI block */
-.rsi-block{display:flex;flex-direction:column;gap:5px;flex-shrink:0;min-width:180px;align-items:flex-end}
-.rsi-top-lbl{font-family:var(--font-ui);font-size:8.5px;letter-spacing:2px;color:var(--text-faint);text-transform:uppercase}
-.rsi-row{display:flex;align-items:center;gap:9px;width:100%}
-.rsi-track{flex:1;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
-.rsi-bar{height:100%;border-radius:3px;transition:width .9s cubic-bezier(.22,1,.36,1)}
-.rsi-val{font-family:var(--font-ui);font-size:14px;font-weight:700;min-width:30px;text-align:right}
-.rsi-note{font-size:10px;color:var(--text-dim);max-width:190px;text-align:right;line-height:1.4}
+/* RSI */
+.rsi-wrap{display:flex;flex-direction:column;gap:4px;flex-shrink:0;min-width:175px;align-items:flex-end}
+.rsi-lbl{font-family:var(--font-ui);font-size:8px;letter-spacing:2px;color:var(--faint);text-transform:uppercase}
+.rsi-row{display:flex;align-items:center;gap:8px;width:100%}
+.rsi-bg{flex:1;height:5px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden}
+.rsi-fill{height:100%;border-radius:3px;transition:width .9s ease}
+.rsi-num{font-family:var(--font-ui);font-size:14px;font-weight:700;min-width:28px;text-align:right}
+.rsi-note{font-size:10px;color:var(--muted);max-width:180px;text-align:right;line-height:1.4}
+.chev{color:var(--gold);font-size:10px;transition:transform .25s;flex-shrink:0;margin-left:8px}
+.chev.open{transform:rotate(180deg)}
 
-.chevron{color:var(--gold);font-size:10px;transition:transform .26s;flex-shrink:0;margin-left:10px}
-.chevron.open{transform:rotate(180deg)}
+/* ── HORSE TABLE ──────────────────────────────────────── */
+.tbl-wrap{overflow-x:auto}
+table.horse-table{width:100%;border-collapse:collapse;min-width:700px}
+table.horse-table thead tr{background:rgba(0,0,0,.3);border-bottom:1px solid var(--border2)}
+table.horse-table thead th{font-family:var(--font-ui);font-size:9px;letter-spacing:1.5px;color:var(--faint);font-weight:700;text-transform:uppercase;padding:8px 10px;text-align:left;white-space:nowrap}
+table.horse-table thead th.c{text-align:center}
+table.horse-table tbody tr{border-bottom:1px solid rgba(255,255,255,.04);transition:background .12s;border-left:3px solid transparent}
+table.horse-table tbody tr:last-child{border-bottom:none}
+table.horse-table tbody tr:hover{background:rgba(255,255,255,.035)}
+table.horse-table tbody td{padding:10px 10px;vertical-align:top;font-size:13px}
+table.horse-table tbody td.c{text-align:center;vertical-align:middle}
 
-/* ━━ TABLE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.tbl-head{
-  display:grid;
-  grid-template-columns:36px minmax(0,1fr) 82px 68px 74px 74px 82px;
-  gap:6px;padding:7px 22px;
-  background:rgba(0,0,0,.25);border-bottom:1px solid var(--border);
-}
-.th{font-family:var(--font-ui);font-size:9px;letter-spacing:1.5px;color:var(--text-faint);font-weight:700;text-transform:uppercase}
-.th.c{text-align:center}
-.hrow{
-  display:grid;
-  grid-template-columns:36px minmax(0,1fr) 82px 68px 74px 74px 82px;
-  gap:6px;align-items:center;
-  padding:11px 22px;
-  border-bottom:1px solid rgba(255,255,255,.035);
-  border-left:3px solid transparent;
-  transition:background .12s;
-  cursor:default;
-}
-.hrow:last-child{border-bottom:none}
-.hrow:hover{background:rgba(255,255,255,.035)}
-.pos-dot{
-  width:30px;height:30px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-ui);font-weight:700;font-size:12px;letter-spacing:.5px;
-  flex-shrink:0;
-}
-.hname{
-  font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--text);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.hbarrier{font-family:var(--font-ui);font-size:10px;color:var(--text-faint);margin-left:6px}
-.hmeta{font-size:10.5px;color:var(--text-dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hgear{font-size:10px;color:#5580aa;margin-top:2px}
-.hlaststart{font-size:10px;color:#5568aa;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.htip{font-size:10px;color:#9a7020;margin-top:3px;font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cell{text-align:center}
-.cell-lbl{font-family:var(--font-ui);font-size:8.5px;letter-spacing:1px;color:var(--text-faint);margin-bottom:2px;text-transform:uppercase}
-.form-val{font-family:var(--font-ui);font-size:11px;color:#8898bb;letter-spacing:1px}
-.wpct-val{font-family:var(--font-ui);font-size:17px;font-weight:700;line-height:1}
-.odds-val{font-family:var(--font-ui);font-size:14px;font-weight:700}
-.val-badge{
-  display:inline-block;padding:3px 9px;border-radius:5px;
-  font-family:var(--font-ui);font-size:10px;font-weight:700;letter-spacing:1px;
-}
-.conf-lbl{font-family:var(--font-ui);font-size:9px;letter-spacing:.8px;margin-top:3px;text-transform:uppercase}
+/* pos circle */
+.pos-circ{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-ui);font-size:12px;font-weight:800;flex-shrink:0;margin:0 auto}
 
-/* ━━ SOURCES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.src-strip{
-  display:flex;flex-wrap:wrap;gap:6px;
-  padding:10px 22px 14px;
-  background:rgba(0,0,0,.15);border-top:1px solid var(--border);
-  font-size:10px;color:var(--text-faint);align-items:center;
-}
-.src-tag{
-  font-family:var(--font-ui);letter-spacing:.8px;
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:3px;padding:2px 8px;
-}
+/* horse name cell */
+.h-name{font-family:var(--font-h);font-size:14px;font-weight:700;color:var(--text);line-height:1.2}
+.h-barrier{font-family:var(--font-ui);font-size:10px;color:var(--faint);margin-left:5px}
+.h-connections{font-size:10.5px;color:var(--muted);margin-top:2px;line-height:1.5}
+.h-gear{font-size:10px;color:#5580aa;margin-top:1px}
+.h-tip{font-size:10px;color:#9a7020;margin-top:2px;font-style:italic;line-height:1.4}
+.h-laststart{font-size:10px;color:#5068a0;margin-top:1px}
 
-/* ━━ DISCLAIMER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.disclaimer{
-  margin-top:32px;padding:14px 22px;
-  background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
-  font-size:11.5px;color:var(--text-faint);text-align:center;line-height:1.8;
-}
+.form-val{font-family:var(--font-ui);font-size:11px;color:#8090b8;letter-spacing:1px}
+.wpct{font-family:var(--font-ui);font-size:17px;font-weight:800;line-height:1}
+.odds{font-family:var(--font-ui);font-size:14px;font-weight:700}
+.val-badge{display:inline-block;padding:3px 9px;border-radius:4px;font-family:var(--font-ui);font-size:10px;font-weight:800;letter-spacing:1px;white-space:nowrap}
+.conf{font-family:var(--font-ui);font-size:9px;letter-spacing:.8px;margin-top:3px;text-transform:uppercase}
+
+/* ── SOURCE STRIP ─────────────────────────────────────── */
+.src-strip{display:flex;flex-wrap:wrap;gap:6px;padding:9px 20px 13px;background:rgba(0,0,0,.15);border-top:1px solid var(--border);font-size:10px;color:var(--faint);align-items:center}
+.src-chip{font-family:var(--font-ui);letter-spacing:.8px;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:2px 8px}
+
+/* ── DISCLAIMER ───────────────────────────────────────── */
+.disclaimer{margin-top:28px;padding:14px 20px;background:var(--card);border:1px solid var(--border);border-radius:9px;font-size:11.5px;color:var(--faint);text-align:center;line-height:1.8}
 
 .hidden{display:none!important}
 
-/* ━━ RESPONSIVE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-@media(max-width:760px){
-  .wrap{padding:20px 16px 50px}
-  .topbar{padding:0 16px}
-  .tbl-head,.hrow{grid-template-columns:28px 1fr 58px 52px 60px 60px 62px;gap:4px;padding:9px 12px}
-  .rsi-block{display:none}
-  .results-header{padding:16px}
+@media(max-width:700px){
+  .wrap,.topbar{padding-left:14px;padding-right:14px}
+  .rsi-wrap{display:none}
+  .res-hdr{padding:14px}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══ TOP BAR ═══ -->
+<!-- TOPBAR -->
 <header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand">
-      <div class="brand-icon">🏇</div>
+  <div class="topbar-in">
+    <div class="logo">
+      <div class="logo-icon">🏇</div>
       <div>
-        <div class="brand-name">The Form Guide</div>
-        <div class="brand-tag">AI Race Intelligence</div>
+        <div class="logo-name">The Form Guide</div>
+        <div class="logo-tag">AI Race Intelligence</div>
       </div>
     </div>
-    <div class="topbar-date" id="topDate"></div>
+    <div class="hdr-date" id="hdrDate"></div>
   </div>
 </header>
 
 <div class="wrap">
 
-  <!-- ═══ SEARCH PANEL ═══ -->
-  <div class="search-panel">
+  <!-- SEARCH -->
+  <div class="search-box">
     <div class="search-row">
-      <div class="field grow">
-        <div class="field-label">Track / Racecourse</div>
-        <input id="trackInp" class="inp" type="text"
-          placeholder="e.g. Flemington, Randwick, Eagle Farm, Caulfield…"/>
+      <div class="sf grow">
+        <div class="slbl">Track / Racecourse</div>
+        <input id="trackInp" class="sinp" type="text" placeholder="e.g. Flemington, Randwick, Eagle Farm, Caulfield…"/>
       </div>
-      <div class="field">
-        <div class="field-label">Race Date</div>
-        <input id="dateInp" class="inp" type="date"/>
+      <div class="sf">
+        <div class="slbl">Race Date</div>
+        <input id="dateInp" class="sinp" type="date"/>
       </div>
-      <button class="btn-analyse" id="goBtn" onclick="runAnalysis()">ANALYSE →</button>
+      <button class="btn-go" id="goBtn" onclick="runAnalysis()">ANALYSE →</button>
     </div>
   </div>
 
-  <!-- ═══ QUICK TRACK BUTTONS ═══ -->
-  <div class="section-lbl">Quick Select — Major Tracks</div>
-  <div class="tracks-grid" id="trackGrid"></div>
+  <!-- QUICK TRACKS -->
+  <div class="sec-lbl">Quick Select — Major Tracks</div>
+  <div class="trk-grid" id="trkGrid"></div>
 
-  <!-- ═══ LOADING ═══ -->
-  <div id="loadWrap" class="loading-wrap hidden">
-    <div class="loading-horse">🐎</div>
-    <div class="phase-badge" id="phaseBadge">PHASE 1 — RESEARCH</div>
-    <div class="loading-headline" id="loadHeadline">Gathering Race Intelligence</div>
-    <div class="loading-sub" id="loadSub">Searching live sources across the web…</div>
-    <div class="progress-track"><div class="progress-fill" id="progressBar" style="width:0%"></div></div>
-    <div class="steps-list" id="stepsList"></div>
+  <!-- LOADING -->
+  <div id="loadWrap" class="load-box hidden">
+    <div class="load-icon">🐎</div>
+    <div class="load-phase" id="loadPhase">RESEARCHING</div>
+    <div class="load-title" id="loadTitle">Gathering Race Intelligence</div>
+    <div class="load-sub" id="loadSub">AI is searching live sources for real race data…</div>
+    <div class="prog-rail"><div class="prog-bar" id="progBar" style="width:0%"></div></div>
+    <div class="steps-col" id="stepsCol"></div>
   </div>
 
-  <!-- ═══ ERROR ═══ -->
+  <!-- ERROR -->
   <div id="errWrap" class="err-box hidden">
     <div class="err-title">⚠ Analysis Failed</div>
-    <div class="err-msg" id="errMsg"></div>
-    <div class="err-hint" id="errHint">
-      Race fields are usually declared 2–3 days before the meeting. If this is an upcoming race, check back closer to the date.
-      Make sure the track name is spelled correctly — try "Flemington", "Randwick", "Caulfield", "Eagle Farm", etc.
+    <div class="err-body" id="errBody">Unknown error.</div>
+    <div class="err-hint">
+      <b>Tips:</b><br>
+      • Race fields are declared ~2–3 days before the meeting — check the date is correct<br>
+      • Spell the track correctly: "Flemington" · "Randwick" · "Caulfield" · "Eagle Farm" · "Doomben"<br>
+      • Try a date that's this weekend or next weekend for best results
     </div>
   </div>
 
-  <!-- ═══ RESULTS ═══ -->
+  <!-- RESULTS -->
   <div id="resultsWrap" class="hidden">
-
-    <div class="results-header">
-      <div style="flex:1">
-        <div class="res-track" id="resTrack">—</div>
+    <div class="res-hdr">
+      <div style="flex:1;min-width:0">
+        <div class="res-track" id="resTrack"></div>
         <div class="res-pills" id="resPills"></div>
         <div class="analyst-note hidden" id="analystNote"></div>
       </div>
@@ -423,530 +234,490 @@ input[type="date"].inp{color-scheme:dark}
     </div>
 
     <div class="legend">
-      <span style="font-family:var(--font-ui);font-size:9.5px;letter-spacing:2.5px;color:var(--text-faint)">LEGEND</span>
-      <span><span class="leg-dot" style="background:var(--green)"></span><b style="color:var(--green)">OVERS</b> — your model odds shorter than market = VALUE BET</span>
-      <span><span class="leg-dot" style="background:var(--red)"></span><b style="color:var(--red)">UNDERS</b> — model longer = overbet, avoid</span>
-      <span><span class="leg-dot" style="background:var(--yellow)"></span><b style="color:var(--yellow)">FAIR</b> — correctly priced</span>
-      <span style="margin-left:auto;font-size:10.5px;color:var(--text-faint)">RSI = Race Stability Index / 100</span>
+      <span style="font-family:var(--font-ui);font-size:9px;letter-spacing:2.5px;color:var(--faint)">LEGEND</span>
+      <span><span class="ld" style="background:var(--green)"></span><b style="color:var(--green)">OVERS</b> — model shorter than market = value bet</span>
+      <span><span class="ld" style="background:var(--red)"></span><b style="color:var(--red)">UNDERS</b> — overbacked, avoid</span>
+      <span><span class="ld" style="background:var(--yellow)"></span><b style="color:var(--yellow)">FAIR</b> — correctly priced</span>
+      <span style="margin-left:auto;font-size:10px;color:var(--faint)">RSI = Race Stability Index /100</span>
     </div>
 
     <div id="racesList"></div>
 
-    <div class="src-strip" id="srcStrip"></div>
+    <div class="src-strip hidden" id="srcStrip"></div>
 
     <div class="disclaimer">
-      ⚠ For entertainment and informational purposes only. AI-generated analysis — not financial advice.<br>
-      Always gamble responsibly. Set a deposit limit before you play. If gambling is causing harm, call Gambling Help Online: <b>1800 858 858</b>
+      ⚠ For informational purposes only. AI-generated analysis — not financial advice.<br>
+      Always gamble responsibly. Set a limit before you play. Help: <b>1800 858 858</b>
     </div>
-
-  </div><!-- /resultsWrap -->
+  </div>
 
 </div><!-- /wrap -->
 
 <script>
-/* ════════════════════════════════════════════════════════
-   CONFIGURATION
-════════════════════════════════════════════════════════ */
-const API = 'https://api.anthropic.com/v1/messages';
-const MODEL = 'claude-sonnet-4-20250514';
+/* ═══════════════════════════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════════════════════════ */
+const API_URL = 'https://api.anthropic.com/v1/messages';
+const MODEL   = 'claude-sonnet-4-20250514';
 
 const TRACKS = [
-  {n:'Flemington',s:'VIC'},{n:'Caulfield',s:'VIC'},{n:'Moonee Valley',s:'VIC'},{n:'Sandown',s:'VIC'},{n:'Bendigo',s:'VIC'},
+  {n:'Flemington',s:'VIC'},{n:'Caulfield',s:'VIC'},{n:'Moonee Valley',s:'VIC'},{n:'Sandown',s:'VIC'},
   {n:'Randwick',s:'NSW'},{n:'Rosehill',s:'NSW'},{n:'Warwick Farm',s:'NSW'},{n:'Kembla Grange',s:'NSW'},
   {n:'Eagle Farm',s:'QLD'},{n:'Doomben',s:'QLD'},{n:'Gold Coast',s:'QLD'},
   {n:'Morphettville',s:'SA'},{n:'Ascot',s:'WA'},{n:'Belmont',s:'WA'},
-  {n:'Ellerslie',s:'NZ'},{n:'Trentham',s:'NZ'},
+  {n:'Ellerslie',s:'NZ'},{n:'Trentham',s:'NZ'}
 ];
 
-/* ════════════════════════════════════════════════════════
-   PHASE 1 — DEEP RESEARCH PROMPT
-   AI searches the web and returns raw research notes
-════════════════════════════════════════════════════════ */
-const RESEARCH_SYSTEM = `You are a professional horse racing researcher with access to web search. Your task is to find REAL, CURRENT race data for a specific race meeting.
+/* ═══════════════════════════════════════════════════════════════
+   SYSTEM PROMPT — single powerful call
+═══════════════════════════════════════════════════════════════ */
+const SYSTEM = `You are an expert horse racing analyst. When given a track and date, you MUST use your web_search tool to find REAL, current race information before producing any analysis.
 
-You MUST perform ALL of the following web searches in order, and compile what you find:
+MANDATORY SEARCHES — run every one of these:
+1. Search: "[TRACK] [DATE] race fields 2025 2026" — get every race on the card
+2. Search: "[TRACK] [DATE] acceptances barrier draw" — get every runner, barriers, jockeys, weights
+3. Search: "racenet [TRACK] [DATE]" — cross-reference fields and form
+4. Search: "tab.com.au [TRACK] [DATE] win odds" — get current bookmaker prices
+5. Search: "[TRACK] track condition going [DATE]" — find official going rating and rail
+6. Search: "[TRACK] [DATE] tips form guide" — gather expert analyst notes
+7. Search key runners: "[HORSE NAME] recent form results 2025 2026" for each race favourite
+8. Search: "[TRAINER] [TRACK] record 2025" for the leading trainers on the day
+9. Search: "[JOCKEY] form stats 2025 2026" for key riders
 
-SEARCH 1: "[TRACK] [DATE] race fields" — find the full list of races on the card
-SEARCH 2: "[TRACK] [DATE] acceptances" — find all accepted runners per race  
-SEARCH 3: "[TRACK] [DATE] barrier draw" — find official barrier draws
-SEARCH 4: "racenet [TRACK] [DATE] fields" — racenet.com.au race data
-SEARCH 5: "[TRACK] [DATE] TAB odds" — current bookmaker win prices
-SEARCH 6: "[TRACK] track condition [DATE]" — going rating and rail position
-SEARCH 7: "[TRACK] [DATE] tips" — expert form analyst tips
-SEARCH 8: Each horse name found — search "[HORSE NAME] recent form 2025" for last 5 results
-SEARCH 9: "[TRAINER NAME] form 2025" for top trainers
-SEARCH 10: "[JOCKEY NAME] [TRACK] record" for key jockey bookings
+ANALYSIS — for EVERY horse in EVERY race, assess:
+✦ FORM — last 5–8 starts (wins, placings, beaten margins, class of race won)
+✦ DISTANCE — track record at today's exact distance
+✦ TRACK — record at this venue (state the number of wins from starts)
+✦ CONDITIONS — wet/dry track record (from breeding and form)
+✦ BARRIER — inside (1–4) advantage on tight tracks; wide suits on-pace on big tracks
+✦ WEIGHT — every 1kg ≈ 1 length at 1200m; heavy impost = negative
+✦ JOCKEY — quality of booking; first Group jockey = positive market signal
+✦ TRAINER — 14-day form %, track speciality, current stable form
+✦ DAYS SINCE LAST RUN — 14–28 days ideal; <10 = fatigue query; 60+ = fitness query
+✦ CLASS — dropping in class = big positive; rising = scrutinise form closely
+✦ GEAR — first-time blinkers = often improves; tongue ties etc
+✦ SPEED MAP — leaders advantage in slowly run races; closers thrive in true pace
+✦ MARKET MOVE — horse that firmed from $8 to $4 is being heavily backed for a reason
 
-After completing all searches, write a comprehensive research report covering:
-- Every race number and name
-- Every accepted runner with: horse name, barrier, jockey, trainer, weight, age, sex
-- Recent form for each horse (last 5–8 starts, including wins/placings, track, distance, going)
-- Current TAB/Betfair win market odds for each runner
-- Track condition (going rating e.g. Good 4), rail position, weather
-- Trainer and jockey statistics at this track
-- Any gear changes, first-up runners, class risers/fallers
-- Speed map notes (likely leaders, on-pace, midfield, backmarkers)
-- Notable market moves (horses that have shortened or drifted)
-
-Write this as detailed notes — be specific, use real names. Do NOT make up any horses, jockeys or trainers.
-If you genuinely cannot find declared fields for this meeting, say so clearly.`;
-
-/* ════════════════════════════════════════════════════════
-   PHASE 2 — ANALYSIS & STRUCTURING PROMPT
-   AI takes research notes and produces structured tips
-════════════════════════════════════════════════════════ */
-const ANALYSIS_SYSTEM = `You are an elite horse racing analyst. You have been given detailed research notes about a race meeting. Your task is to analyse every factor and produce structured, data-driven predictions.
-
-FOR EVERY HORSE, weigh these factors in your analysis:
-1. FORM: Recent wins/placings, quality of opposition, winning margins, beaten margins
-2. DISTANCE: Track record at today's distance (wins, strike rate)
-3. TRACK: Record at this venue, preference for track configuration
-4. CONDITIONS: Wet/dry track record based on breeding and past results
-5. BARRIER: Inside barrier (1–4) advantage on tight tracks; wide gates can suit on-pace runners on big tracks
-6. WEIGHT: Every 1kg ≈ 1 length over 1200m. Heavy impost = negative
-7. JOCKEY: Top-tier jockeys add significant value; first-time Group jockey booking = market signal
-8. TRAINER: Strike rate last 14 days, track specialists, stable form
-9. DAYS SINCE LAST RUN: 14–28 days = ideal; <10 days = may be fatigued; >60 days = fitness query
-10. CLASS: Dropping in class = major positive. Rising in class = needs form to justify
-11. GEAR CHANGES: First-time blinkers often improve performance
-12. SPEED MAP: Leaders get significant advantage in slowly-run races; closers thrive in true-run races
-13. MARKET: Horses that firm from 8.00 to 4.00 are being heavily backed for a reason
-
-RETURN ONLY a valid raw JSON object — no markdown, no backticks, no text before or after the JSON:
+Return ONLY a raw JSON object — absolutely no markdown fences, no backticks, no text before or after:
 
 {
   "track": "Official Track Name",
-  "date": "Saturday 14 June 2025",
+  "date": "Saturday 7 March 2026",
   "state": "VIC",
   "trackCondition": "Good 4",
   "railPosition": "True",
-  "weather": "Sunny 21°C, fine",
-  "totalPrizemoney": "$320,000",
-  "analystNote": "Strong card dominated by quality trainers Hayes and Waller. Soft track conditions expected to play a key role.",
-  "sourcesFound": ["racenet.com.au","tab.com.au","punters.com.au","racing.com"],
+  "weather": "Sunny 24°C, fine",
+  "totalPrizemoney": "$1,200,000",
+  "analystNote": "Strong Saturday metropolitan card. Wet bias likely after Thursday rain. Watch for leaders from tight gates.",
+  "sourcesSearched": ["racenet.com.au","tab.com.au","racing.com","punters.com.au"],
   "races": [
     {
       "raceNumber": 1,
       "raceTime": "12:10",
       "raceName": "Full Official Race Name",
       "distance": "1200m",
-      "raceClass": "Maiden Plate / BM64 / Group 2",
+      "raceClass": "Maiden Plate",
       "prizemoney": "$35,000",
-      "paceMap": "Hot pace — suits off-pace runners",
-      "rsi": 74,
-      "rsiNote": "Clear form reference, strong favourite",
+      "paceMap": "Genuine speed, suits on-pace runners",
+      "rsi": 72,
+      "rsiNote": "Clear form, strong favourite from inside gate",
       "horses": [
         {
           "position": 1,
           "name": "HORSE NAME",
-          "barrier": 4,
+          "barrier": 3,
           "jockey": "J. McDonald",
           "trainer": "C. Waller",
           "weight": "58.5kg",
-          "age": "5yo",
+          "age": "4yo",
           "sex": "G",
-          "recentForm": "1-2-1x3-1",
+          "recentForm": "1-2-1-3-1",
           "lastStart": "Won 1400m Gd4 Randwick 14d",
-          "trackRecord": "3: 2-0-1",
-          "distRecord": "8: 4-2-1",
-          "gearChanges": "",
-          "trainerForm": "28% last 14d",
-          "daysLastRun": 14,
-          "winPct": 40,
+          "gearChanges": "Blinkers on",
+          "winPct": 38,
           "marketOdds": "$3.40",
           "modelOdds": "$2.60",
           "value": "OVERS",
           "confidence": "HIGH",
-          "tip": "Dominant 3-len win last start, drops in class, Waller booking, inside gate on Good 4"
+          "tip": "Dominant last-start winner, drops in class, Waller booking, suits Good 4"
         }
       ]
     }
   ]
 }
 
-RSI GUIDE: 85–100 = banker (very clear form); 65–84 = solid; 45–64 = open race; 25–44 = very open; 0–24 = complete lottery
-VALUE: "OVERS" = modelOdds shorter than marketOdds (value bet exists); "UNDERS" = modelOdds longer (overbacked); "FAIR" = within 15%
-winPct: sum to ~105% per race (bookmaker overround)
-confidence: "HIGH" / "MEDIUM" / "LOW"
-List EVERY runner in predicted finishing order — position 1 is your top selection
-Use REAL names from the research notes only — never invent horses`;
+CRITICAL RULES:
+— List EVERY accepted runner in every race, in your predicted finishing order (1st = best pick)
+— winPct across all horses in a race should sum to ~105% (reflecting bookmaker overround)
+— marketOdds MUST come from your web search of TAB or Betfair — do NOT guess odds
+— RSI: 85–100 = banker; 65–84 = solid; 45–64 = open; below 45 = very open/unpredictable
+— value: "OVERS" when modelOdds < marketOdds (value exists), "UNDERS" when modelOdds > marketOdds, "FAIR" within 15%
+— confidence: "HIGH" / "MEDIUM" / "LOW"
+— NEVER invent horse names, jockeys or trainers — only use names found in your search results
+— If you cannot find declared fields, include a top-level "error" field explaining why`;
 
-/* ════════════════════════════════════════════════════════
-   LOADING STEPS UI
-════════════════════════════════════════════════════════ */
-const STEPS_P1 = [
-  {icon:'🔍', text:'Searching for declared race fields…'},
-  {icon:'📋', text:'Finding all accepted runners & barriers…'},
-  {icon:'💹', text:'Pulling live TAB & Betfair win market odds…'},
-  {icon:'📊', text:'Researching recent form for every runner…'},
-  {icon:'👤', text:'Checking jockey bookings & trainer stats…'},
-  {icon:'🌿', text:'Verifying track condition, rail & weather…'},
-];
-const STEPS_P2 = [
-  {icon:'🗺', text:'Building speed maps & pace scenarios…'},
-  {icon:'⚖️', text:'Weighing barrier, weight & class factors…'},
-  {icon:'🧮', text:'Calculating win probabilities per runner…'},
-  {icon:'💰', text:'Computing model odds vs market odds…'},
-  {icon:'✅', text:'Finalising tips, RSI scores & value ratings…'},
+/* ═══════════════════════════════════════════════════════════════
+   LOADING STEPS
+═══════════════════════════════════════════════════════════════ */
+const ALL_STEPS = [
+  {i:'🔍', t:'Searching for declared race fields & acceptances…'},
+  {i:'📋', t:'Finding runners, barriers, jockeys & weights…'},
+  {i:'💹', t:'Pulling live TAB & Betfair win market odds…'},
+  {i:'📊', t:'Researching last 8 starts for every runner…'},
+  {i:'👤', t:'Checking trainer 14-day form & jockey bookings…'},
+  {i:'🌿', t:'Verifying track condition, rail & weather forecast…'},
+  {i:'🗺', t:'Building speed maps & pace scenarios per race…'},
+  {i:'⚖', t:'Weighing barrier, weight, class & gear factors…'},
+  {i:'🧮', t:'Calculating win% & model odds for every runner…'},
+  {i:'💰', t:'Identifying OVERS value bets & UNDERS overlays…'},
+  {i:'✅', t:'Finalising tips, RSI scores & full race cards…'},
 ];
 
-function buildSteps(steps) {
-  const el = document.getElementById('stepsList');
-  el.innerHTML = '';
-  steps.forEach((s, i) => {
+let stepInterval = null;
+
+function showSteps() {
+  const col = document.getElementById('stepsCol');
+  col.innerHTML = '';
+  ALL_STEPS.forEach((s, i) => {
     const d = document.createElement('div');
-    d.className = 'step-item';
-    d.id = `step-${i}`;
-    d.innerHTML = `<span class="step-icon">${s.icon}</span><span>${s.text}</span>`;
-    el.appendChild(d);
+    d.className = 'step';
+    d.id = 'st' + i;
+    d.innerHTML = `<span>${s.i}</span><span>${s.t}</span>`;
+    col.appendChild(d);
   });
-}
-
-function activateStep(i) {
-  document.querySelectorAll('.step-item').forEach((el, idx) => {
-    el.classList.remove('active', 'done');
-    if (idx < i) el.classList.add('done');
-    else if (idx === i) el.classList.add('active');
-  });
-}
-
-let stepTimer = null;
-function animateSteps(steps, duration) {
-  clearInterval(stepTimer);
-  let i = 0;
+  let cur = 0;
   activateStep(0);
-  const interval = duration / steps.length;
-  stepTimer = setInterval(() => {
-    i++;
-    if (i >= steps.length) { clearInterval(stepTimer); return; }
-    activateStep(i);
-  }, interval);
+  stepInterval = setInterval(() => {
+    cur++;
+    if (cur >= ALL_STEPS.length) { clearInterval(stepInterval); return; }
+    activateStep(cur);
+  }, 2800);
 }
 
-function setProgress(pct) {
-  document.getElementById('progressBar').style.width = pct + '%';
+function activateStep(n) {
+  ALL_STEPS.forEach((_, i) => {
+    const el = document.getElementById('st' + i);
+    if (!el) return;
+    el.classList.remove('active', 'done');
+    if (i < n) el.classList.add('done');
+    else if (i === n) el.classList.add('active');
+  });
 }
 
-/* ════════════════════════════════════════════════════════
-   COLOUR HELPERS
-════════════════════════════════════════════════════════ */
-function rsiCol(v) { return v>=75?'var(--green)':v>=50?'var(--yellow)':'var(--red)'; }
-function valCol(v) { return v==='OVERS'?'var(--green)':v==='UNDERS'?'var(--red)':'var(--yellow)'; }
-function medCol(p) { return p===1?'#FFD700':p===2?'#C0C0C0':p===3?'#CD7F32':null; }
-function confCol(c) { return c==='HIGH'?'var(--green)':c==='MEDIUM'?'var(--yellow)':'var(--red)'; }
-function wpctCol(w) { return w>=35?'var(--green)':w>=18?'var(--yellow)':'var(--text-dim)'; }
+function setProgress(p) {
+  document.getElementById('progBar').style.width = Math.min(p, 100) + '%';
+}
 
-/* ════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════════════════════ */
+function rsiCol(v) { return v >= 75 ? 'var(--green)' : v >= 50 ? 'var(--yellow)' : 'var(--red)'; }
+function valCol(v) { return v === 'OVERS' ? 'var(--green)' : v === 'UNDERS' ? 'var(--red)' : 'var(--yellow)'; }
+function confCol(c) { return c === 'HIGH' ? 'var(--green)' : c === 'MEDIUM' ? 'var(--yellow)' : 'var(--red)'; }
+function wpctCol(w) { return w >= 35 ? 'var(--green)' : w >= 18 ? 'var(--yellow)' : 'var(--muted)'; }
+function medCol(p) { return p === 1 ? '#FFD700' : p === 2 ? '#C0C0C0' : p === 3 ? '#CD7F32' : null; }
+
+/* ═══════════════════════════════════════════════════════════════
    INIT
-════════════════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 document.getElementById('dateInp').value = new Date().toISOString().split('T')[0];
-document.getElementById('topDate').textContent = new Date()
-  .toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short',year:'numeric'})
-  .toUpperCase();
+document.getElementById('hdrDate').textContent = new Date()
+  .toLocaleDateString('en-AU', {weekday:'short', day:'numeric', month:'short', year:'numeric'}).toUpperCase();
 
-// Build track buttons
 TRACKS.forEach(t => {
   const b = document.createElement('div');
   b.className = 'trk-btn';
-  b.innerHTML = `<div class="trk-name">${t.n}</div><div class="trk-state">${t.s}</div>`;
+  b.innerHTML = `<div class="trk-n">${t.n}</div><div class="trk-s">${t.s}</div>`;
   b.onclick = () => {
-    document.querySelectorAll('.trk-btn').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.trk-btn').forEach(x => x.classList.remove('active'));
     b.classList.add('active');
     document.getElementById('trackInp').value = t.n;
     runAnalysis();
   };
-  document.getElementById('trackGrid').appendChild(b);
+  document.getElementById('trkGrid').appendChild(b);
 });
 
 document.getElementById('trackInp').addEventListener('keydown', e => {
   if (e.key === 'Enter') runAnalysis();
 });
 
-/* ════════════════════════════════════════════════════════
-   RENDER FUNCTIONS
-════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   RENDER RACES
+═══════════════════════════════════════════════════════════════ */
 function renderRaces(races) {
   const el = document.getElementById('racesList');
   el.innerHTML = '';
-  races.forEach((race, i) => {
+  races.forEach((race, idx) => {
+    const rc = rsiCol(race.rsi || 50);
+    const open = idx === 0;
     const card = document.createElement('div');
     card.className = 'race-card';
-    const rc = rsiCol(race.rsi||50);
-    const isOpen = i === 0;
+
+    // Build horse rows
+    const horseRows = (race.horses || []).map(h => {
+      const mc = medCol(h.position);
+      const vc = valCol(h.value);
+      const wc = wpctCol(h.winPct || 0);
+      const posStyle = mc
+        ? `background:${mc};color:#07080f`
+        : `background:var(--surface2);color:var(--faint)`;
+      const rowBL = mc ? `border-left-color:${mc}` : '';
+      const rowBG = mc ? `background:linear-gradient(90deg,${mc}11,transparent)` : '';
+
+      return `<tr style="${rowBL};${rowBG}"
+        onmouseenter="this.style.background='${mc ? `linear-gradient(90deg,${mc}22,rgba(255,255,255,.04))` : 'rgba(255,255,255,.04)'}'"
+        onmouseleave="this.style.background='${mc ? `linear-gradient(90deg,${mc}11,transparent)` : ''}'">
+        <td class="c"><div class="pos-circ" style="${posStyle}">${h.position}</div></td>
+        <td>
+          <div class="h-name">${h.name || '—'}${h.barrier ? `<span class="h-barrier">B${h.barrier}</span>` : ''}</div>
+          <div class="h-connections">${[h.jockey, h.trainer, h.weight, h.age && h.sex ? `${h.age} ${h.sex}` : ''].filter(Boolean).join(' &middot; ')}</div>
+          ${h.gearChanges ? `<div class="h-gear">⚙ ${h.gearChanges}</div>` : ''}
+          ${h.lastStart ? `<div class="h-laststart">↩ ${h.lastStart}</div>` : ''}
+          ${h.tip ? `<div class="h-tip">💬 ${h.tip}</div>` : ''}
+        </td>
+        <td class="c"><div class="form-val">${h.recentForm || '—'}</div></td>
+        <td class="c"><div class="wpct" style="color:${wc}">${h.winPct || 0}%</div></td>
+        <td class="c"><div class="odds" style="color:var(--text)">${h.marketOdds || '—'}</div></td>
+        <td class="c"><div class="odds" style="color:var(--gold)">${h.modelOdds || '—'}</div></td>
+        <td class="c">
+          <div class="val-badge" style="background:${vc}18;color:${vc};border:1px solid ${vc}33">${h.value || '—'}</div>
+          ${h.confidence ? `<div class="conf" style="color:${confCol(h.confidence)}">${h.confidence}</div>` : ''}
+        </td>
+      </tr>`;
+    }).join('');
 
     card.innerHTML = `
-      <div class="race-hdr${isOpen?' open':''}" onclick="toggleCard(this)">
-        <div class="rnum">R${race.raceNumber}</div>
+      <div class="race-hdr${open ? ' open' : ''}" onclick="toggleRace(this)">
+        <div class="rnum-badge">R${race.raceNumber}</div>
         <div class="rinfo">
           <div class="rname">
-            ${race.raceTime?`<span class="rtime">${race.raceTime}</span>`:''}
-            ${race.raceName||'Race '+race.raceNumber}
+            ${race.raceTime ? `<span class="rtime-lbl">${race.raceTime}</span>` : ''}
+            ${race.raceName || 'Race ' + race.raceNumber}
           </div>
-          <div class="rsub">${[race.distance,race.raceClass,race.prizemoney,race.paceMap].filter(Boolean).join(' · ')}</div>
+          <div class="rsub">${[race.distance, race.raceClass, race.prizemoney, race.paceMap].filter(Boolean).join(' · ')}</div>
         </div>
-        <div class="rsi-block">
-          <div class="rsi-top-lbl">Race Stability Index</div>
+        <div class="rsi-wrap">
+          <div class="rsi-lbl">Race Stability Index</div>
           <div class="rsi-row">
-            <div class="rsi-track">
-              <div class="rsi-bar" style="width:${race.rsi||0}%;background:${rc};box-shadow:0 0 8px ${rc}55"></div>
+            <div class="rsi-bg">
+              <div class="rsi-fill" style="width:${race.rsi || 0}%;background:${rc};box-shadow:0 0 7px ${rc}66"></div>
             </div>
-            <span class="rsi-val" style="color:${rc}">${race.rsi||'—'}</span>
+            <span class="rsi-num" style="color:${rc}">${race.rsi || '—'}</span>
           </div>
-          ${race.rsiNote?`<div class="rsi-note">${race.rsiNote}</div>`:''}
+          ${race.rsiNote ? `<div class="rsi-note">${race.rsiNote}</div>` : ''}
         </div>
-        <div class="chevron${isOpen?' open':''}">▼</div>
+        <div class="chev${open ? ' open' : ''}">▼</div>
       </div>
-      <div class="race-body${isOpen?'':' hidden'}">
-        <div class="tbl-head">
-          <div class="th">Pos</div>
-          <div class="th">Horse / Connections</div>
-          <div class="th c">Form</div>
-          <div class="th c">Win %</div>
-          <div class="th c">Market</div>
-          <div class="th c">Model</div>
-          <div class="th c">Value</div>
+      <div class="race-body${open ? '' : ' hidden'}">
+        <div class="tbl-wrap">
+          <table class="horse-table">
+            <thead>
+              <tr>
+                <th class="c" style="width:40px">POS</th>
+                <th>HORSE / CONNECTIONS</th>
+                <th class="c" style="width:90px">FORM</th>
+                <th class="c" style="width:72px">WIN %</th>
+                <th class="c" style="width:78px">MARKET</th>
+                <th class="c" style="width:78px">MODEL</th>
+                <th class="c" style="width:84px">VALUE</th>
+              </tr>
+            </thead>
+            <tbody>${horseRows}</tbody>
+          </table>
         </div>
-        ${(race.horses||[]).map(h => renderHorse(h)).join('')}
       </div>`;
     el.appendChild(card);
   });
 }
 
-function renderHorse(h) {
-  const mc = medCol(h.position);
-  const vc = valCol(h.value);
-  const wc = wpctCol(h.winPct||0);
-  const rowBL = mc ? `border-left-color:${mc}` : '';
-  const rowBG = mc ? `background:linear-gradient(90deg,${mc}0d,transparent)` : '';
-  const dotStyle = mc ? `background:${mc};color:#060810` : `background:var(--surface2);color:var(--text-faint)`;
-
-  return `<div class="hrow" style="${rowBL};${rowBG}"
-    onmouseenter="this.style.background='${mc?`linear-gradient(90deg,${mc}22,rgba(255,255,255,.035))`:'rgba(255,255,255,.035)'}'"
-    onmouseleave="this.style.background='${mc?`linear-gradient(90deg,${mc}0d,transparent)`:''}'">
-    <div class="pos-dot" style="${dotStyle}">${h.position}</div>
-    <div style="min-width:0">
-      <div class="hname">${h.name||'—'}${h.barrier?`<span class="hbarrier">B${h.barrier}</span>`:''}</div>
-      <div class="hmeta">${[h.jockey,h.trainer,h.weight,h.age&&h.sex?`${h.age} ${h.sex}`:''].filter(Boolean).join(' · ')}</div>
-      ${h.gearChanges?`<div class="hgear">⚙ ${h.gearChanges}</div>`:''}
-      ${h.lastStart?`<div class="hlaststart">↩ ${h.lastStart}</div>`:''}
-      ${h.tip?`<div class="htip">💬 ${h.tip}</div>`:''}
-    </div>
-    <div class="cell">
-      <div class="cell-lbl">Form</div>
-      <div class="form-val">${h.recentForm||'—'}</div>
-    </div>
-    <div class="cell">
-      <div class="cell-lbl">Win %</div>
-      <div class="wpct-val" style="color:${wc}">${h.winPct||0}%</div>
-    </div>
-    <div class="cell">
-      <div class="cell-lbl">Market</div>
-      <div class="odds-val" style="color:var(--text)">${h.marketOdds||'—'}</div>
-    </div>
-    <div class="cell">
-      <div class="cell-lbl">Model</div>
-      <div class="odds-val" style="color:var(--gold)">${h.modelOdds||'—'}</div>
-    </div>
-    <div class="cell">
-      <div class="val-badge" style="background:${vc}18;color:${vc};border:1px solid ${vc}33">${h.value||'—'}</div>
-      ${h.confidence?`<div class="conf-lbl" style="color:${confCol(h.confidence)}">${h.confidence}</div>`:''}
-    </div>
-  </div>`;
-}
-
-function toggleCard(hdr) {
+function toggleRace(hdr) {
   const body = hdr.nextElementSibling;
-  const chev = hdr.querySelector('.chevron');
+  const chev = hdr.querySelector('.chev');
   const opening = body.classList.contains('hidden');
   body.classList.toggle('hidden');
   hdr.classList.toggle('open', opening);
   chev.classList.toggle('open', opening);
 }
 
-/* ════════════════════════════════════════════════════════
-   MAIN ANALYSIS ENGINE — TWO PHASES
-════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   MAIN ANALYSIS
+═══════════════════════════════════════════════════════════════ */
 async function runAnalysis() {
   const track = document.getElementById('trackInp').value.trim();
   const date  = document.getElementById('dateInp').value;
   if (!track) { document.getElementById('trackInp').focus(); return; }
 
-  // Format date nicely for prompts
+  // Format date nicely
   const d = new Date(date + 'T12:00:00');
-  const niceDate = d.toLocaleDateString('en-AU', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const niceDate = isNaN(d) ? date : d.toLocaleDateString('en-AU', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+  });
 
-  // UI: show loading
+  // Reset UI
   const btn = document.getElementById('goBtn');
-  btn.disabled = true; btn.textContent = 'ANALYSING…';
+  btn.disabled = true;
+  btn.textContent = 'ANALYSING…';
   document.getElementById('loadWrap').classList.remove('hidden');
   document.getElementById('errWrap').classList.add('hidden');
   document.getElementById('resultsWrap').classList.add('hidden');
-
-  // ─── PHASE 1: Research ──────────────────────────────────────────────────────
-  document.getElementById('phaseBadge').textContent = 'PHASE 1 — LIVE RESEARCH';
-  document.getElementById('loadHeadline').textContent = `Researching ${track}`;
-  document.getElementById('loadSub').textContent = 'AI is searching the web for real race data, fields, form & odds…';
-  buildSteps(STEPS_P1);
-  animateSteps(STEPS_P1, 22000);
+  document.getElementById('loadPhase').textContent = 'LIVE RESEARCH + ANALYSIS';
+  document.getElementById('loadTitle').textContent = `${track} — ${niceDate}`;
+  document.getElementById('loadSub').textContent = 'AI is searching the web for declared fields, odds, form & conditions…';
   setProgress(5);
+  showSteps();
 
-  let researchNotes = '';
-  try {
-    const p1Res = await fetch(API, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 4000,
-        system: RESEARCH_SYSTEM,
-        tools: [{type: 'web_search_20250305', name: 'web_search'}],
-        messages: [{
-          role: 'user',
-          content: `Research this race meeting thoroughly using web search:\n\nTRACK: ${track}\nDATE: ${niceDate} (${date})\n\nPerform all the mandatory searches listed. Find every race, every runner, barriers, jockeys, trainers, weights, form and current odds. Write detailed research notes — be specific with real horse and trainer names.`
-        }]
-      })
-    });
-
-    const p1Json = await p1Res.json();
-    if (p1Json.error) throw new Error(`API Error: ${p1Json.error.message}`);
-
-    // Extract text blocks (may include tool use results)
-    researchNotes = (p1Json.content||[])
-      .filter(b => b.type === 'text')
-      .map(b => b.text)
-      .join('\n\n');
-
-    if (!researchNotes || researchNotes.length < 100) {
-      throw new Error('The AI could not find sufficient race data for this meeting. Fields may not be declared yet — they are usually released 2–3 days before the race. Try a date closer to an upcoming Saturday metropolitan meeting.');
-    }
-
-    clearInterval(stepTimer);
-    STEPS_P1.forEach((_, i) => {
-      const el = document.getElementById(`step-${i}`);
-      if (el) { el.classList.remove('active'); el.classList.add('done'); }
-    });
-    setProgress(50);
-
-  } catch(e) {
-    showError(e.message);
-    btn.disabled = false; btn.textContent = 'ANALYSE →';
-    return;
-  }
-
-  // ─── PHASE 2: Analysis ──────────────────────────────────────────────────────
-  document.getElementById('phaseBadge').textContent = 'PHASE 2 — DEEP ANALYSIS';
-  document.getElementById('loadHeadline').textContent = 'Crunching the Numbers';
-  document.getElementById('loadSub').textContent = 'Analysing form, speed maps, value & building predictions…';
-  buildSteps(STEPS_P2);
-  animateSteps(STEPS_P2, 18000);
-  setProgress(55);
+  const userMsg = `I need full race tips for:\n\nTRACK: ${track}\nDATE: ${niceDate} (${date})\n\nPlease:\n1. Use web search to find every race on the ${track} race card for this date\n2. Find every accepted runner, their barrier, jockey, trainer, weight\n3. Search for current TAB win market odds for every runner\n4. Research recent form for each runner (last 5–8 starts)\n5. Find the track condition and rail position\n6. Analyse every factor and produce the full JSON with every horse in finishing order\n\nReturn every race, every runner. Do not skip any horses.`;
 
   try {
-    const p2Res = await fetch(API, {
+    setProgress(15);
+
+    const resp = await fetch(API_URL, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: MODEL,
         max_tokens: 8000,
-        system: ANALYSIS_SYSTEM,
-        messages: [{
-          role: 'user',
-          content: `Here are the research notes for the ${track} race meeting on ${niceDate}:\n\n---\n${researchNotes}\n---\n\nNow produce the full structured JSON analysis for every race. Weigh all factors carefully. Return ONLY the JSON object, nothing else.`
-        }]
+        system: SYSTEM,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: userMsg }]
       })
     });
 
-    const p2Json = await p2Res.json();
-    if (p2Json.error) throw new Error(`Analysis Error: ${p2Json.error.message}`);
+    setProgress(40);
 
-    const rawText = (p2Json.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n');
-
-    // Extract JSON — be robust about it
-    let jsonData = null;
-    const match = rawText.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('Could not parse analysis data. The AI may not have found declared fields for this meeting yet.');
-
-    try {
-      jsonData = JSON.parse(match[0]);
-    } catch(parseErr) {
-      // Try to fix common JSON issues
-      const cleaned = match[0]
-        .replace(/,(\s*[}\]])/g, '$1')  // trailing commas
-        .replace(/[\u0000-\u001F\u007F-\u009F]/g, ' '); // control chars
-      jsonData = JSON.parse(cleaned);
+    if (!resp.ok) {
+      let errDetail = '';
+      try { const j = await resp.json(); errDetail = j.error?.message || JSON.stringify(j); }
+      catch(_) { errDetail = await resp.text(); }
+      throw new Error(`API error ${resp.status}: ${errDetail}`);
     }
 
-    if (!jsonData || !jsonData.races || jsonData.races.length === 0) {
-      throw new Error('No race data found for this meeting. The track may not be racing on this date, or fields have not been declared yet.');
+    const json = await resp.json();
+
+    setProgress(70);
+
+    if (json.error) {
+      throw new Error(`API error: ${json.error.message || JSON.stringify(json.error)}`);
+    }
+
+    // Extract all text blocks — handle tool use responses
+    const textBlocks = (json.content || [])
+      .filter(b => b.type === 'text')
+      .map(b => b.text);
+
+    const fullText = textBlocks.join('\n\n');
+
+    if (!fullText || fullText.length < 50) {
+      throw new Error(
+        'The AI returned no text content. This may be because race fields are not yet declared for this date, ' +
+        'or the model used search tools but did not return a final analysis. ' +
+        'Try a date closer to race day (fields are declared ~2–3 days before).'
+      );
+    }
+
+    setProgress(85);
+
+    // Extract JSON from the text — robust matching
+    let raceData = null;
+    const jsonMatch = fullText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error(
+        'Could not find structured race data in the AI response. ' +
+        'The AI may not have found declared fields for ' + track + ' on ' + niceDate + '. ' +
+        'Race fields are usually available 2–3 days before the meeting.'
+      );
+    }
+
+    try {
+      raceData = JSON.parse(jsonMatch[0]);
+    } catch (parseErr) {
+      // Try cleaning the JSON
+      const cleaned = jsonMatch[0]
+        .replace(/,\s*([}\]])/g, '$1')   // trailing commas
+        .replace(/[\x00-\x1F\x7F]/g, ' '); // control chars
+      raceData = JSON.parse(cleaned);
+    }
+
+    if (raceData.error) {
+      throw new Error(raceData.error);
+    }
+
+    if (!raceData.races || raceData.races.length === 0) {
+      throw new Error(
+        'No races found for ' + track + ' on ' + niceDate + '. ' +
+        'The track may not be racing on this date, or fields have not been declared yet.'
+      );
     }
 
     setProgress(100);
-    clearInterval(stepTimer);
+    clearInterval(stepInterval);
+    ALL_STEPS.forEach((_, i) => {
+      const el = document.getElementById('st' + i);
+      if (el) { el.classList.remove('active'); el.classList.add('done'); }
+    });
 
-    // ─── Populate Results ────────────────────────────────────────────────────
-    document.getElementById('resTrack').textContent = jsonData.track || track;
+    // ── Populate Results ───────────────────────────────────────────────
+    document.getElementById('resTrack').textContent = raceData.track || track;
 
-    // Pills
-    const pillsEl = document.getElementById('resPills');
-    const pillItems = [
-      jsonData.date && `<span>${jsonData.date}</span>`,
-      jsonData.state && `<span class="pill">${jsonData.state}</span>`,
-      jsonData.trackCondition && `<span class="pill gold">🌿 ${jsonData.trackCondition}</span>`,
-      jsonData.railPosition && `<span class="pill">Rail: ${jsonData.railPosition}</span>`,
-      jsonData.weather && `<span class="pill">🌤 ${jsonData.weather}</span>`,
-      jsonData.totalPrizemoney && `<span class="pill gold">💰 ${jsonData.totalPrizemoney}</span>`,
+    const pillData = [
+      raceData.date        && `<span>${raceData.date}</span>`,
+      raceData.state       && `<span class="pill">${raceData.state}</span>`,
+      raceData.trackCondition && `<span class="pill gold">🌿 ${raceData.trackCondition}</span>`,
+      raceData.railPosition   && `<span class="pill">Rail: ${raceData.railPosition}</span>`,
+      raceData.weather     && `<span class="pill">🌤 ${raceData.weather}</span>`,
+      raceData.totalPrizemoney && `<span class="pill gold">💰 ${raceData.totalPrizemoney}</span>`,
     ].filter(Boolean);
-    pillsEl.innerHTML = pillItems.join('');
+    document.getElementById('resPills').innerHTML = pillData.join('');
 
-    // Analyst note
-    if (jsonData.analystNote) {
+    if (raceData.analystNote) {
       const an = document.getElementById('analystNote');
-      an.textContent = '💬 ' + jsonData.analystNote;
+      an.textContent = '💬 ' + raceData.analystNote;
       an.classList.remove('hidden');
+    } else {
+      document.getElementById('analystNote').classList.add('hidden');
     }
 
-    // Stats
-    const races = jsonData.races || [];
-    const totalRunners = races.reduce((a, r) => a + (r.horses||[]).length, 0);
-    const bankers = races.filter(r => (r.rsi||0) >= 75).length;
-    const oversBets = races.reduce((a, r) => a + (r.horses||[]).filter(h => h.value === 'OVERS' && h.position === 1).length, 0);
+    const races = raceData.races || [];
+    const totalRunners = races.reduce((a, r) => a + (r.horses || []).length, 0);
+    const bankers = races.filter(r => (r.rsi || 0) >= 75).length;
+    const oversBets = races.filter(r => {
+      const winner = (r.horses || []).find(h => h.position === 1);
+      return winner && winner.value === 'OVERS';
+    }).length;
 
     document.getElementById('statsRow').innerHTML = `
-      <div class="stat-card"><div class="stat-n">${races.length}</div><div class="stat-l">Races</div></div>
-      <div class="stat-card"><div class="stat-n">${totalRunners}</div><div class="stat-l">Runners</div></div>
-      <div class="stat-card"><div class="stat-n" style="color:var(--green)">${oversBets}</div><div class="stat-l">Value Tips</div></div>
-      <div class="stat-card"><div class="stat-n">${bankers}</div><div class="stat-l">Bankers</div></div>
-    `;
+      <div class="stat"><div class="stat-n">${races.length}</div><div class="stat-l">Races</div></div>
+      <div class="stat"><div class="stat-n">${totalRunners}</div><div class="stat-l">Runners</div></div>
+      <div class="stat"><div class="stat-n" style="color:var(--green)">${oversBets}</div><div class="stat-l">Value Tips</div></div>
+      <div class="stat"><div class="stat-n">${bankers}</div><div class="stat-l">Bankers</div></div>`;
 
-    // Races
     renderRaces(races);
 
     // Sources
-    const srcEl = document.getElementById('srcStrip');
-    if (jsonData.sourcesFound?.length) {
-      srcEl.innerHTML = `<span style="font-family:var(--font-ui);letter-spacing:1px">SOURCES RESEARCHED</span>` +
-        jsonData.sourcesFound.map(s => `<span class="src-tag">${s}</span>`).join('');
-    } else {
-      srcEl.innerHTML = '';
+    if (raceData.sourcesSearched?.length) {
+      const ss = document.getElementById('srcStrip');
+      ss.innerHTML = `<span style="font-family:var(--font-ui);letter-spacing:1px;margin-right:4px">SOURCES SEARCHED</span>` +
+        raceData.sourcesSearched.map(s => `<span class="src-chip">${s}</span>`).join('');
+      ss.classList.remove('hidden');
     }
 
-    // Show results
     document.getElementById('loadWrap').classList.add('hidden');
     document.getElementById('resultsWrap').classList.remove('hidden');
-    document.getElementById('resultsWrap').scrollIntoView({behavior:'smooth', block:'start'});
+    setTimeout(() => {
+      document.getElementById('resultsWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
 
-  } catch(e) {
-    showError(e.message);
+  } catch (err) {
+    clearInterval(stepInterval);
+    document.getElementById('loadWrap').classList.add('hidden');
+    document.getElementById('errWrap').classList.remove('hidden');
+    document.getElementById('errBody').textContent = err.message || String(err);
+    console.error('Analysis error:', err);
   }
 
-  btn.disabled = false; btn.textContent = 'ANALYSE →';
-}
-
-function showError(msg) {
-  clearInterval(stepTimer);
-  document.getElementById('loadWrap').classList.add('hidden');
-  document.getElementById('errWrap').classList.remove('hidden');
-  document.getElementById('errMsg').textContent = msg;
+  btn.disabled = false;
+  btn.textContent = 'ANALYSE →';
 }
 </script>
 </body>
