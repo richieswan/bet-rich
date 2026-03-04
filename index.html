@@ -18,18 +18,16 @@
   --amber:#ffb22e;--abg:rgba(255,178,46,.08);--abdr:rgba(255,178,46,.22);
   --blue:#4f96ff;--bbg:rgba(79,150,255,.09);--bbdr:rgba(79,150,255,.22);
   --purple:#a78bfa;--pbg:rgba(167,139,250,.1);--pbdr:rgba(167,139,250,.22);
-  --r:10px;--r2:14px;--r3:18px;
+  --gold:#ffd700;--goldbg:rgba(255,215,0,.08);--goldbdr:rgba(255,215,0,.25);
+  --r:10px;--r2:14px;
 }
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;line-height:1.6}
-
-/* Atmosphere */
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:linear-gradient(rgba(0,232,154,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(0,232,154,.015) 1px,transparent 1px);
   background-size:56px 56px;
   mask-image:radial-gradient(ellipse 100% 45% at 50% 0%,black 0%,transparent 100%)}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:radial-gradient(ellipse 60% 40% at 50% -5%,rgba(0,232,154,.035) 0%,transparent 70%)}
-
+  background:radial-gradient(ellipse 60% 40% at 50% -5%,rgba(0,232,154,.03) 0%,transparent 70%)}
 #app{display:flex;flex-direction:column;height:100vh;position:relative;z-index:1}
 
 /* ── HEADER ── */
@@ -51,7 +49,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 #layout{display:flex;flex:1;overflow:hidden}
 
 /* ── SIDEBAR ── */
-#side{width:214px;flex-shrink:0;border-right:1px solid var(--border);padding:14px 11px;display:flex;flex-direction:column;gap:3px;overflow-y:auto}
+#side{width:220px;flex-shrink:0;border-right:1px solid var(--border);padding:14px 11px;display:flex;flex-direction:column;gap:3px;overflow-y:auto}
 @media(max-width:680px){#side{display:none}}
 .sl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);padding:2px 8px;margin:6px 0 3px}
 .sitem{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;color:var(--muted);font-size:12px;cursor:pointer;transition:all .15s;border:1px solid transparent}
@@ -59,12 +57,36 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .sitem.active{background:var(--gbg);color:var(--green);border-color:var(--gbdr)}
 .sitem-paste{background:var(--pbg);color:var(--purple);border-color:var(--pbdr)}
 .sitem-paste:hover{background:rgba(167,139,250,.14);border-color:rgba(167,139,250,.3)}
+
+/* ── LOCKS SECTION ── */
+.locks-section{margin-top:4px}
+.locks-header{display:flex;align-items:center;justify-content:space-between;padding:2px 8px;margin-bottom:4px}
+.locks-title{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.locks-count{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--gold);background:var(--goldbg);border:1px solid var(--goldbdr);border-radius:10px;padding:1px 6px;display:none}
+.locks-count.visible{display:block}
+#locks-list{display:flex;flex-direction:column;gap:3px}
+.lock-empty{padding:8px 10px;border-radius:8px;border:1px dashed var(--dim);font-size:11px;color:var(--dim);text-align:center;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em}
+.lock-item{
+  background:var(--goldbg);border:1px solid var(--goldbdr);
+  border-radius:8px;padding:8px 10px;
+  animation:lockIn .4s ease;
+}
+@keyframes lockIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+.lock-horse{font-weight:700;font-size:12px;color:var(--gold);display:flex;align-items:center;gap:5px;margin-bottom:2px}
+.lock-horse-icon{font-size:11px}
+.lock-meta{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--muted);display:flex;flex-direction:column;gap:1px}
+.lock-race{color:var(--t2);font-size:10px}
+.lock-conf{color:var(--green)}
+.lock-odds{color:var(--amber)}
+.lock-divider{height:1px;background:var(--goldbdr);margin:4px 0;opacity:.5}
+
+/* ENGINE INFO */
 .side-box{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:11px 12px;margin-top:4px}
 .sbrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:11px}
 .sbrow:last-child{margin-bottom:0}
 .sbk{color:var(--muted)}
 .sbv{font-family:'IBM Plex Mono',monospace;font-size:10px}
-.green{color:var(--green)}.red{color:var(--red)}.amber{color:var(--amber)}.purple{color:var(--purple)}
+.green{color:var(--green)}.red{color:var(--red)}.amber{color:var(--amber)}.purple{color:var(--purple)}.gold{color:var(--gold)}
 .sfoot{margin-top:auto;padding-top:10px;display:flex;flex-direction:column;gap:6px}
 .snew{background:var(--green);color:#000;border:none;border-radius:8px;padding:9px;font-weight:700;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .18s}
 .snew:hover{background:var(--g2)}
@@ -102,21 +124,20 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
 /* MESSAGES */
 .msg{display:flex;flex-direction:column;animation:rise .22s ease}
-.mu{align-items:flex-end}
-.ma{align-items:flex-start}
+.mu{align-items:flex-end}.ma{align-items:flex-start}
 .mwho{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);margin-bottom:5px;padding:0 3px}
 .bbu{background:linear-gradient(135deg,var(--green),var(--g2));color:#000;font-weight:600;font-size:14px;padding:10px 16px;border-radius:16px 16px 4px 16px;max-width:460px;word-break:break-word}
 .bba{background:var(--bg2);border:1px solid var(--border);border-radius:4px 16px 16px 16px;padding:22px 26px;max-width:100%;width:100%}
 .bba-paste{border-color:var(--pbdr);background:linear-gradient(135deg,var(--bg2) 80%,rgba(167,139,250,.04) 100%)}
 
-/* TYPING */
+/* TYPING / STEPS */
 .typing{display:flex;align-items:center;gap:5px;padding:7px 2px}
 .typing i{display:block;width:5px;height:5px;background:var(--green);border-radius:50%;animation:tdot 1.1s ease-in-out infinite}
 .typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.35s}
 @keyframes tdot{0%,80%,100%{transform:translateY(0);opacity:.25}40%{transform:translateY(-7px);opacity:1}}
 .proc{display:flex;flex-direction:column;gap:6px}
-.prow{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);opacity:0;animation:step .3s ease forwards}
-@keyframes step{to{opacity:1}}
+.prow{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);opacity:0;animation:pstep .3s ease forwards}
+@keyframes pstep{to{opacity:1}}
 .pico{width:16px;height:16px;border-radius:50%;border:1px solid var(--gbdr);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--green);flex-shrink:0}
 
 /* ── INPUT ZONE ── */
@@ -134,7 +155,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .itools{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding:0 2px}
 .itool-left{display:flex;align-items:center;gap:8px}
 .imode{display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--dim);letter-spacing:.04em}
-.imode-dot{width:5px;height:5px;border-radius:50%;background:var(--dim)}
+.imode-dot{width:5px;height:5px;border-radius:50%}
 .imode-dot.sim{background:var(--green);box-shadow:0 0 5px var(--green)}
 .imode-dot.paste{background:var(--purple);box-shadow:0 0 5px var(--purple)}
 .ipaste-btn{background:var(--pbg);border:1px solid var(--pbdr);border-radius:5px;padding:3px 9px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--purple);cursor:pointer;transition:all .2s;letter-spacing:.04em}
@@ -149,9 +170,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .pp-title{font-weight:700;font-size:13px;color:var(--purple)}
 .pp-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:2px 6px;transition:color .2s}
 .pp-close:hover{color:var(--text)}
-.pp-instructions{font-size:12px;color:var(--t2);line-height:1.7;margin-bottom:12px}
-.pp-instructions code{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green)}
-.pp-example{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);line-height:1.8;margin-bottom:10px;white-space:pre-wrap}
+.pp-desc{font-size:12px;color:var(--t2);line-height:1.7;margin-bottom:10px}
+.pp-desc code{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green)}
 .pp-load{background:var(--purple);color:#fff;border:none;border-radius:7px;padding:8px 16px;font-family:'Outfit',sans-serif;font-weight:600;font-size:12px;cursor:pointer;transition:background .2s}
 .pp-load:hover{background:#9d74f0}
 
@@ -177,17 +197,20 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .tt{color:var(--muted);background:rgba(255,255,255,.03);border-color:var(--border)}
 .tc{color:var(--amber);background:var(--abg);border-color:var(--abdr)}
 .treal{color:var(--purple);background:var(--pbg);border-color:var(--pbdr)}
+.tlock{color:var(--gold);background:var(--goldbg);border-color:var(--goldbdr)}
 
+/* RSI stats row */
 .rbstats{display:flex;gap:20px;flex-wrap:wrap;padding:10px 15px;border-bottom:1px solid var(--border)}
 .stat{display:flex;flex-direction:column;gap:1px}
-.sl2{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim)}
-.sv{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500}
+.slbl{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim)}
+.sval{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500}
 .rsirow{display:flex;align-items:center;gap:8px}
-.rsibar{width:62px;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
-.rsifill{height:100%;border-radius:2px}
-.rh .rsifill{background:var(--green)}
-.rm .rsifill{background:var(--amber)}
-.rl .rsifill{background:var(--red)}
+.rsibar{width:80px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.rsifill{height:100%;border-radius:2px;transition:width .6s ease}
+.rh .rsifill{background:linear-gradient(90deg,var(--g2),var(--green))}
+.rm .rsifill{background:linear-gradient(90deg,var(--amber),#ffcc44)}
+.rl .rsifill{background:linear-gradient(90deg,var(--red),#ff7a8a)}
+.rsi-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);margin-left:2px}
 
 /* TABLE */
 .tscroll{overflow-x:auto}
@@ -198,9 +221,11 @@ table.rt th{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:u
 table.rt td{padding:9px 11px;border-bottom:1px solid rgba(36,43,56,.5);font-size:12px;white-space:nowrap;vertical-align:middle}
 table.rt tr:last-child td{border-bottom:none}
 table.rt tbody tr:hover{background:rgba(255,255,255,.012)}
+table.rt tbody tr.lock-row{background:rgba(255,215,0,.04)}
+table.rt tbody tr.lock-row:hover{background:rgba(255,215,0,.07)}
 .pc{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;width:32px;text-align:center}
 .p1{color:var(--green)}.p2{color:#88ccb6}.p3{color:var(--muted)}
-.hn{font-weight:600;font-size:12px}.hn.fav{color:var(--green)}.hn.real{color:var(--purple)}
+.hn{font-weight:600;font-size:12px}.hn.fav{color:var(--green)}.hn.real{color:var(--purple)}.hn.lock{color:var(--gold)}
 .fs{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.07em}
 .mn{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)}
 .mnb{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text)}
@@ -209,7 +234,7 @@ table.rt tbody tr:hover{background:rgba(255,255,255,.012)}
 .vu{background:var(--rbg);color:var(--red);border-color:var(--rbdr)}
 .vf{background:rgba(255,255,255,.03);color:var(--muted);border-color:var(--border)}
 
-/* SUMMARY */
+/* RACE SUMMARY */
 .rbs{padding:13px 15px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:9px}
 .scrow{display:flex;gap:9px;flex-wrap:wrap}
 .sc{flex:1;min-width:150px;background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px}
@@ -217,6 +242,9 @@ table.rt tbody tr:hover{background:rgba(255,255,255,.012)}
 .sc .lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim);margin-bottom:2px}
 .sc .val{font-weight:700;font-size:12px}
 .sc .sub{font-size:11px;color:var(--muted);margin-top:1px}
+.sc.lock-sc{background:var(--goldbg);border-color:var(--goldbdr)}
+.sc.lock-sc .lbl{color:rgba(255,215,0,.5)}
+.sc.lock-sc .val{color:var(--gold)}
 .riskbox{background:var(--abg);border:1px solid var(--abdr);border-radius:var(--r);padding:9px 12px;font-size:12px;color:var(--t2)}
 .riskbox b{color:var(--amber)}
 .atxt{font-size:12px;color:var(--muted);line-height:1.78;padding-top:9px;border-top:1px solid var(--border)}
@@ -234,21 +262,20 @@ table.rt tbody tr:hover{background:rgba(255,255,255,.012)}
 </head>
 <body>
 <div id="app">
-
   <header id="hdr">
     <div class="logo">
       <div class="lmark">B</div>
       <div class="ltxt"><span class="lname">Betrich</span><span class="lsub">AI Racing Model</span></div>
     </div>
     <div class="hdr-r">
-      <div class="eng-pill"><div class="epulse"></div><span class="etxt">LOCAL ENGINE v5</span></div>
+      <div class="eng-pill"><div class="epulse"></div><span class="etxt">LOCAL ENGINE v6</span></div>
       <button class="paste-btn" onclick="togglePastePanel()">📋 Paste Race Data</button>
     </div>
   </header>
 
   <div id="layout">
     <nav id="side">
-      <div class="sl">Simulate</div>
+      <div class="sl">Meetings</div>
       <div class="sitem active"><span>🏇</span><span id="cur-lbl">New Session</span></div>
       <div class="sitem" onclick="fillQ('Model Flemington Saturday')"><span>📋</span>Flemington</div>
       <div class="sitem" onclick="fillQ('Model Randwick Saturday')"><span>📋</span>Randwick</div>
@@ -256,18 +283,31 @@ table.rt tbody tr:hover{background:rgba(255,255,255,.012)}
       <div class="sitem" onclick="fillQ('Model Eagle Farm Saturday')"><span>📋</span>Eagle Farm</div>
       <div class="sitem" onclick="fillQ('Model Rosehill Saturday')"><span>📋</span>Rosehill</div>
       <div class="sitem" onclick="fillQ('Model Moonee Valley Saturday')"><span>📋</span>Moonee Valley</div>
+
       <div class="sl" style="margin-top:8px">Paste Real Data</div>
       <div class="sitem sitem-paste" onclick="loadPasteExample()"><span>⚡</span>Load Example</div>
       <div class="sitem sitem-paste" onclick="togglePastePanel()"><span>📋</span>Paste Panel</div>
+
+      <!-- LOCKS SECTION -->
+      <div class="locks-section">
+        <div class="locks-header">
+          <span class="locks-title">🔒 Locks</span>
+          <span class="locks-count" id="locks-count">0</span>
+        </div>
+        <div id="locks-list">
+          <div class="lock-empty" id="locks-empty">No locks yet</div>
+        </div>
+      </div>
+
       <div class="sl" style="margin-top:8px">Engine</div>
       <div class="side-box">
         <div class="sbrow"><span class="sbk">Mode</span><span class="sbv green" id="eng-mode">SIMULATE</span></div>
+        <div class="sbrow"><span class="sbk">RSI Engine</span><span class="sbv green">DYNAMIC</span></div>
         <div class="sbrow"><span class="sbk">APIs</span><span class="sbv red">NONE</span></div>
-        <div class="sbrow"><span class="sbk">Keys</span><span class="sbv red">NOT REQUIRED</span></div>
-        <div class="sbrow"><span class="sbk">Data</span><span class="sbv green" id="eng-data">INTERNAL</span></div>
+        <div class="sbrow"><span class="sbk">Locks Found</span><span class="sbv gold" id="eng-locks">0</span></div>
       </div>
       <div class="sfoot">
-        <button class="snew" onclick="location.reload()">+ New Session</button>
+        <button class="snew" onclick="resetSession()">+ New Session</button>
       </div>
     </nav>
 
@@ -276,9 +316,9 @@ table.rt tbody tr:hover{background:rgba(255,255,255,.012)}
         <div id="msgs">
           <div id="welcome">
             <div class="wlc">
-              <div class="wchip"><div class="epulse"></div><span>ZERO-API · LOCAL ENGINE · PASTE REAL DATA</span></div>
+              <div class="wchip"><div class="epulse"></div><span>ZERO-API · DYNAMIC RSI · AUTO LOCKS</span></div>
               <h1>Simulate. Or<br/><em>Use Real Data.</em></h1>
-              <p class="wsub">Betrich runs fully offline — simulate any race meeting, or paste real race data from Racing Australia, TAB, or Sky Racing for instant AI modeling.</p>
+              <p class="wsub">Betrich runs fully offline — simulate any race meeting, or paste real race data for instant AI modeling. High-confidence picks auto-populate as 🔒 Locks.</p>
             </div>
             <div class="wmodes">
               <div class="wmode sim" onclick="fillQ('Model Flemington Saturday')">
@@ -289,7 +329,7 @@ table.rt tbody tr:hover{background:rgba(255,255,255,.012)}
               <div class="wmode paste" onclick="loadPasteExample()">
                 <div class="mico">📋</div>
                 <div class="mtit">Paste Real Data</div>
-                <div class="mdesc">Copy real race runners from TAB or Racing Australia — Betrich models them instantly</div>
+                <div class="mdesc">Copy real runners from TAB or Racing Australia — Betrich models them instantly</div>
               </div>
             </div>
             <div class="wgrid">
@@ -308,26 +348,19 @@ table.rt tbody tr:hover{background:rgba(255,255,255,.012)}
           <span class="pp-title">📋 Paste Real Race Data</span>
           <button class="pp-close" onclick="togglePastePanel()">✕</button>
         </div>
-        <div class="pp-instructions">
-          Copy and paste real race runner data from <strong>TAB, Racing Australia, Sky Racing</strong> or any racing site. Format each runner on a new line:<br/><br/>
-          <code>Horse Name | Barrier | Weight | Jockey | Trainer | Form | Market Odds</code><br/><br/>
-          Start with a line like <code>Race 1 — 1400m BM78 — Good 4 — Flemington</code> then list runners below.
-          You can paste multiple races. Missing fields are estimated by the engine.
+        <div class="pp-desc">
+          Paste runners in this format — one per line, fields separated by <code>|</code>:<br/>
+          <code>Race 1 — 1200m BM78 — Good 4 — Flemington</code><br/>
+          <code>1. Horse Name | Barrier | Weight | Jockey | Trainer | Form | Odds</code>
         </div>
-        <div class="pp-example">Race 1 — 1200m Maiden — Good 4 — Flemington
-1. Zoustyle | 3 | 56.5 | J. McDonald | C. Waller | 1-2-1-3-2 | 2.80
-2. Ayrton | 7 | 57.0 | D. Oliver | T. McEvoy | 3-1-2-1-4 | 3.50
-3. Broadsword | 1 | 58.0 | H. Coffey | G. Waterhouse | 2-1-3-2-1 | 5.00
-4. Lighthouse | 11 | 55.5 | T. Berry | D. Hayes | 5-3-4-2-3 | 9.00
-5. Crimson Edge | 5 | 57.5 | J. Bowman | P. Moody | 4-2-5-1-3 | 12.00</div>
-        <button class="pp-load" onclick="loadPasteExample()">⚡ Load This Example</button>
+        <button class="pp-load" onclick="loadPasteExample()">⚡ Load Example Data</button>
       </div>
 
       <div id="izone">
         <div class="iwrap">
           <div class="irow">
             <textarea id="inp" rows="1"
-              placeholder='Simulate: "Model Flemington Saturday"  |  Or paste real race data below'
+              placeholder='Simulate: "Model Flemington Saturday"  |  Or paste real race data'
               onkeydown="hk(event)"
               oninput="onInput(this)"></textarea>
             <button id="sbtn" onclick="submit()" title="Submit">
@@ -338,7 +371,7 @@ table.rt tbody tr:hover{background:rgba(255,255,255,.012)}
             <div class="itool-left">
               <div class="imode"><div class="imode-dot sim" id="mode-dot"></div><span id="mode-txt">SIMULATE MODE</span></div>
               <button class="ipaste-btn" onclick="togglePastePanel()">+ Paste Data</button>
-              <button class="iclear-btn" id="clear-btn" onclick="clearPaste()">✕ Clear Paste</button>
+              <button class="iclear-btn" id="clear-btn" onclick="clearPaste()">✕ Clear</button>
             </div>
             <span class="ihint">↵ submit · Shift+↵ newline</span>
           </div>
@@ -351,12 +384,11 @@ table.rt tbody tr:hover{background:rgba(255,255,255,.012)}
 <script>
 'use strict';
 // ═══════════════════════════════════════════════════════════
-//  BETRICH v5  ·  Zero-API  ·  Simulate + Paste Real Data
+//  BETRICH v6  ·  Zero-API  ·  Dynamic RSI  ·  Auto Locks
 // ═══════════════════════════════════════════════════════════
 
-// ── DATA POOLS ───────────────────────────────────────────────
-const H=[
-  'Zoustyle','Thunder Run','Crimson Ace','Night Rider','Golden Edge','Pacific Storm',
+// ── DATA POOLS ──────────────────────────────────────────────
+const H=['Zoustyle','Thunder Run','Crimson Ace','Night Rider','Golden Edge','Pacific Storm',
   'Iron Fist','Silent Echo','Rapid Fire','Dark Matter','Silver Streak','Viper King',
   'Blue Horizon','Wind Dancer','Steel Arrow','Phantom Blaze','Ruby Crown','Crystal Bay',
   'Desert Prince','Morning Light','Shadow Racer','Blazing Trail','Copper King','Wild Spirit',
@@ -367,12 +399,7 @@ const H=[
   'Iron Duke','Sunfire King','Quantum Leap','Echo Ridge','Swift Blade','Coastal Dream',
   'Urban Legend','High Noon Hero','Mystic Wave','Red Rover','Black Opal','Golden Gate',
   'Thunder Bay','Sapphire Sky','Crimson Wings','Silent Storm','Blazing Sun','Coral King',
-  'Desert Wind','Forest King','Harbor Light','Island Breeze','Jungle Cat','Keen Edge',
-  'Lightning Rod','Mountain Man','Northern Star','Orbit One','Polar Star','Quest Runner',
-  'Raging Bull','Sand Storm','Tidal Force','Ultra Sound','Volcanic Sky','Warp Speed',
-  'Xcalibur Prime','Yellow Brick','Zenith Star','Alpha Wave','Beta Force','Celestial Run',
-  'Delta Storm','Epsilon Dawn','Foxtrot King','Gamma Ray','Horizon Blue','Impact Zone',
-];
+  'Desert Wind','Forest King','Harbor Light','Island Breeze','Jungle Cat','Keen Edge'];
 const J=['J. McDonald','D. Oliver','H. Coffey','T. Berry','J. Bowman','R. Bayliss',
   'C. Williams','M. Dee','B. Shinn','K. McEvoy','J. Byrne','S. Clipperton',
   'T. Clark','Z. Purton','H. Moreira','N. Rawiller','B. Prebble','D. Dunn',
@@ -381,426 +408,559 @@ const TR=['C. Waller','D. Hayes','J. Size','A. Freedman','P. Moody','T. McEvoy',
   'L. Maher','M. Moroney','G. Waterhouse','B. Hayes','M. Price','T. Dabernig',
   'S. Nichols','R. Griffiths','J. Warren','P. Snowden','C. Maher','D. Weir',
   'N. Burke','J. Thompson','A. Payne','M. Smith','B. Cummings','G. Milligan'];
-const RNAMES=[
-  ['Autumn Sprint','Summer Classic','Winter Cup','Spring Stakes','Heritage Mile','Plate Qualifier'],
-  ['Galilee Series','Moonlight Stakes','Coastal Cup','Bayside Classic','Sprint Final','Speed Cup'],
-  ['Fillies Final','Mares Classic','Nursery Stakes','Sires Produce','Juvenile Sprint','Rising Stars'],
-  ['Distance Classic','Marathon Cup','Staying Series','Stayers Final','Long Course Classic','Endurance Cup'],
-];
+const RNAMES=[['Autumn Sprint','Summer Classic','Heritage Mile','Plate Final','Coastal Cup'],
+  ['Galilee Series','Moonlight Stakes','Bayside Classic','Sprint Cup','Speed Stakes'],
+  ['Fillies Final','Nursery Stakes','Sires Produce','Juvenile Sprint','Rising Stars'],
+  ['Distance Classic','Marathon Cup','Staying Series','Long Course Cup','Endurance Stakes']];
 const RTYPES=['Maiden','BM64','BM72','BM78','BM88','3YO Maiden','3YO BM64','4YO+','Listed','Group 3'];
 const DISTS=[1000,1100,1200,1300,1400,1600,1800,2000,2200,2400];
 const CONDS=['Good 3','Good 4','Soft 5','Soft 6','Heavy 8','Heavy 9'];
 const PACES=['Slow','Moderate','Fast'];
 
-// ── SEEDED RNG ────────────────────────────────────────────────
+// ── SEEDED RNG ───────────────────────────────────────────────
 function rng(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;return()=>{s=s*16807%2147483647;return(s-1)/2147483646}}
 function hash(str){let h=5381;for(let i=0;i<str.length;i++)h=(h*33^str.charCodeAt(i))>>>0;return h}
 
-// ── SIMULATION ENGINE ─────────────────────────────────────────
-function simulateMeeting(track, date){
-  const r=rng(hash((track+date).toLowerCase().trim()));
-  const ri=n=>Math.floor(r()*n);
-  const rf=(lo,hi)=>lo+r()*(hi-lo);
-  const pick=a=>a[ri(a.length)];
-  const cond=pick(CONDS);
-  const numRaces=6+ri(3);
-  const races=[];
-  const pool=[...H].sort(()=>r()-.5);
-  let pi=0;
+// ── RSI CALCULATION ──────────────────────────────────────────
+// The key fix: RSI is driven by HOW DOMINANT the top horse is
+// relative to the average expected win% for the field size.
+// A truly dominant horse scores near 95; an even spread scores ~42.
+function calcRSI(runners) {
+  const n = runners.length;
+  if (n < 2) return 75;
+  
+  // Sort descending by winPct
+  const sorted = [...runners].sort((a,b) => b.winPct - a.winPct);
+  const top    = sorted[0].winPct;
+  const second = sorted[1].winPct;
+  const third  = sorted[2] ? sorted[2].winPct : 0;
+  
+  // Expected average if all equal
+  const avgExpected = 100 / n;
+  
+  // How dominant is the leader vs what we'd expect by chance
+  // dominanceFactor: 1.0 = just average, 3.0 = three times average (very strong)
+  const dominanceFactor = top / avgExpected;
+  
+  // Gap ratio: how much daylight between 1st and 2nd (as % of average)
+  const gapRatio = (top - second) / avgExpected;
+  
+  // Compression: if 2nd and 3rd are close to each other the race is muddled
+  const compression = second > 0 ? (second - third) / second : 0;
+  
+  // RSI formula — produces genuine spread from ~42 to ~95
+  let rsi = 28
+    + (dominanceFactor * 16)   // dominant horse lifts RSI strongly
+    + (gapRatio * 12)          // clear gap between 1st and 2nd
+    + (compression * 8)        // spread below the leader
+    - ((n - 8) * 0.4);         // bigger fields = slightly more volatile
 
-  for(let n=0;n<numRaces;n++){
-    const dist=pick(DISTS);
-    const rtype=pick(RTYPES);
-    const rcond=r()<.65?cond:pick(CONDS);
-    const pace=pick(PACES);
-    const rname=pick(pick(RNAMES));
-    const fs=9+ri(6);
-    const runners=[];
-    const jp=[...J].sort(()=>r()-.5);
-    const tp=[...TR].sort(()=>r()-.5);
-    for(let h=0;h<fs;h++){
-      const horse=pool[(pi++)%pool.length];
-      const raw=40+r()*60;
-      const barrier=h+1;
-      const bs=dist<=1400?Math.max(0,1-((barrier-1)/(fs-1)))*15:10-(barrier/fs)*5;
-      const wgt=parseFloat((53+r()*7).toFixed(1));
-      const wp=(wgt-56)*1.5;
-      const fa=[];
-      for(let f=0;f<5;f++)fa.push(r()<.06?'x':String(Math.min(9,1+ri(9))));
-      const form=fa.join('-');
-      const fns=fa.filter(x=>x!=='x').map(Number);
-      const avg=fns.length?fns.reduce((a,b)=>a+b,0)/fns.length:5;
-      const fs2=Math.max(0,10-(avg-1)*1.8);
-      const score=Math.max(1,raw+bs-wp+fs2+rf(-5,5));
-      runners.push({horse,barrier,weight:wgt+'kg',jockey:jp[h%jp.length],trainer:tp[h%tp.length],form,score,isReal:false});
+  rsi = Math.round(Math.min(95, Math.max(42, rsi)));
+  return rsi;
+}
+
+// ── LOCK DETECTION ───────────────────────────────────────────
+// A "lock" is a horse where the model has high conviction:
+//   - winPct > 2.2x the field average (significantly dominant)
+//   - AND RSI >= 72 (race structure is stable)
+//   - AND position 1 in the model ranking
+function isLock(runner, fieldSize, rsi) {
+  const avg = 100 / fieldSize;
+  return (
+    runner.pos === 1 &&
+    runner.winPct >= avg * 2.2 &&
+    rsi >= 72
+  );
+}
+
+// ── SIMULATE MEETING ─────────────────────────────────────────
+function simulateMeeting(track, date) {
+  const r   = rng(hash((track + date).toLowerCase().trim()));
+  const ri  = n => Math.floor(r() * n);
+  const rf  = (lo, hi) => lo + r() * (hi - lo);
+  const pick = a => a[ri(a.length)];
+  const cond = pick(CONDS);
+  const numRaces = 6 + ri(3);
+  const races = [];
+  const pool = [...H].sort(() => r() - .5);
+  let pi = 0;
+
+  for (let n = 0; n < numRaces; n++) {
+    const dist  = pick(DISTS);
+    const rtype = pick(RTYPES);
+    const rcond = r() < .65 ? cond : pick(CONDS);
+    const pace  = pick(PACES);
+    const rname = pick(pick(RNAMES));
+    const fs    = 9 + ri(6);
+    const runners = [];
+    const jp = [...J].sort(() => r() - .5);
+    const tp = [...TR].sort(() => r() - .5);
+
+    for (let h = 0; h < fs; h++) {
+      const horse  = pool[(pi++) % pool.length];
+      const raw    = 40 + r() * 60;
+      const barrier = h + 1;
+      const bs     = dist <= 1400 ? Math.max(0, 1 - ((barrier - 1) / (fs - 1))) * 15 : 8;
+      const wgt    = parseFloat((53 + r() * 7).toFixed(1));
+      const wp     = (wgt - 56) * 1.5;
+      const fa     = [];
+      for (let f = 0; f < 5; f++) fa.push(r() < .06 ? 'x' : String(Math.min(9, 1 + ri(9))));
+      const form   = fa.join('-');
+      const fns    = fa.filter(x => x !== 'x').map(Number);
+      const avg    = fns.length ? fns.reduce((a,b) => a+b, 0) / fns.length : 5;
+      const fs2    = Math.max(0, 10 - (avg - 1) * 1.8);
+      const score  = Math.max(1, raw + bs - wp + fs2 + rf(-5, 5));
+      runners.push({ horse, barrier, weight: wgt + 'kg', jockey: jp[h % jp.length], trainer: tp[h % tp.length], form, score, isReal: false });
     }
-    // Shuffle barriers
-    const bars=[...Array(fs)].map((_,i)=>i+1).sort(()=>r()-.5);
-    runners.forEach((r2,i)=>r2.barrier=bars[i]);
-    finalise(runners,dist);
-    const race=buildRace(n+1,rname,dist+'m',rtype,rcond,pace,runners);
-    races.push(race);
+    const bars = [...Array(fs)].map((_,i) => i+1).sort(() => r() - .5);
+    runners.forEach((r2,i) => r2.barrier = bars[i]);
+    finalise(runners, dist);
+    races.push(buildRace(n + 1, rname, dist + 'm', rtype, rcond, pace, runners));
   }
-  return{track,date,condition:cond,mode:'simulated',races};
+  return { track, date, condition: cond, mode: 'simulated', races };
 }
 
 // ── REAL DATA PARSER ─────────────────────────────────────────
-function parseRealData(rawText){
-  const lines=rawText.split('\n').map(l=>l.trim()).filter(Boolean);
-  const races=[];
-  let currentRace=null;
+function parseRealData(rawText) {
+  const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
+  const races = [];
+  let currentRace = null;
 
-  for(const line of lines){
-    // Race header detection
-    const raceHeader=line.match(/race\s*(\d+)[^\n]*?(\d{3,4}m)[^\n]*?([A-Z][a-z]{1,}[\d\s]+)?/i)
-      || line.match(/^race\s*(\d+)/i)
-      || line.match(/—[^—]*(\d{3,4}m)/i)
-      || (line.toLowerCase().includes('race') && line.match(/\d/));
+  for (const line of lines) {
+    const isHeader =
+      (line.toLowerCase().includes('race') || line.includes('—') || line.includes('--')) &&
+      (line.match(/\d{3,4}\s*m/i) ||
+       line.toLowerCase().includes('maiden') ||
+       line.toLowerCase().includes('bm') ||
+       line.toLowerCase().includes('group') ||
+       line.toLowerCase().includes('quality') ||
+       line.toLowerCase().includes('handicap') ||
+       line.toLowerCase().includes('stakes'));
 
-    // Detect race header line (has "Race" + distance or separator)
-    if((line.toLowerCase().includes('race')||line.includes('—')||line.includes('-')) &&
-       (line.match(/\d{3,4}m/i)||line.toLowerCase().includes('maiden')||
-        line.toLowerCase().includes('bm')||line.toLowerCase().includes('group'))){
-      // Parse race metadata
-      const distMatch=line.match(/(\d{3,4})\s*m/i);
-      const typeMatch=line.match(/\b(maiden|bm\s*\d+|group\s*\d+|listed|3yo|4yo\+?|class\s*\d+)\b/i);
-      const condMatch=line.match(/\b(good\s*[1-4]|soft\s*[5-7]|heavy\s*[8-9]|firm\s*[1-2])\b/i);
-      const trackMatch=line.match(/—\s*([A-Za-z\s]+)$/) || line.match(/at\s+([A-Za-z\s]+)$/i);
-      const raceNumMatch=line.match(/race\s*(\d+)/i);
-      const raceNameMatch=line.match(/—\s*([A-Z][^—]+?)\s*—/);
-
-      currentRace={
-        raceNum:raceNumMatch?parseInt(raceNumMatch[1]):races.length+1,
-        raceName:raceNameMatch?raceNameMatch[1].trim():'Race '+(races.length+1),
-        distance:distMatch?distMatch[1]+'m':'1200m',
-        raceType:typeMatch?typeMatch[1].trim().toUpperCase():'BM78',
-        condition:condMatch?condMatch[1].trim():'Good 4',
-        pace:PACES[Math.floor(Math.random()*3)],
-        track:trackMatch?trackMatch[1].trim():'',
-        runners:[],
-        rawLines:[],
+    if (isHeader) {
+      const distM    = line.match(/(\d{3,4})\s*m/i);
+      const typeM    = line.match(/\b(maiden|bm\s*\d+|group\s*\d+|listed|3yo|4yo\+?|class\s*\d+|quality\s*\d+|handicap|stakes)\b/i);
+      const condM    = line.match(/\b(good\s*[0-9]|soft\s*[0-9]|heavy\s*[0-9]|firm\s*[0-9])\b/i);
+      const trackM   = line.match(/—\s*([A-Za-z\s]+)$/) || line.match(/at\s+([A-Za-z\s]+)$/i);
+      const raceNumM = line.match(/race\s*(\d+)/i);
+      const raceNmM  = line.match(/—\s*(.+?)\s*—/);
+      currentRace = {
+        raceNum:   raceNumM ? parseInt(raceNumM[1]) : races.length + 1,
+        raceName:  raceNmM  ? raceNmM[1].trim() : 'Race ' + (races.length + 1),
+        distance:  distM    ? distM[1] + 'm' : '1200m',
+        raceType:  typeM    ? typeM[1].trim().toUpperCase() : 'BM78',
+        condition: condM    ? condM[1].trim() : 'Good 4',
+        pace:      PACES[Math.floor(Math.random() * 3)],
+        track:     trackM   ? trackM[1].trim() : '',
+        runners:   [],
       };
       races.push(currentRace);
       continue;
     }
 
-    if(!currentRace){
-      // Create a default race if none detected
-      currentRace={raceNum:1,raceName:'Race 1',distance:'1200m',raceType:'BM78',condition:'Good 4',pace:'Moderate',track:'',runners:[],rawLines:[]};
+    if (!currentRace) {
+      currentRace = { raceNum: 1, raceName: 'Race 1', distance: '1200m', raceType: 'BM78', condition: 'Good 4', pace: 'Moderate', track: '', runners: [] };
       races.push(currentRace);
     }
 
-    // Runner line: number, name, barrier, weight, jockey, trainer, form, odds
-    // Support formats: "1. Horse | 3 | 56.5 | J.McDonald | C.Waller | 1-2-3 | 2.80"
-    // or "Horse Name   3   56.5   J McDonald   ..."
-    const runnerPipe=line.match(/^(\d+[\.\)]\s*)?([A-Za-z\s\(\)'&-]+?)\s*[\|,]\s*(\d{1,2})\s*[\|,]\s*([\d\.]+)\s*[\|,]\s*([A-Za-z\s\.]+?)\s*[\|,]\s*([A-Za-z\s\.]+?)\s*[\|,]\s*([\dx\-]+)\s*[\|,]\s*([\d\.]+)/i);
-    const runnerSimple=line.match(/^(\d+[\.\)]\s*)?([A-Za-z][A-Za-z\s'()-]+?)(?:\s{2,}|\t)(.+)/);
+    // Pipe-separated runner
+    const pip = line.match(/^(\d+[\.\)]\s*)?([A-Za-z][A-Za-z\s\(\)'\-&]+?)\s*\|\s*(\d{1,2})\s*\|\s*([\d\.]+)\s*\|\s*([A-Za-z][A-Za-z\s\.]+?)\s*\|\s*([A-Za-z][A-Za-z\s\.]+?)\s*\|\s*([\dx\-]+)\s*\|\s*([\d\.]+)/i);
+    // Shorter pipe: name | barrier | weight | odds (minimal)
+    const pipMin = line.match(/^(\d+[\.\)]\s*)?([A-Za-z][A-Za-z\s\(\)'\-&]+?)\s*\|\s*(\d{1,2})\s*\|\s*([\d\.]+)\s*\|\s*([\d\.]+)\s*$/);
 
-    if(runnerPipe){
-      const[,_pos,horse,barrier,weight,jockey,trainer,form,odds]=runnerPipe;
+    if (pip) {
+      const [, , horse, barrier, weight, jockey, trainer, form, odds] = pip;
       currentRace.runners.push({
-        horse:horse.trim(),
-        barrier:parseInt(barrier),
-        weight:parseFloat(weight)+'kg',
-        jockey:jockey.trim(),
-        trainer:trainer.trim(),
-        form:form.trim(),
-        marketOdds:parseFloat(odds),
-        isReal:true,
-        score:null,
+        horse:      horse.trim(),
+        barrier:    parseInt(barrier),
+        weight:     parseFloat(weight) + 'kg',
+        jockey:     jockey.trim(),
+        trainer:    trainer.trim(),
+        form:       form.trim(),
+        marketOdds: parseFloat(odds),
+        isReal:     true,
+        score:      null,
       });
-    } else if(runnerSimple && line.match(/[A-Za-z]{3,}/)){
-      // Try to extract what we can
-      const parts=line.split(/[\|\s]{2,}|\t/);
-      if(parts.length>=2){
-        const nameMatch=line.match(/^(\d+[\.\)]\s*)?([A-Za-z][A-Za-z\s'()-]{2,30})/);
-        if(nameMatch){
-          const nums=line.match(/\d+[\.\d]*/g)||[];
+    } else if (pipMin) {
+      const [, , horse, barrier, weight, odds] = pipMin;
+      currentRace.runners.push({
+        horse:      horse.trim(),
+        barrier:    parseInt(barrier),
+        weight:     parseFloat(weight) + 'kg',
+        jockey:     J[Math.floor(Math.random() * J.length)],
+        trainer:    TR[Math.floor(Math.random() * TR.length)],
+        form:       'x-x-x-x-x',
+        marketOdds: parseFloat(odds),
+        isReal:     true,
+        score:      null,
+      });
+    } else {
+      // Try to extract runner with flexible parsing
+      const nameM = line.match(/^(\d+[\.\)]\s*)?([A-Za-z][A-Za-z\s\(\)'\-&]{2,35})/);
+      if (nameM && line.length > 5) {
+        const nums = line.match(/[\d]+\.?[\d]*/g) || [];
+        const oddsNum = nums.length >= 2 ? parseFloat(nums[nums.length - 1]) : 10.0;
+        const barrierNum = nums.length >= 2 ? parseInt(nums[1]) : Math.floor(Math.random() * 14) + 1;
+        const weightNum = nums.length >= 3 ? parseFloat(nums[2]) : 57.0;
+        if (oddsNum > 0 && oddsNum < 500) {
           currentRace.runners.push({
-            horse:nameMatch[2].trim(),
-            barrier:nums[1]?parseInt(nums[1]):Math.floor(Math.random()*14)+1,
-            weight:nums[2]?parseFloat(nums[2])+'kg':'57.0kg',
-            jockey:J[Math.floor(Math.random()*J.length)],
-            trainer:TR[Math.floor(Math.random()*TR.length)],
-            form:'x-x-x-x-x',
-            marketOdds:nums[nums.length-1]?parseFloat(nums[nums.length-1]):10.0,
-            isReal:true,
-            score:null,
+            horse:      nameM[2].trim(),
+            barrier:    barrierNum,
+            weight:     weightNum + 'kg',
+            jockey:     J[Math.floor(Math.random() * J.length)],
+            trainer:    TR[Math.floor(Math.random() * TR.length)],
+            form:       'x-x-x-x-x',
+            marketOdds: oddsNum,
+            isReal:     true,
+            score:      null,
           });
         }
       }
     }
   }
 
-  // Filter races with actual runners
-  const validRaces=races.filter(r=>r.runners.length>0);
-  if(!validRaces.length)return null;
+  const validRaces = races.filter(r => r.runners.length > 0);
+  if (!validRaces.length) return null;
 
-  // Apply modeling to each real race
-  for(const race of validRaces){
-    // Calculate scores from provided data
-    for(const runner of race.runners){
-      const distNum=parseInt(race.distance)||1200;
-      const bs=distNum<=1400?Math.max(0,1-((runner.barrier-1)/(race.runners.length-1)))*15:8;
-      const wgt=parseFloat(runner.weight)||57;
-      const wp=(wgt-56)*1.5;
-      const fns=runner.form.split('-').filter(x=>x!=='x'&&x!=='d').map(Number).filter(n=>!isNaN(n));
-      const avg=fns.length?fns.reduce((a,b)=>a+b,0)/fns.length:5;
-      const fs2=Math.max(0,10-(avg-1)*1.8);
-      // Use market odds as signal
-      const oddsSignal=runner.marketOdds?Math.max(5,60-(runner.marketOdds*1.5)):20;
-      runner.score=Math.max(1,50+bs-wp+fs2+oddsSignal+(Math.random()*10-5));
+  for (const race of validRaces) {
+    const distNum = parseInt(race.distance) || 1200;
+    for (const runner of race.runners) {
+      const bs        = distNum <= 1400 ? Math.max(0, 1 - ((runner.barrier - 1) / Math.max(1, race.runners.length - 1))) * 15 : 8;
+      const wgt       = parseFloat(runner.weight) || 57;
+      const wpen      = (wgt - 56) * 1.5;
+      const fns       = runner.form.split('-').filter(x => x !== 'x' && x !== 'd').map(Number).filter(n => !isNaN(n));
+      const avg       = fns.length ? fns.reduce((a, b) => a + b, 0) / fns.length : 5;
+      const formScore = Math.max(0, 10 - (avg - 1) * 1.8);
+      // Market odds as a STRONG signal — the market is usually informative
+      // Transform: shorter odds = higher score, but not linearly dominant
+      const oddsSignal = runner.marketOdds ? Math.max(2, 55 - (runner.marketOdds * 1.8)) : 15;
+      runner.score = Math.max(1, 50 + bs - wpen + formScore + oddsSignal + (Math.random() * 8 - 4));
     }
-    finalise(race.runners,parseInt(race.distance)||1200);
+    finalise(race.runners, distNum);
   }
 
-  // Build structured races
-  const track=validRaces[0].track||'Unknown Track';
-  const structuredRaces=validRaces.map((race,i)=>{
-    return buildRace(i+1,race.raceName,race.distance,race.raceType,race.condition,race.pace,race.runners);
-  });
-
-  return{track,date:'User-Provided Data',condition:validRaces[0].condition,mode:'real',races:structuredRaces};
+  const track = validRaces[0].track || 'Race Meeting';
+  return {
+    track,
+    date:      'User-Provided Data',
+    condition: validRaces[0].condition,
+    mode:      'real',
+    races:     validRaces.map((race, i) => buildRace(i + 1, race.raceName, race.distance, race.raceType, race.condition, race.pace, race.runners)),
+  };
 }
 
-// ── SHARED FINALIZE (normalise win %, odds, value) ────────────
-function finalise(runners,dist){
-  const tot=runners.reduce((a,b)=>a+b.score,0);
-  runners.forEach(r=>{r.winPct=parseFloat(((r.score/tot)*100).toFixed(1))});
-  // Normalise to 100
-  const s=runners.reduce((a,b)=>a+b.winPct,0);
-  const d=parseFloat((100-s).toFixed(1));
-  runners[0].winPct=parseFloat((runners[0].winPct+d).toFixed(1));
-  // Odds
-  runners.forEach(r=>{
-    r.fairOdds=parseFloat((100/r.winPct).toFixed(2));
-    if(!r.marketOdds||r.isReal===false){
-      const shade=0.83+Math.random()*0.14;
-      r.marketOdds=roundOdds(r.fairOdds*shade);
+// ── FINALISE (normalise win%, odds, value) ───────────────────
+function finalise(runners, dist) {
+  const tot = runners.reduce((a, b) => a + b.score, 0);
+  runners.forEach(r => { r.winPct = parseFloat(((r.score / tot) * 100).toFixed(1)) });
+  // Normalise to exactly 100
+  const diff = parseFloat((100 - runners.reduce((a, b) => a + b.winPct, 0)).toFixed(1));
+  runners[0].winPct = parseFloat((runners[0].winPct + diff).toFixed(1));
+  // Compute fair & market odds
+  runners.forEach(r => {
+    r.fairOdds = parseFloat((100 / r.winPct).toFixed(2));
+    if (!r.marketOdds || r.isReal === false) {
+      r.marketOdds = roundOdds(r.fairOdds * (0.83 + Math.random() * 0.14));
     }
-    const gap=r.marketOdds-r.fairOdds;
-    r.value=gap>0.28?'Overs':gap<-0.28?'Unders':'Fair';
+    const gap = r.marketOdds - r.fairOdds;
+    r.value = gap > 0.28 ? 'Overs' : gap < -0.28 ? 'Unders' : 'Fair';
   });
 }
 
-function buildRace(num,name,distance,type,condition,pace,runners){
-  // Sort by winPct desc → predicted finishing position
-  runners.sort((a,b)=>b.winPct-a.winPct);
-  runners.forEach((r,i)=>r.pos=i+1);
-  const top=runners[0].winPct,second=runners[1].winPct;
-  const gap=top-second;
-  const rsi=Math.round(Math.min(95,Math.max(40,40+gap*2.2+(top-20)*.5-(runners[runners.length-1].winPct)*.7)));
-  const topRated=runners[0].horse;
-  const bestValue=runners.reduce((a,b)=>(b.marketOdds-b.fairOdds>a.marketOdds-a.fairOdds)?b:a).horse;
-  const riskFactor=[
-    `With a ${runners.length}-horse field, the pace map creates genuine complexity for midfield runners.`,
-    `Barrier positions play a significant role at ${distance} — wide barriers face extra ground.`,
-    `Form figures suggest genuine uncertainty; the market may be underestimating depth in this race.`,
+// ── BUILD RACE ───────────────────────────────────────────────
+function buildRace(num, name, distance, type, condition, pace, runners) {
+  runners.sort((a, b) => b.winPct - a.winPct);
+  runners.forEach((r, i) => r.pos = i + 1);
+
+  // Dynamic RSI using the new formula
+  const rsi = calcRSI(runners);
+
+  const topRated  = runners[0].horse;
+  const bestValue = runners.reduce((a, b) => (b.marketOdds - b.fairOdds > a.marketOdds - a.fairOdds) ? b : a).horse;
+
+  const riskOptions = [
+    `With ${runners.length} runners, pace maps create genuine query for midfield horses.`,
+    `Barrier positions play a significant role at ${distance} — wide barriers face extra ground lost.`,
+    `Form figures suggest genuine uncertainty; the market may be underestimating depth here.`,
     `${pace} projected tempo suits front-runners — watch for any last-minute jockey changes.`,
     `Tight win probabilities across the field suggest a highly competitive betting race.`,
-    `${top.toFixed(1)}% model confidence for the top pick indicates ${rsi>70?'a solid standout':'a contested affair'}.`,
-  ][Math.floor(Math.random()*6)];
-  const analysis=[
-    `${runners[0].horse} tops the model at ${runners[0].winPct}% with barrier ${runners[0].barrier} over ${distance}. Trainer and jockey combination rates highly in similar conditions. ${runners[1].horse} at ${runners[1].winPct}% is the principal danger and should be included in combination bets.`,
-    `This ${distance} ${type} shapes as a clash between ${runners[0].horse} and ${runners[1].horse}. The model gives ${runners[0].horse} a clear edge at ${runners[0].winPct}% but the RSI of ${rsi} suggests ${rsi>70?'a relatively predictable structure':'this is a harder race to assess'}. Best value runner ${bestValue} is rated ${runners.find(r=>r.horse===bestValue)?.value} at current market pricing.`,
-    `Model projects ${runners[0].horse} as the dominant force in this race, supported by barrier suitability and form consistency. At $${runners[0].marketOdds}, this runner is rated ${runners[0].value} relative to model fair odds of $${runners[0].fairOdds}. The ${condition} surface is factored into all runner scores.`,
-  ][Math.floor(Math.random()*3)];
-  return{raceNum:num,raceName:name,distance,raceType:type,condition,pace,rsi,runners,topRated,bestValue,riskFactor,analysis};
+    `Model shows ${runners[0].winPct.toFixed(1)}% confidence for the top selection — ${rsi > 70 ? 'solid standout' : 'open affair'}.`,
+    `${runners[0].horse} leads the model but the second pick is only ${(runners[0].winPct - runners[1].winPct).toFixed(1)}% behind.`,
+  ];
+  const riskFactor = riskOptions[Math.floor(Math.random() * riskOptions.length)];
+
+  const analyses = [
+    `${runners[0].horse} tops the model at ${runners[0].winPct}% with barrier ${runners[0].barrier} over ${distance}. The jockey-trainer combination rates highly in similar conditions. ${runners[1].horse} at ${runners[1].winPct}% is the principal danger and should be included in combination bets.`,
+    `This ${distance} ${type} shapes as a clash between ${runners[0].horse} and ${runners[1].horse}. The model gives ${runners[0].horse} a clear edge at ${runners[0].winPct}% and the RSI of ${rsi} suggests ${rsi > 70 ? 'a relatively stable structure' : 'this is an open affair'}. Best value runner ${bestValue} is rated ${runners.find(r => r.horse === bestValue)?.value} at current pricing.`,
+    `Model projects ${runners[0].horse} as the dominant force, supported by barrier suitability and form metrics. At $${runners[0].marketOdds}, this runner is rated ${runners[0].value} relative to model fair odds of $${runners[0].fairOdds}. The ${condition} surface is factored into all runner scores.`,
+  ];
+  const analysis = analyses[Math.floor(Math.random() * analyses.length)];
+
+  return { raceNum: num, raceName: name, distance, raceType: type, condition, pace, rsi, runners, topRated, bestValue, riskFactor, analysis };
 }
 
-function roundOdds(o){
-  if(o<3)return parseFloat(o.toFixed(2));
-  if(o<6)return Math.round(o*4)/4;
-  if(o<15)return Math.round(o*2)/2;
+function roundOdds(o) {
+  if (o < 3) return parseFloat(o.toFixed(2));
+  if (o < 6) return Math.round(o * 4) / 4;
+  if (o < 15) return Math.round(o * 2) / 2;
   return Math.round(o);
 }
 
-// ── INPUT DETECTION ───────────────────────────────────────────
-function detectMode(txt){
-  // Real data: has pipe chars, numbered list with numbers, multiple lines with numeric patterns
-  if(txt.includes('|'))return 'real';
-  if(txt.split('\n').filter(l=>l.trim()).length>3 && txt.match(/\d{1,2}\.\s+[A-Z]/))return 'real';
-  return 'sim';
+// ── LOCKS STATE ──────────────────────────────────────────────
+let allLocks = [];
+
+function updateLocksUI() {
+  const list  = document.getElementById('locks-list');
+  const count = document.getElementById('locks-count');
+  const empty = document.getElementById('locks-empty');
+  const engL  = document.getElementById('eng-locks');
+
+  if (engL) engL.textContent = allLocks.length;
+  if (count) {
+    count.textContent = allLocks.length;
+    count.classList.toggle('visible', allLocks.length > 0);
+  }
+
+  // Remove old lock items (keep empty placeholder)
+  Array.from(list.children).forEach(el => {
+    if (!el.classList.contains('lock-empty')) el.remove();
+  });
+
+  if (allLocks.length === 0) {
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+
+  if (empty) empty.style.display = 'none';
+
+  allLocks.forEach((lock, idx) => {
+    const div = document.createElement('div');
+    div.className = 'lock-item';
+    div.innerHTML = `
+      <div class="lock-horse"><span class="lock-horse-icon">🔒</span>${esc(lock.horse)}</div>
+      <div class="lock-meta">
+        <span class="lock-race">Race ${lock.raceNum} · ${esc(lock.distance)}</span>
+        <span class="lock-conf">Win% ${lock.winPct.toFixed(1)}% · RSI ${lock.rsi}</span>
+        <span class="lock-odds">Fair $${lock.fairOdds} · Mkt $${lock.marketOdds}</span>
+      </div>
+    `;
+    list.appendChild(div);
+    if (idx < allLocks.length - 1) {
+      const div2 = document.createElement('div');
+      div2.className = 'lock-divider';
+      list.appendChild(div2);
+    }
+  });
 }
 
-// ── UI STATE ──────────────────────────────────────────────────
-let busy=false;
-let pasteOpen=false;
+function extractLocks(meeting) {
+  const newLocks = [];
+  for (const race of meeting.races) {
+    const winner = race.runners.find(r => r.pos === 1);
+    if (winner && isLock(winner, race.runners.length, race.rsi)) {
+      newLocks.push({
+        horse:      winner.horse,
+        raceNum:    race.raceNum,
+        distance:   race.distance,
+        winPct:     winner.winPct,
+        fairOdds:   winner.fairOdds,
+        marketOdds: winner.marketOdds,
+        value:      winner.value,
+        rsi:        race.rsi,
+      });
+    }
+  }
+  // Replace locks for this session
+  allLocks = newLocks;
+  updateLocksUI();
+}
 
-const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-const scrollBot=()=>{const w=document.getElementById('msgs-wrap');w.scrollTop=w.scrollHeight};
-const hideWelcome=()=>{const w=document.getElementById('welcome');if(w)w.style.display='none'};
-
-function fillQ(t){document.getElementById('inp').value=t;onInput(document.getElementById('inp'));document.getElementById('inp').focus()}
-function hk(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submit()}}
-
-function onInput(el){
-  el.style.height='auto';el.style.height=Math.min(el.scrollHeight,200)+'px';
-  const mode=detectMode(el.value);
-  const dot=document.getElementById('mode-dot');
-  const txt=document.getElementById('mode-txt');
-  const clr=document.getElementById('clear-btn');
-  const eng=document.getElementById('eng-mode');
-  const engd=document.getElementById('eng-data');
-  if(mode==='real'){
-    el.classList.add('paste-mode');dot.className='imode-dot paste';
-    txt.textContent='REAL DATA MODE';
-    clr.style.display='block';
-    if(eng)eng.textContent='REAL DATA';if(eng)eng.className='sbv purple';
-    if(engd)engd.textContent='USER INPUT';if(engd)engd.className='sbv purple';
+// ── UI HELPERS ───────────────────────────────────────────────
+let busy = false, pasteOpen = false;
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const scrollBot = () => { const w = document.getElementById('msgs-wrap'); w.scrollTop = w.scrollHeight };
+const hideWelcome = () => { const w = document.getElementById('welcome'); if (w) w.style.display = 'none' };
+function fillQ(t) { document.getElementById('inp').value = t; onInput(document.getElementById('inp')); document.getElementById('inp').focus() }
+function hk(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submit() } }
+function onInput(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 200) + 'px';
+  const mode  = detectMode(el.value);
+  const dot   = document.getElementById('mode-dot');
+  const txt   = document.getElementById('mode-txt');
+  const clr   = document.getElementById('clear-btn');
+  const eng   = document.getElementById('eng-mode');
+  if (mode === 'real') {
+    el.classList.add('paste-mode');
+    dot.className = 'imode-dot paste'; txt.textContent = 'REAL DATA MODE';
+    clr.style.display = 'block';
+    if (eng) { eng.textContent = 'REAL DATA'; eng.className = 'sbv purple' }
   } else {
-    el.classList.remove('paste-mode');dot.className='imode-dot sim';
-    txt.textContent='SIMULATE MODE';
-    clr.style.display='none';
-    if(eng)eng.textContent='SIMULATE';if(eng)eng.className='sbv green';
-    if(engd)engd.textContent='INTERNAL';if(engd)engd.className='sbv green';
+    el.classList.remove('paste-mode');
+    dot.className = 'imode-dot sim'; txt.textContent = 'SIMULATE MODE';
+    clr.style.display = 'none';
+    if (eng) { eng.textContent = 'SIMULATE'; eng.className = 'sbv green' }
   }
 }
-
-function clearPaste(){document.getElementById('inp').value='';onInput(document.getElementById('inp'))}
-
-function togglePastePanel(){
-  pasteOpen=!pasteOpen;
-  document.getElementById('paste-panel').style.display=pasteOpen?'block':'none';
+function detectMode(txt) {
+  if (txt.includes('|')) return 'real';
+  if (txt.split('\n').filter(l => l.trim()).length > 3 && txt.match(/\d{1,2}[\.\)]\s+[A-Z]/)) return 'real';
+  return 'sim';
 }
+function clearPaste() { document.getElementById('inp').value = ''; onInput(document.getElementById('inp')) }
+function togglePastePanel() { pasteOpen = !pasteOpen; document.getElementById('paste-panel').style.display = pasteOpen ? 'block' : 'none' }
+function resetSession() { allLocks = []; updateLocksUI(); location.reload() }
 
-function loadPasteExample(){
-  const ex=`Race 1 — 1200m Maiden — Good 4 — Flemington
-1. Zoustyle | 3 | 56.5 | J. McDonald | C. Waller | 1-2-1-3-2 | 2.80
-2. Ayrton | 7 | 57.0 | D. Oliver | T. McEvoy | 3-1-2-1-4 | 3.50
-3. Broadsword | 1 | 58.0 | H. Coffey | G. Waterhouse | 2-1-3-2-1 | 5.00
-4. Lighthouse | 11 | 55.5 | T. Berry | D. Hayes | 5-3-4-2-3 | 9.00
-5. Crimson Edge | 5 | 57.5 | J. Bowman | P. Moody | 4-2-5-1-3 | 12.00
-6. Pacific Reign | 9 | 56.0 | K. McEvoy | M. Price | 6-4-3-5-2 | 15.00
-7. Viper King | 2 | 57.0 | B. Shinn | T. Dabernig | 7-6-5-4-6 | 26.00
-8. Storm Front | 14 | 56.5 | C. Williams | N. Burke | 8-7-5-6-7 | 34.00
+function loadPasteExample() {
+  const ex =
+`Race 1 — 1100m Quality 53 — Good 4 — Flemington
+1. Legacy Bound | 1 | 61 | Logan Bates | R. Griffiths | x-1-4-3-x | 3.00
+2. Shining Smile | 2 | 58.5 | Jackson Radley | B. Hayes | 5-4-3-8-x | 11.00
+3. Burma Star | 3 | 56.5 | Hugh Bowman | C. Waller | 1-2-1-6-x | 8.50
+4. Military Tycoon | 4 | 54.5 | D.W. Stackhouse | C. Maher | 9-6-x-2-7 | 4.60
+5. Go Left | 5 | 54 | Luke Cartwright | P. Moody | 1-1-2-x-x | 27.00
+6. Pure Passion | 6 | 54 | Z. Spain | P. Moody | 1-5-4-0-x | 51.00
+7. Vangogh Bankcheque | 7 | 54 | Jamie Melham | L. Kennewell | 1-3-x-x-x | 3.10
+8. Petit Artiste | 8 | 53 | Lachlan Neindorf | A. Yargi | 2-4-0-x-3 | 41.00
 
-Race 2 — 1400m BM78 — Good 4 — Flemington
-1. Midnight Blue | 4 | 58.5 | J. McDonald | C. Waller | 1-1-2-1-1 | 2.20
-2. Thunder Bay | 8 | 57.0 | H. Coffey | P. Snowden | 2-3-1-2-3 | 4.50
-3. Crystal Bay | 2 | 56.5 | D. Oliver | C. Maher | 3-2-4-1-2 | 6.00
-4. Coastal Dream | 12 | 55.5 | T. Berry | L. Maher | 4-5-3-4-5 | 11.00
-5. Iron Duke | 6 | 57.5 | J. Byrne | D. Hayes | 5-4-6-3-4 | 14.00
-6. Solar Flare | 10 | 56.0 | M. Dee | M. Moroney | 6-7-5-6-7 | 21.00`;
-  document.getElementById('inp').value=ex;
+Race 3 — 1000m Group 3 — Good 4 — Flemington
+1. Rebel Tuesday | 1 | 56 | Lachlan Neindorf | P. Stokes | 3-2-x-1-1 | 9.00
+2. Medicinal | 2 | 56 | Jamie Melham | B. Hayes | 6-1-x-x-x | 2.70
+3. Simply Steffi | 3 | 56 | Ben Melham | C. McDonald | 7-x-1-x-x | 7.50
+4. Scintillation | 4 | 56 | Jamie Mott | J. O'Shea | 1-x-x-x-x | 14.00
+5. Better Off Alone | 5 | 56 | Craig Williams | B. Baker | 7-x-x-x-x | 19.00
+6. Chapados | 6 | 56 | B. Egan | D. Sutton | x-x-x-x-x | 20.00
+7. Diamond Dawn | 7 | 56 | Z. Spain | P. Moody | x-x-x-x-x | 34.00
+8. Jadzia | 8 | 56 | Jordan Childs | G. Begg | x-x-x-x-x | 6.75
+9. Money Honey | 9 | 56 | J. Allen | A. Bobbin | x-x-x-x-x | 35.00
+10. Sanctuary | 10 | 56 | Thomas Stockdale | C. Maher | x-x-x-x-x | 4.80`;
+  document.getElementById('inp').value = ex;
   onInput(document.getElementById('inp'));
-  if(pasteOpen)togglePastePanel();
+  if (pasteOpen) togglePastePanel();
   document.getElementById('inp').focus();
 }
 
-// ── MESSAGE HELPERS ───────────────────────────────────────────
-function addUserMsg(t){
-  const preview=t.length>120?t.substring(0,120)+'…':t;
-  const d=document.createElement('div');d.className='msg mu';
-  d.innerHTML=`<div class="mwho">You</div><div class="bbu">${esc(preview)}</div>`;
-  document.getElementById('msgs').appendChild(d);scrollBot();
+// ── MESSAGE HELPERS ──────────────────────────────────────────
+function addUserMsg(t) {
+  const preview = t.length > 120 ? t.substring(0, 120) + '…' : t;
+  const d = document.createElement('div'); d.className = 'msg mu';
+  d.innerHTML = `<div class="mwho">You</div><div class="bbu">${esc(preview)}</div>`;
+  document.getElementById('msgs').appendChild(d); scrollBot();
 }
-
 let stepInt;
-function addStepMsg(steps,isReal){
-  const d=document.createElement('div');d.className='msg ma';d.id='step-msg';
-  d.innerHTML=`<div class="mwho">Betrich</div><div class="bba ${isReal?'bba-paste':''}" style="padding:16px 20px"><div class="proc" id="proc"></div></div>`;
-  document.getElementById('msgs').appendChild(d);scrollBot();
-  let i=0;const cont=document.getElementById('proc');
-  function next(){
-    if(i>=steps.length)return;
-    const row=document.createElement('div');row.className='prow';row.style.animationDelay=(i*.22)+'s';
-    row.innerHTML=`<div class="pico">${i===0?'⚡':i===steps.length-1?'⏳':'›'}</div>${esc(steps[i])}`;
-    cont.appendChild(row);i++;scrollBot();
+function addStepMsg(steps, isReal) {
+  const d = document.createElement('div'); d.className = 'msg ma'; d.id = 'step-msg';
+  d.innerHTML = `<div class="mwho">Betrich</div><div class="bba ${isReal ? 'bba-paste' : ''}" style="padding:16px 20px"><div class="proc" id="proc"></div></div>`;
+  document.getElementById('msgs').appendChild(d); scrollBot();
+  let i = 0;
+  const cont = document.getElementById('proc');
+  function next() {
+    if (i >= steps.length) return;
+    const row = document.createElement('div'); row.className = 'prow'; row.style.animationDelay = (i * .22) + 's';
+    row.innerHTML = `<div class="pico">${i === 0 ? '⚡' : i === steps.length - 1 ? '⏳' : '›'}</div>${esc(steps[i])}`;
+    cont.appendChild(row); i++; scrollBot();
   }
-  next();stepInt=setInterval(next,320);
+  next(); stepInt = setInterval(next, 320);
 }
-function rmStep(){clearInterval(stepInt);const t=document.getElementById('step-msg');if(t)t.remove()}
-
-function addAIMsg(html,isReal){
-  const d=document.createElement('div');d.className='msg ma';
-  d.innerHTML=`<div class="mwho">Betrich</div><div class="bba ${isReal?'bba-paste':''}">${html}</div>`;
-  document.getElementById('msgs').appendChild(d);scrollBot();
+function rmStep() { clearInterval(stepInt); const t = document.getElementById('step-msg'); if (t) t.remove() }
+function addAIMsg(html, isReal) {
+  const d = document.createElement('div'); d.className = 'msg ma';
+  d.innerHTML = `<div class="mwho">Betrich</div><div class="bba ${isReal ? 'bba-paste' : ''}">${html}</div>`;
+  document.getElementById('msgs').appendChild(d); scrollBot();
 }
 
-// ── SUBMIT ────────────────────────────────────────────────────
-function submit(){
-  if(busy)return;
-  const inp=document.getElementById('inp');
-  const txt=inp.value.trim();if(!txt)return;
-  busy=true;inp.value='';onInput(inp);
-  document.getElementById('sbtn').disabled=true;
+// ── SUBMIT ───────────────────────────────────────────────────
+function submit() {
+  if (busy) return;
+  const inp = document.getElementById('inp');
+  const txt = inp.value.trim(); if (!txt) return;
+  busy = true; inp.value = ''; onInput(inp);
+  document.getElementById('sbtn').disabled = true;
   hideWelcome();
-  const mode=detectMode(txt);
-  const isReal=mode==='real';
+  const isReal = detectMode(txt) === 'real';
   addUserMsg(txt);
 
-  const steps=isReal?[
+  const steps = isReal ? [
     'Detecting pasted race data...',
-    'Parsing horse names, barriers, weights...',
+    'Parsing horse names, barriers and weights...',
     'Reading jockey and trainer assignments...',
     'Extracting market odds...',
     'Running barrier advantage calculations...',
-    'Applying weight penalty modeling...',
+    'Applying weight penalty model...',
     'Computing form consistency scores...',
     'Calculating probabilistic win percentages...',
-    'Generating RSI and value ratings...',
-    'Rendering complete race card...',
-  ]:[
+    'Computing dynamic RSI scores...',
+    'Detecting high-confidence locks...',
+    'Rendering race card...',
+  ] : [
     'Parsing race meeting request...',
-    'Seeding race generation engine...',
-    'Building simulated field entries...',
-    'Running barrier & weight model...',
+    'Seeding generation engine...',
+    'Building simulated field...',
+    'Running barrier and weight model...',
     'Calculating win probabilities...',
-    'Scoring RSI and value ratings...',
+    'Computing dynamic RSI scores...',
+    'Detecting high-confidence locks...',
     'Rendering race card...',
   ];
 
-  addStepMsg(steps,isReal);
+  addStepMsg(steps, isReal);
 
-  const delay=1600+steps.length*260;
-  setTimeout(()=>{
+  setTimeout(() => {
     rmStep();
-    let meeting=null;
-    let errorMsg=null;
-    try{
-      if(isReal){
-        meeting=parseRealData(txt);
-        if(!meeting)throw new Error('Could not detect valid race runner data. Please check the format — each runner needs a name, barrier, weight and odds separated by | characters.');
+    let meeting = null, errorMsg = null;
+    try {
+      if (isReal) {
+        meeting = parseRealData(txt);
+        if (!meeting) throw new Error('Could not detect valid runner data. Use the format:\n\nRace 1 — 1200m BM78 — Good 4 — Track\n1. Horse Name | Barrier | Weight | Jockey | Trainer | Form | Odds');
       } else {
-        const mMatch=txt.match(/model\s+(\w+)/i);
-        const track=mMatch?mMatch[1]:'Flemington';
-        const dMatch=txt.match(/(\d+)(st|nd|rd|th)?\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*/i);
-        const date=dMatch?`${dMatch[1]} ${dMatch[3]} 2025`:'Saturday';
-        meeting=simulateMeeting(track,date);
+        const mM = txt.match(/model\s+(\w+)/i);
+        const track = mM ? mM[1] : 'Flemington';
+        const dM = txt.match(/(\d+)(st|nd|rd|th)?\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*/i);
+        const date = dM ? `${dM[1]} ${dM[3]} 2025` : 'Saturday';
+        meeting = simulateMeeting(track, date);
       }
-    }catch(e){errorMsg=e.message}
+    } catch(e) { errorMsg = e.message }
 
-    if(errorMsg){
-      addAIMsg(`<div class="err">⚠ ${esc(errorMsg)}</div>`,isReal);
+    if (errorMsg) {
+      addAIMsg(`<div class="err">⚠ ${esc(errorMsg)}</div>`, isReal);
     } else {
-      addAIMsg(renderMeeting(meeting),isReal);
-      const m=txt.match(/model\s+(\w+)/i);
-      if(m){const l=document.getElementById('cur-lbl');if(l)l.textContent=m[1]}
-      else if(isReal){const l=document.getElementById('cur-lbl');if(l)l.textContent='Real Data'}
+      // Extract locks BEFORE rendering
+      extractLocks(meeting);
+      addAIMsg(renderMeeting(meeting), isReal);
+      const m = txt.match(/model\s+(\w+)/i);
+      const lbl = document.getElementById('cur-lbl');
+      if (lbl) lbl.textContent = m ? m[1] : (isReal ? 'Real Data' : 'Session');
     }
-    busy=false;document.getElementById('sbtn').disabled=false;inp.focus();scrollBot();
-  },delay);
+    busy = false;
+    document.getElementById('sbtn').disabled = false;
+    inp.focus(); scrollBot();
+  }, 1600 + steps.length * 260);
 }
 
-// ── RENDER ────────────────────────────────────────────────────
-function renderMeeting(m){
-  const isReal=m.mode==='real';
-  let h='';
-  h+=`<div class="rctop">
+// ── RENDER MEETING ───────────────────────────────────────────
+function renderMeeting(m) {
+  const isReal = m.mode === 'real';
+  let h = '';
+
+  h += `<div class="rctop">
     <div>
       <div class="rctitle">🏇 ${esc(m.track)}</div>
       <div class="rcdate">${esc(m.date)} · Track: ${esc(m.condition)}</div>
     </div>
-    <span class="rcpill ${isReal?'real':'sim'}">${m.races.length} RACES ${isReal?'· REAL DATA':'· SIMULATED'}</span>
+    <span class="rcpill ${isReal ? 'real' : 'sim'}">${m.races.length} RACES ${isReal ? '· REAL DATA' : '· SIMULATED'}</span>
   </div>
-  <div class="data-badge ${isReal?'real':'sim'}">${isReal?'⚡ User-provided real race data — modeled by Betrich engine':'🎲 Fully simulated by Betrich internal engine'}</div>`;
+  <div class="data-badge ${isReal ? 'real' : 'sim'}">${isReal ? '⚡ User-provided real race data — modeled by Betrich engine' : '🎲 Fully simulated by Betrich internal engine'}</div>`;
 
-  for(const race of m.races){
-    const rsi=Math.max(40,Math.min(95,+race.rsi||65));
-    const rc=rsi>=75?'rh':rsi>=58?'rm':'rl';
-    const rcol=rsi>=75?'var(--green)':rsi>=58?'var(--amber)':'var(--red)';
-    h+=`<div class="rb">
+  for (const race of m.races) {
+    const rsi    = race.rsi;
+    const rc     = rsi >= 75 ? 'rh' : rsi >= 58 ? 'rm' : 'rl';
+    const rcol   = rsi >= 75 ? 'var(--green)' : rsi >= 58 ? 'var(--amber)' : 'var(--red)';
+    const rsiLbl = rsi >= 75 ? 'STABLE' : rsi >= 58 ? 'MODERATE' : 'VOLATILE';
+
+    // Check if this race has a lock
+    const raceLock = allLocks.find(l => l.raceNum === race.raceNum);
+
+    h += `<div class="rb">
       <div class="rbh">
         <span class="rnum">RACE ${race.raceNum}</span>
         <span class="rnm">${esc(race.raceName)}</span>
@@ -808,18 +968,20 @@ function renderMeeting(m){
           <span class="tag td">${esc(race.distance)}</span>
           <span class="tag tt">${esc(race.raceType)}</span>
           <span class="tag tc">${esc(race.condition)}</span>
-          ${isReal?'<span class="tag treal">REAL DATA</span>':''}
+          ${isReal ? '<span class="tag treal">REAL</span>' : ''}
+          ${raceLock ? '<span class="tag tlock">🔒 LOCK</span>' : ''}
         </div>
       </div>
       <div class="rbstats">
-        <div class="stat"><span class="sl2">Pace</span><span class="sv">${esc(race.pace)}</span></div>
-        <div class="stat"><span class="sl2">RSI</span>
+        <div class="stat"><span class="slbl">Pace</span><span class="sval">${esc(race.pace)}</span></div>
+        <div class="stat"><span class="slbl">RSI Score</span>
           <div class="rsirow ${rc}">
-            <span class="sv" style="color:${rcol}">${rsi}</span>
+            <span class="sval" style="color:${rcol}">${rsi}</span>
             <div class="rsibar"><div class="rsifill" style="width:${rsi}%"></div></div>
+            <span class="rsi-label">${rsiLbl}</span>
           </div>
         </div>
-        <div class="stat"><span class="sl2">Field</span><span class="sv">${race.runners.length} runners</span></div>
+        <div class="stat"><span class="slbl">Field</span><span class="sval">${race.runners.length} runners</span></div>
       </div>
       <div class="tscroll"><table class="rt"><thead><tr>
         <th style="width:32px">POS</th><th>Horse</th><th>BRR</th><th>WGT</th>
@@ -827,41 +989,49 @@ function renderMeeting(m){
         <th>Mkt $</th><th>Win%</th><th>Fair $</th><th>Value</th>
       </tr></thead><tbody>`;
 
-    for(const r of race.runners){
-      const p=+r.pos;
-      const pc=p===1?'p1':p===2?'p2':p===3?'p3':'';
-      const nc=p===1?(isReal?'hn real':'hn fav'):'hn';
-      const mk=p===1?' ★':'';
-      const vl=(r.value||'').toLowerCase();
-      const vc=vl==='overs'?'vo':vl==='unders'?'vu':'vf';
-      h+=`<tr>
+    for (const r of race.runners) {
+      const p    = +r.pos;
+      const pc   = p === 1 ? 'p1' : p === 2 ? 'p2' : p === 3 ? 'p3' : '';
+      const isLockHorse = raceLock && r.horse === raceLock.horse;
+      const nc   = isLockHorse ? 'hn lock' : p === 1 ? (isReal ? 'hn real' : 'hn fav') : 'hn';
+      const mk   = isLockHorse ? ' 🔒' : p === 1 ? ' ★' : '';
+      const vl   = (r.value || '').toLowerCase();
+      const vc   = vl === 'overs' ? 'vo' : vl === 'unders' ? 'vu' : 'vf';
+      const rowClass = isLockHorse ? 'lock-row' : '';
+      h += `<tr class="${rowClass}">
         <td class="pc ${pc}">${p}</td>
         <td><span class="${nc}">${esc(r.horse)}${mk}</span></td>
-        <td class="mn">${r.barrier||'–'}</td>
-        <td class="mn">${esc(r.weight||'–')}</td>
-        <td style="font-size:11px;color:var(--muted)">${esc(r.jockey||'–')}</td>
-        <td style="font-size:11px;color:var(--muted)">${esc(r.trainer||'–')}</td>
-        <td><span class="fs">${esc(r.form||'–')}</span></td>
-        <td class="mn">$${(+r.marketOdds||0).toFixed(2)}</td>
-        <td class="mnb">${(+r.winPct||0).toFixed(1)}%</td>
-        <td class="mn">$${(+r.fairOdds||0).toFixed(2)}</td>
-        <td><span class="vb ${vc}">${esc(r.value||'–')}</span></td>
+        <td class="mn">${r.barrier || '–'}</td>
+        <td class="mn">${esc(r.weight || '–')}</td>
+        <td style="font-size:11px;color:var(--muted)">${esc(r.jockey || '–')}</td>
+        <td style="font-size:11px;color:var(--muted)">${esc(r.trainer || '–')}</td>
+        <td><span class="fs">${esc(r.form || '–')}</span></td>
+        <td class="mn">$${(+r.marketOdds || 0).toFixed(2)}</td>
+        <td class="mnb">${(+r.winPct || 0).toFixed(1)}%</td>
+        <td class="mn">$${(+r.fairOdds || 0).toFixed(2)}</td>
+        <td><span class="vb ${vc}">${esc(r.value || '–')}</span></td>
       </tr>`;
     }
-    h+=`</tbody></table></div>
+
+    h += `</tbody></table></div>
       <div class="rbs">
         <div class="scrow">
-          <div class="sc"><div class="ico">🏆</div><div class="lbl">Top Rated</div><div class="val">${esc(race.topRated||'–')}</div><div class="sub">Model #1 selection</div></div>
-          <div class="sc"><div class="ico">📊</div><div class="lbl">Best Value</div><div class="val">${esc(race.bestValue||'–')}</div><div class="sub">Price above fair odds</div></div>
+          <div class="sc"><div class="ico">🏆</div><div class="lbl">Top Rated</div><div class="val">${esc(race.topRated || '–')}</div><div class="sub">Model #1 selection</div></div>
+          <div class="sc"><div class="ico">📊</div><div class="lbl">Best Value</div><div class="val">${esc(race.bestValue || '–')}</div><div class="sub">Price above fair odds</div></div>
+          ${raceLock ? `<div class="sc lock-sc"><div class="ico">🔒</div><div class="lbl">Lock Pick</div><div class="val">${esc(raceLock.horse)}</div><div class="sub">Win% ${raceLock.winPct.toFixed(1)} · RSI ${raceLock.rsi}</div></div>` : ''}
         </div>
-        ${race.riskFactor?`<div class="riskbox"><b>⚠ Volatility:</b> ${esc(race.riskFactor)}</div>`:''}
-        ${race.analysis?`<p class="atxt">${esc(race.analysis)}</p>`:''}
+        ${race.riskFactor ? `<div class="riskbox"><b>⚠ Volatility:</b> ${esc(race.riskFactor)}</div>` : ''}
+        ${race.analysis ? `<p class="atxt">${esc(race.analysis)}</p>` : ''}
       </div>
     </div>`;
   }
-  h+=`<p class="disc">Betrich uses ${isReal?'user-provided race data':'simulated race data'} and internal modeling logic. Not betting advice.</p>`;
+
+  h += `<p class="disc">Betrich uses ${isReal ? 'user-provided race data' : 'simulated race data'} and internal modeling logic. Not betting advice.</p>`;
   return h;
 }
+
+// Init locks UI
+updateLocksUI();
 </script>
 </body>
 </html>
