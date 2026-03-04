@@ -121,6 +121,49 @@ body::after {
 .topbar-right {
   display: flex; align-items: center; gap: 16px;
 }
+/* ── API KEY SETUP ── */
+.key-bar {
+  background: linear-gradient(135deg, rgba(200,153,31,.08), rgba(200,153,31,.04));
+  border-bottom: 1px solid rgba(200,153,31,.18);
+  padding: 10px 40px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.key-bar.hidden { display: none; }
+.key-bar-label {
+  font-size: 11px; letter-spacing: 1.5px; font-weight: 600;
+  color: var(--gold); text-transform: uppercase; white-space: nowrap; flex-shrink: 0;
+}
+.key-bar-sub { font-size: 11px; color: var(--text-3); flex-shrink: 0; }
+.key-bar-sub a { color: var(--gold); text-decoration: none; opacity: .8; }
+.key-bar-sub a:hover { opacity: 1; }
+.key-inp {
+  flex: 1; min-width: 220px; max-width: 380px;
+  background: rgba(0,0,0,.35); border: 1px solid var(--wire3);
+  border-radius: var(--r-sm); color: var(--text);
+  padding: 7px 14px; font-family: var(--font-data); font-size: 12px; letter-spacing: .5px;
+  outline: none; transition: border-color .2s;
+}
+.key-inp:focus { border-color: var(--gold); }
+.key-inp::placeholder { color: var(--text-3); letter-spacing: 0; font-family: var(--font-ui); font-size: 11px; }
+.key-save-btn {
+  padding: 7px 18px; background: linear-gradient(135deg, var(--gold-hi), var(--gold));
+  border: none; border-radius: var(--r-sm); color: var(--ink);
+  font-family: var(--font-ui); font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  transition: filter .2s;
+}
+.key-save-btn:hover { filter: brightness(1.1); }
+.key-status { font-size: 11px; white-space: nowrap; }
+.key-status.ok { color: var(--green); }
+.key-status.err { color: var(--red); }
+.key-dismiss {
+  margin-left: auto; font-size: 10px; letter-spacing: 1px; font-weight: 600;
+  color: var(--text-3); cursor: pointer; text-transform: uppercase;
+  padding: 4px 8px; border-radius: 4px; flex-shrink: 0;
+  transition: color .2s;
+}
+.key-dismiss:hover { color: var(--text); }
+
 .live-pill {
   display: flex; align-items: center; gap: 7px;
   font-size: 10px; letter-spacing: 1.5px; font-weight: 600;
@@ -702,6 +745,16 @@ table.htable tbody td.c { text-align: center; vertical-align: middle; }
   </div>
 </header>
 
+<!-- ═══ API KEY BAR ═══ -->
+<div class="key-bar" id="keyBar">
+  <span class="key-bar-label">⚙ API Key</span>
+  <span class="key-bar-sub">Get a free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys</span>
+  <input id="keyInp" class="key-inp" type="password" placeholder="Paste your Anthropic API key:  sk-ant-api03-..." autocomplete="off" spellcheck="false"/>
+  <button class="key-save-btn" onclick="saveKey()">Save Key</button>
+  <span class="key-status" id="keyStatus"></span>
+  <span class="key-dismiss" onclick="dismissKeyBar()" title="Hide (key already saved)">✕ Hide</span>
+</div>
+
 <div class="page">
 
   <!-- ═══ HOME ═══ -->
@@ -841,6 +894,43 @@ const QUICK_TRACKS = [
 ];
 
 /* ════════════════════════════════════════════════
+   API KEY MANAGEMENT
+════════════════════════════════════════════════ */
+const STORAGE_KEY = 'betrich_api_key';
+
+function getKey() { return localStorage.getItem(STORAGE_KEY) || ''; }
+
+function saveKey() {
+  const val = document.getElementById('keyInp').value.trim();
+  if (!val) { setKeyStatus('Enter your key first', 'err'); return; }
+  if (!val.startsWith('sk-')) { setKeyStatus('Key should start with sk-ant-…', 'err'); return; }
+  localStorage.setItem(STORAGE_KEY, val);
+  document.getElementById('keyInp').value = '';
+  setKeyStatus('✓ Key saved!', 'ok');
+  setTimeout(() => document.getElementById('keyBar').classList.add('hidden'), 1400);
+}
+
+function setKeyStatus(msg, cls) {
+  const el = document.getElementById('keyStatus');
+  el.textContent = msg; el.className = 'key-status ' + cls;
+}
+
+function dismissKeyBar() {
+  document.getElementById('keyBar').classList.add('hidden');
+}
+
+function initKeyBar() {
+  const k = getKey();
+  if (k) {
+    // Key already saved — show a small indicator and hide the full bar
+    document.getElementById('keyBar').classList.add('hidden');
+  } else {
+    // No key yet — show the bar
+    document.getElementById('keyBar').classList.remove('hidden');
+  }
+}
+
+/* ════════════════════════════════════════════════
    INIT
 ════════════════════════════════════════════════ */
 document.getElementById('topDate').textContent = new Date()
@@ -865,6 +955,11 @@ QUICK_TRACKS.forEach(track => {
 document.getElementById('cmdInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') runAnalysis();
 });
+document.getElementById('keyInp').addEventListener('keydown', e => {
+  if (e.key === 'Enter') saveKey();
+});
+
+initKeyBar();
 
 function nextSaturday() {
   const d = new Date();
@@ -1097,9 +1192,18 @@ async function callClaude(messages, system, useSearch = false) {
   const body = { model: AI_MODEL, max_tokens: MAX_TOKENS, system, messages };
   if (useSearch) body.tools = [{ type: 'web_search_20250305', name: 'web_search' }];
 
+  // Build headers — include key if one is saved (required when hosted outside Claude.ai)
+  const headers = { 'Content-Type': 'application/json' };
+  const savedKey = getKey();
+  if (savedKey) {
+    headers['x-api-key'] = savedKey;
+    headers['anthropic-version'] = '2023-06-01';
+    headers['anthropic-dangerous-direct-browser-access'] = 'true';
+  }
+
   const res = await fetch(API_ENDPOINT, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(body)
   });
 
@@ -1107,6 +1211,17 @@ async function callClaude(messages, system, useSearch = false) {
     let msg = '';
     try { const j = await res.json(); msg = j.error?.message || JSON.stringify(j); }
     catch (_) { msg = await res.text(); }
+    // If 401, prompt user to re-enter key
+    if (res.status === 401) {
+      localStorage.removeItem(STORAGE_KEY);
+      document.getElementById('keyBar').classList.remove('hidden');
+      setKeyStatus('Key invalid or expired — please re-enter', 'err');
+      throw new Error('API key invalid or expired. Please enter a valid key in the bar at the top of the page.');
+    }
+    if (res.status === 402 || (msg && msg.toLowerCase().includes('credit'))) {
+      document.getElementById('keyBar').classList.remove('hidden');
+      throw new Error('Your API key has run out of credits. Top up at console.anthropic.com → Plans & Billing.');
+    }
     throw new Error(`API ${res.status}: ${msg}`);
   }
 
@@ -1116,9 +1231,7 @@ async function callClaude(messages, system, useSearch = false) {
   // Collect ALL text regardless of block type
   let text = '';
   for (const block of (json.content || [])) {
-    if (block.type === 'text') {
-      text += block.text + '\n';
-    }
+    if (block.type === 'text') text += block.text + '\n';
   }
   return text.trim();
 }
@@ -1403,9 +1516,8 @@ Compile everything into detailed research notes.`;
         <div style="font-size:15px;color:var(--red);font-weight:600;margin-bottom:12px">⚠ Unable to complete analysis</div>
         <div><b style="color:var(--text)">Error:</b> ${err.message}</div>
         <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--wire)">
-          <b style="color:var(--gold)">This platform is designed to run inside Claude.ai</b><br/>
-          The AI uses Claude's built-in API access — no separate key is required when running here.<br/>
-          To host independently, you would need an Anthropic API key with active credits at <b>console.anthropic.com</b>
+          <b style="color:var(--gold)">Fix:</b> Enter your Anthropic API key in the bar at the top of the page.<br/>
+          Get a free key at <b>console.anthropic.com</b> → API Keys. Your key is stored in your browser only.
         </div>
       </div>`;
     document.getElementById('sourcesRow').classList.add('hidden');
