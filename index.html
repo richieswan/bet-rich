@@ -5,203 +5,230 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Betrich — AI Racing Model</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#07090c;--bg1:#0c0e12;--bg2:#111419;--bg3:#171b22;
-  --panel:#1c2029;--border:#252a35;--border2:#2f3545;
-  --text:#e2e8f4;--text2:#aab2c4;--muted:#64718a;--dim:#363d50;
-  --green:#00e8a0;--g2:#00c488;--g3:#009e70;
-  --gbg:rgba(0,232,160,.08);--gbdr:rgba(0,232,160,.2);
-  --red:#ff4f6b;--rbg:rgba(255,79,107,.08);--rbdr:rgba(255,79,107,.2);
-  --amber:#ffb230;--abg:rgba(255,178,48,.08);--abdr:rgba(255,178,48,.2);
-  --blue:#5598ff;--bbg:rgba(85,152,255,.1);--bbdr:rgba(85,152,255,.2);
-  --r:10px;--r2:14px;
+  --bg:#07090c;--bg1:#0b0e13;--bg2:#10141a;--bg3:#161b23;
+  --panel:#1b2029;--border:#242b38;--border2:#2e3748;
+  --text:#e0e8f6;--t2:#a8b4ca;--muted:#5e6d87;--dim:#333d52;
+  --green:#00e89a;--g2:#00c482;--g3:#009e69;
+  --gbg:rgba(0,232,154,.08);--gbdr:rgba(0,232,154,.2);
+  --red:#ff4d68;--rbg:rgba(255,77,104,.08);--rbdr:rgba(255,77,104,.22);
+  --amber:#ffb22e;--abg:rgba(255,178,46,.08);--abdr:rgba(255,178,46,.22);
+  --blue:#4f96ff;--bbg:rgba(79,150,255,.09);--bbdr:rgba(79,150,255,.22);
+  --purple:#a78bfa;--pbg:rgba(167,139,250,.1);--pbdr:rgba(167,139,250,.22);
+  --r:10px;--r2:14px;--r3:18px;
 }
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;line-height:1.6}
 
-/* Grid atmosphere */
+/* Atmosphere */
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:linear-gradient(rgba(0,232,160,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(0,232,160,.018) 1px,transparent 1px);
-  background-size:55px 55px;
-  mask-image:radial-gradient(ellipse 90% 55% at 50% 0%,black 0%,transparent 100%)}
+  background-image:linear-gradient(rgba(0,232,154,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(0,232,154,.015) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(ellipse 100% 45% at 50% 0%,black 0%,transparent 100%)}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 60% 40% at 50% -5%,rgba(0,232,154,.035) 0%,transparent 70%)}
 
 #app{display:flex;flex-direction:column;height:100vh;position:relative;z-index:1}
 
 /* ── HEADER ── */
-#hdr{
-  display:flex;align-items:center;justify-content:space-between;
-  height:54px;padding:0 20px;flex-shrink:0;
-  background:rgba(7,9,12,.95);backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--border);
-}
+#hdr{display:flex;align-items:center;justify-content:space-between;height:55px;padding:0 20px;flex-shrink:0;background:rgba(7,9,12,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
 .logo{display:flex;align-items:center;gap:11px}
-.logo-icon{
-  width:34px;height:34px;border-radius:8px;
-  background:linear-gradient(135deg,var(--green),var(--g2));
-  display:flex;align-items:center;justify-content:center;
-  font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:13px;color:#000;
-  box-shadow:0 0 20px rgba(0,232,160,.28);flex-shrink:0;
-}
-.logo-text{display:flex;flex-direction:column}
-.logo-name{font-weight:800;font-size:15px;letter-spacing:-.25px;line-height:1}
-.logo-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--green);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
-.hdr-right{display:flex;align-items:center;gap:10px}
-.engine-tag{
-  display:flex;align-items:center;gap:6px;
-  background:var(--gbg);border:1px solid var(--gbdr);
-  border-radius:20px;padding:4px 11px;
-}
-.etag-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);animation:pulse 2.2s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
-.etag-txt{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--green);letter-spacing:.07em}
-.ver-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.06em;background:var(--bg3);border:1px solid var(--border);padding:3px 8px;border-radius:5px}
+.lmark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--green),var(--g2));display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:13px;color:#000;box-shadow:0 0 24px rgba(0,232,154,.28);flex-shrink:0}
+.ltxt{display:flex;flex-direction:column}
+.lname{font-weight:800;font-size:15.5px;letter-spacing:-.3px;line-height:1}
+.lsub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--green);letter-spacing:.13em;text-transform:uppercase;margin-top:2px}
+.hdr-r{display:flex;align-items:center;gap:8px}
+.eng-pill{display:flex;align-items:center;gap:6px;background:var(--gbg);border:1px solid var(--gbdr);border-radius:20px;padding:4px 11px}
+.epulse{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);animation:blink 2.2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.etxt{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--green);letter-spacing:.07em}
+.paste-btn{display:flex;align-items:center;gap:6px;background:var(--pbg);border:1px solid var(--pbdr);border-radius:7px;padding:5px 12px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--purple);letter-spacing:.05em;transition:all .2s}
+.paste-btn:hover{background:rgba(167,139,250,.15);border-color:rgba(167,139,250,.35)}
 
-/* ── BODY ── */
-#body-wrap{display:flex;flex:1;overflow:hidden}
+/* ── LAYOUT ── */
+#layout{display:flex;flex:1;overflow:hidden}
 
 /* ── SIDEBAR ── */
-#side{width:212px;flex-shrink:0;border-right:1px solid var(--border);padding:14px 11px;display:flex;flex-direction:column;gap:3px;overflow-y:auto;background:rgba(7,9,12,.5)}
+#side{width:214px;flex-shrink:0;border-right:1px solid var(--border);padding:14px 11px;display:flex;flex-direction:column;gap:3px;overflow-y:auto}
 @media(max-width:680px){#side{display:none}}
-.side-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);padding:4px 8px;margin-top:4px}
-.side-btn{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;color:var(--muted);font-size:12px;cursor:pointer;transition:all .15s;border:1px solid transparent}
-.side-btn:hover{background:var(--bg3);color:var(--text2);border-color:var(--border)}
-.side-btn.active{background:var(--gbg);color:var(--green);border-color:var(--gbdr)}
-.side-ico{font-size:12px;flex-shrink:0}
-.side-foot{margin-top:auto}
-.side-new{width:100%;background:var(--green);color:#000;border:none;border-radius:8px;padding:9px;font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:background .18s}
-.side-new:hover{background:var(--g2)}
-.side-stats{margin-top:10px;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px}
-.side-stat-row{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
-.side-stat-row:last-child{margin-bottom:0}
-.side-stat-lbl{color:var(--muted)}
-.side-stat-val{font-family:'IBM Plex Mono',monospace;color:var(--green);font-size:10px}
+.sl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);padding:2px 8px;margin:6px 0 3px}
+.sitem{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;color:var(--muted);font-size:12px;cursor:pointer;transition:all .15s;border:1px solid transparent}
+.sitem:hover{background:var(--bg3);color:var(--t2);border-color:var(--border)}
+.sitem.active{background:var(--gbg);color:var(--green);border-color:var(--gbdr)}
+.sitem-paste{background:var(--pbg);color:var(--purple);border-color:var(--pbdr)}
+.sitem-paste:hover{background:rgba(167,139,250,.14);border-color:rgba(167,139,250,.3)}
+.side-box{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:11px 12px;margin-top:4px}
+.sbrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:11px}
+.sbrow:last-child{margin-bottom:0}
+.sbk{color:var(--muted)}
+.sbv{font-family:'IBM Plex Mono',monospace;font-size:10px}
+.green{color:var(--green)}.red{color:var(--red)}.amber{color:var(--amber)}.purple{color:var(--purple)}
+.sfoot{margin-top:auto;padding-top:10px;display:flex;flex-direction:column;gap:6px}
+.snew{background:var(--green);color:#000;border:none;border-radius:8px;padding:9px;font-weight:700;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .18s}
+.snew:hover{background:var(--g2)}
 
 /* ── CHAT ── */
 #chat-col{flex:1;display:flex;flex-direction:column;overflow:hidden}
-#msgs-scroll{flex:1;overflow-y:auto;padding:28px 20px 14px;scroll-behavior:smooth}
-#msgs-scroll::-webkit-scrollbar{width:3px}
-#msgs-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
-#msgs{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+#msgs-wrap{flex:1;overflow-y:auto;padding:28px 20px 14px;scroll-behavior:smooth}
+#msgs-wrap::-webkit-scrollbar{width:3px}
+#msgs-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+#msgs{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
 
 /* WELCOME */
-#welcome{animation:riseIn .5s ease}
-@keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.wlc{text-align:center;padding:40px 0 30px}
-.wlc-chip{display:inline-flex;align-items:center;gap:7px;background:var(--gbg);border:1px solid var(--gbdr);border-radius:20px;padding:5px 13px;margin-bottom:18px}
-.wlc-chip span{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--green);letter-spacing:.08em}
+#welcome{animation:rise .5s ease}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.wlc{text-align:center;padding:38px 0 28px}
+.wchip{display:inline-flex;align-items:center;gap:7px;background:var(--gbg);border:1px solid var(--gbdr);border-radius:20px;padding:5px 13px;margin-bottom:16px}
+.wchip span{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--green);letter-spacing:.08em}
 .wlc h1{font-weight:800;font-size:27px;letter-spacing:-.6px;line-height:1.2;margin-bottom:10px}
 .wlc h1 em{font-style:normal;color:var(--green)}
-.wlc p{color:var(--muted);font-size:13px;max-width:370px;margin:0 auto 30px}
-.wlc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px;max-width:580px;margin:0 auto}
-.wlc-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:13px 15px;text-align:left;cursor:pointer;transition:all .2s}
-.wlc-card:hover{border-color:var(--green);background:var(--gbg);transform:translateY(-2px)}
-.wlc-card .ci{font-size:17px;margin-bottom:7px}
-.wlc-card .ct{font-weight:600;font-size:12px;margin-bottom:2px}
-.wlc-card .cs{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)}
+.wsub{color:var(--muted);font-size:13px;max-width:420px;margin:0 auto 28px;line-height:1.65}
+.wmodes{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:560px;margin:0 auto 14px}
+.wmode{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;text-align:left;cursor:pointer;transition:all .2s}
+.wmode:hover{transform:translateY(-2px)}
+.wmode.sim:hover{border-color:var(--green);background:var(--gbg)}
+.wmode.paste:hover{border-color:var(--purple);background:var(--pbg)}
+.wmode .mico{font-size:20px;margin-bottom:8px}
+.wmode .mtit{font-weight:700;font-size:13px;margin-bottom:4px}
+.wmode .mdesc{font-size:11.5px;color:var(--muted);line-height:1.5}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:8px;max-width:560px;margin:0 auto}
+.wcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:12px 14px;text-align:left;cursor:pointer;transition:all .2s}
+.wcard:hover{border-color:var(--green);background:var(--gbg);transform:translateY(-2px)}
+.wcard .wi{font-size:16px;margin-bottom:6px}
+.wcard .wt{font-weight:600;font-size:12px;margin-bottom:2px}
+.wcard .ws{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)}
 
 /* MESSAGES */
-.msg{display:flex;flex-direction:column;animation:riseIn .22s ease}
-.msg-user{align-items:flex-end}
-.msg-ai{align-items:flex-start}
-.msg-label{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);margin-bottom:5px;padding:0 3px}
-.bbl-user{background:linear-gradient(135deg,var(--green),var(--g2));color:#000;font-weight:600;font-size:14px;padding:10px 16px;border-radius:17px 17px 4px 17px;max-width:440px}
-.bbl-ai{background:var(--bg2);border:1px solid var(--border);border-radius:4px 17px 17px 17px;padding:22px 26px;max-width:100%;width:100%}
+.msg{display:flex;flex-direction:column;animation:rise .22s ease}
+.mu{align-items:flex-end}
+.ma{align-items:flex-start}
+.mwho{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);margin-bottom:5px;padding:0 3px}
+.bbu{background:linear-gradient(135deg,var(--green),var(--g2));color:#000;font-weight:600;font-size:14px;padding:10px 16px;border-radius:16px 16px 4px 16px;max-width:460px;word-break:break-word}
+.bba{background:var(--bg2);border:1px solid var(--border);border-radius:4px 16px 16px 16px;padding:22px 26px;max-width:100%;width:100%}
+.bba-paste{border-color:var(--pbdr);background:linear-gradient(135deg,var(--bg2) 80%,rgba(167,139,250,.04) 100%)}
 
 /* TYPING */
 .typing{display:flex;align-items:center;gap:5px;padding:7px 2px}
 .typing i{display:block;width:5px;height:5px;background:var(--green);border-radius:50%;animation:tdot 1.1s ease-in-out infinite}
-.typing i:nth-child(2){animation-delay:.17s}
-.typing i:nth-child(3){animation-delay:.34s}
-@keyframes tdot{0%,80%,100%{transform:translateY(0);opacity:.28}40%{transform:translateY(-7px);opacity:1}}
+.typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.35s}
+@keyframes tdot{0%,80%,100%{transform:translateY(0);opacity:.25}40%{transform:translateY(-7px);opacity:1}}
+.proc{display:flex;flex-direction:column;gap:6px}
+.prow{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);opacity:0;animation:step .3s ease forwards}
+@keyframes step{to{opacity:1}}
+.pico{width:16px;height:16px;border-radius:50%;border:1px solid var(--gbdr);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--green);flex-shrink:0}
 
-/* PROGRESS (fake processing steps) */
-.proc-steps{display:flex;flex-direction:column;gap:5px;padding:4px 2px}
-.proc-step{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);opacity:0;animation:stepIn .3s ease forwards}
-@keyframes stepIn{to{opacity:1}}
-.proc-step .ps-icon{color:var(--green);font-size:12px}
-
-/* ── INPUT ── */
-#input-zone{padding:12px 20px 18px;flex-shrink:0;background:linear-gradient(to top,var(--bg) 60%,transparent)}
-.inp-inner{max-width:880px;margin:0 auto;position:relative}
-#inp{width:100%;background:var(--panel);border:1px solid var(--border2);border-radius:var(--r2);color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;padding:13px 56px 13px 18px;outline:none;resize:none;max-height:140px;overflow-y:auto;transition:border-color .2s,box-shadow .2s;line-height:1.5}
+/* ── INPUT ZONE ── */
+#izone{padding:10px 20px 16px;flex-shrink:0;background:linear-gradient(to top,var(--bg) 58%,transparent)}
+.iwrap{max-width:900px;margin:0 auto}
+.irow{position:relative}
+#inp{width:100%;background:var(--panel);border:1px solid var(--border2);border-radius:var(--r2);color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;padding:13px 56px 13px 18px;outline:none;resize:none;max-height:200px;overflow-y:auto;transition:border-color .2s,box-shadow .2s;line-height:1.5}
 #inp::placeholder{color:var(--dim)}
-#inp:focus{border-color:rgba(0,232,160,.32);box-shadow:0 0 0 3px rgba(0,232,160,.05)}
-#sendbtn{position:absolute;right:9px;bottom:9px;width:36px;height:36px;background:var(--green);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
-#sendbtn:hover{background:var(--g2);transform:scale(1.06)}
-#sendbtn:disabled{background:var(--border);cursor:not-allowed;transform:none}
-#sendbtn svg{fill:#000}
-.inp-hint{text-align:center;color:var(--dim);font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.04em;margin-top:8px}
+#inp:focus{border-color:rgba(0,232,154,.32);box-shadow:0 0 0 3px rgba(0,232,154,.05)}
+#inp.paste-mode{border-color:rgba(167,139,250,.35);box-shadow:0 0 0 3px rgba(167,139,250,.06)}
+#sbtn{position:absolute;right:9px;bottom:9px;width:36px;height:36px;background:var(--green);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+#sbtn:hover{background:var(--g2);transform:scale(1.06)}
+#sbtn:disabled{background:var(--border);cursor:not-allowed;transform:none}
+#sbtn svg{fill:#000}
+.itools{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding:0 2px}
+.itool-left{display:flex;align-items:center;gap:8px}
+.imode{display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--dim);letter-spacing:.04em}
+.imode-dot{width:5px;height:5px;border-radius:50%;background:var(--dim)}
+.imode-dot.sim{background:var(--green);box-shadow:0 0 5px var(--green)}
+.imode-dot.paste{background:var(--purple);box-shadow:0 0 5px var(--purple)}
+.ipaste-btn{background:var(--pbg);border:1px solid var(--pbdr);border-radius:5px;padding:3px 9px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--purple);cursor:pointer;transition:all .2s;letter-spacing:.04em}
+.ipaste-btn:hover{background:rgba(167,139,250,.15)}
+.iclear-btn{background:var(--rbg);border:1px solid var(--rbdr);border-radius:5px;padding:3px 9px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--red);cursor:pointer;transition:all .2s;letter-spacing:.04em;display:none}
+.iclear-btn:hover{background:rgba(255,77,104,.15)}
+.ihint{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--dim);letter-spacing:.04em}
 
-/* ── RACE CARD ── */
-.rc-hdr{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid var(--border)}
-.rc-title{font-weight:800;font-size:21px;letter-spacing:-.4px}
-.rc-sub{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);margin-top:3px;letter-spacing:.04em}
-.rc-pill{background:var(--gbg);border:1px solid var(--gbdr);border-radius:20px;padding:4px 13px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--green);letter-spacing:.07em}
+/* ── PASTE PANEL ── */
+#paste-panel{display:none;max-width:900px;margin:0 auto 12px;background:var(--pbg);border:1px solid var(--pbdr);border-radius:var(--r2);padding:16px 18px}
+.pp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.pp-title{font-weight:700;font-size:13px;color:var(--purple)}
+.pp-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:2px 6px;transition:color .2s}
+.pp-close:hover{color:var(--text)}
+.pp-instructions{font-size:12px;color:var(--t2);line-height:1.7;margin-bottom:12px}
+.pp-instructions code{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green)}
+.pp-example{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);line-height:1.8;margin-bottom:10px;white-space:pre-wrap}
+.pp-load{background:var(--purple);color:#fff;border:none;border-radius:7px;padding:8px 16px;font-family:'Outfit',sans-serif;font-weight:600;font-size:12px;cursor:pointer;transition:background .2s}
+.pp-load:hover{background:#9d74f0}
+
+/* ── RACE CARD OUTPUT ── */
+.rctop{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid var(--border)}
+.rctitle{font-weight:800;font-size:21px;letter-spacing:-.4px}
+.rcdate{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);margin-top:3px;letter-spacing:.04em}
+.rcpill{border-radius:20px;padding:4px 12px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;white-space:nowrap}
+.rcpill.sim{background:var(--gbg);color:var(--green);border:1px solid var(--gbdr)}
+.rcpill.real{background:var(--pbg);color:var(--purple);border:1px solid var(--pbdr)}
+.data-badge{display:inline-flex;align-items:center;gap:5px;border-radius:5px;padding:3px 9px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.05em;margin-bottom:14px}
+.data-badge.sim{background:var(--gbg);border:1px solid var(--gbdr);color:var(--green)}
+.data-badge.real{background:var(--pbg);border:1px solid var(--pbdr);color:var(--purple)}
 
 /* RACE BLOCK */
 .rb{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);margin-bottom:16px;overflow:hidden}
-.rb-head{display:flex;align-items:center;flex-wrap:wrap;gap:7px;padding:12px 15px;background:rgba(255,255,255,.01);border-bottom:1px solid var(--border)}
+.rbh{display:flex;align-items:center;flex-wrap:wrap;gap:7px;padding:12px 15px;background:rgba(255,255,255,.01);border-bottom:1px solid var(--border)}
 .rnum{font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:500;background:var(--gbg);color:var(--green);border:1px solid var(--gbdr);border-radius:4px;padding:3px 9px;letter-spacing:.06em}
-.rname{font-weight:700;font-size:13px;flex:1}
-.tags{display:flex;gap:5px;flex-wrap:wrap}
+.rnm{font-weight:700;font-size:13px;flex:1}
+.rtags{display:flex;gap:5px;flex-wrap:wrap}
 .tag{font-family:'IBM Plex Mono',monospace;font-size:9.5px;padding:2px 7px;border-radius:4px;letter-spacing:.04em;border:1px solid}
 .td{color:var(--blue);background:var(--bbg);border-color:var(--bbdr)}
 .tt{color:var(--muted);background:rgba(255,255,255,.03);border-color:var(--border)}
 .tc{color:var(--amber);background:var(--abg);border-color:var(--abdr)}
+.treal{color:var(--purple);background:var(--pbg);border-color:var(--pbdr)}
 
-.rb-stats{display:flex;gap:20px;flex-wrap:wrap;padding:10px 15px;border-bottom:1px solid var(--border)}
+.rbstats{display:flex;gap:20px;flex-wrap:wrap;padding:10px 15px;border-bottom:1px solid var(--border)}
 .stat{display:flex;flex-direction:column;gap:1px}
-.stat-l{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim)}
-.stat-v{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500}
-.rsi-row{display:flex;align-items:center;gap:8px}
-.rsi-bar{width:62px;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
-.rsi-fill{height:100%;border-radius:2px;transition:width .8s ease}
-.rsi-h .rsi-fill{background:var(--green)}
-.rsi-m .rsi-fill{background:var(--amber)}
-.rsi-l .rsi-fill{background:var(--red)}
+.sl2{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim)}
+.sv{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500}
+.rsirow{display:flex;align-items:center;gap:8px}
+.rsibar{width:62px;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.rsifill{height:100%;border-radius:2px}
+.rh .rsifill{background:var(--green)}
+.rm .rsifill{background:var(--amber)}
+.rl .rsifill{background:var(--red)}
 
 /* TABLE */
 .tscroll{overflow-x:auto}
 .tscroll::-webkit-scrollbar{height:3px}
 .tscroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
-table.rt{width:100%;border-collapse:collapse;min-width:820px}
+table.rt{width:100%;border-collapse:collapse;min-width:830px}
 table.rt th{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);padding:7px 11px;text-align:left;border-bottom:1px solid var(--border);background:var(--bg1);white-space:nowrap}
-table.rt td{padding:9px 11px;border-bottom:1px solid rgba(37,42,53,.55);font-size:12px;white-space:nowrap;vertical-align:middle}
+table.rt td{padding:9px 11px;border-bottom:1px solid rgba(36,43,56,.5);font-size:12px;white-space:nowrap;vertical-align:middle}
 table.rt tr:last-child td{border-bottom:none}
 table.rt tbody tr:hover{background:rgba(255,255,255,.012)}
-.pos{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;width:32px;text-align:center}
-.pos.r1{color:var(--green)}.pos.r2{color:#87c9b4}.pos.r3{color:var(--muted)}
-.hname{font-weight:600;font-size:12px}.hname.fav{color:var(--green)}
-.fstr{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.07em}
+.pc{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;width:32px;text-align:center}
+.p1{color:var(--green)}.p2{color:#88ccb6}.p3{color:var(--muted)}
+.hn{font-weight:600;font-size:12px}.hn.fav{color:var(--green)}.hn.real{color:var(--purple)}
+.fs{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.07em}
 .mn{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)}
-.mnw{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text)}
-.vbadge{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 7px;border-radius:4px;letter-spacing:.04em;font-weight:500;border:1px solid}
+.mnb{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text)}
+.vb{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 7px;border-radius:4px;letter-spacing:.04em;font-weight:500;border:1px solid}
 .vo{background:var(--gbg);color:var(--green);border-color:var(--gbdr)}
 .vu{background:var(--rbg);color:var(--red);border-color:var(--rbdr)}
 .vf{background:rgba(255,255,255,.03);color:var(--muted);border-color:var(--border)}
 
 /* SUMMARY */
-.rb-sum{padding:13px 15px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:9px}
-.sum-cards{display:flex;gap:9px;flex-wrap:wrap}
-.sum-card{flex:1;min-width:150px;background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px}
-.sc-ico{font-size:13px;margin-bottom:3px}
-.sc-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim);margin-bottom:2px}
-.sc-val{font-weight:700;font-size:12px}
-.sc-sub{font-size:11px;color:var(--muted);margin-top:1px}
-.risk-box{background:var(--abg);border:1px solid var(--abdr);border-radius:var(--r);padding:9px 12px;font-size:12px;color:var(--text2)}
-.risk-box b{color:var(--amber)}
-.analysis{font-size:12px;color:var(--muted);line-height:1.75;padding-top:9px;border-top:1px solid var(--border)}
-.disclaimer{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--dim);letter-spacing:.04em;padding-top:14px;margin-top:14px;border-top:1px solid var(--border)}
-.err{background:var(--rbg);border:1px solid var(--rbdr);border-radius:var(--r);padding:12px 15px;color:var(--red);font-size:13px}
+.rbs{padding:13px 15px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:9px}
+.scrow{display:flex;gap:9px;flex-wrap:wrap}
+.sc{flex:1;min-width:150px;background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px}
+.sc .ico{font-size:13px;margin-bottom:3px}
+.sc .lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim);margin-bottom:2px}
+.sc .val{font-weight:700;font-size:12px}
+.sc .sub{font-size:11px;color:var(--muted);margin-top:1px}
+.riskbox{background:var(--abg);border:1px solid var(--abdr);border-radius:var(--r);padding:9px 12px;font-size:12px;color:var(--t2)}
+.riskbox b{color:var(--amber)}
+.atxt{font-size:12px;color:var(--muted);line-height:1.78;padding-top:9px;border-top:1px solid var(--border)}
+.disc{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--dim);letter-spacing:.04em;padding-top:14px;margin-top:14px;border-top:1px solid var(--border)}
+.err{background:var(--rbg);border:1px solid var(--rbdr);border-radius:var(--r);padding:13px 16px;color:var(--red);font-size:13px;line-height:1.65}
 
 @media(max-width:600px){
   #hdr{padding:0 12px}
-  #msgs-scroll{padding:16px 10px}
-  #input-zone{padding:8px 10px 14px}
-  .bbl-ai{padding:14px 16px}
-  .ver-badge,.etag-txt{display:none}
+  #msgs-wrap{padding:16px 10px 10px}
+  #izone{padding:8px 10px 12px}
+  .bba{padding:14px 16px}
+  .etxt{display:none}
 }
 </style>
 </head>
@@ -210,82 +237,112 @@ table.rt tbody tr:hover{background:rgba(255,255,255,.012)}
 
   <header id="hdr">
     <div class="logo">
-      <div class="logo-icon">B</div>
-      <div class="logo-text">
-        <span class="logo-name">Betrich</span>
-        <span class="logo-sub">AI Racing Model</span>
-      </div>
+      <div class="lmark">B</div>
+      <div class="ltxt"><span class="lname">Betrich</span><span class="lsub">AI Racing Model</span></div>
     </div>
-    <div class="hdr-right">
-      <div class="engine-tag">
-        <div class="etag-dot"></div>
-        <span class="etag-txt">LOCAL ENGINE</span>
-      </div>
-      <span class="ver-badge">v3.0 · ZERO-API</span>
+    <div class="hdr-r">
+      <div class="eng-pill"><div class="epulse"></div><span class="etxt">LOCAL ENGINE v5</span></div>
+      <button class="paste-btn" onclick="togglePastePanel()">📋 Paste Race Data</button>
     </div>
   </header>
 
-  <div id="body-wrap">
+  <div id="layout">
     <nav id="side">
-      <div class="side-label">Quick Launch</div>
-      <div class="side-btn active" id="side-cur"><span class="side-ico">🏇</span><span id="side-cur-txt">New Session</span></div>
-      <div class="side-btn" onclick="fillQ('Model Flemington 15th March')"><span class="side-ico">📋</span>Flemington</div>
-      <div class="side-btn" onclick="fillQ('Model Randwick 22nd March')"><span class="side-ico">📋</span>Randwick</div>
-      <div class="side-btn" onclick="fillQ('Model Caulfield 8th April')"><span class="side-ico">📋</span>Caulfield</div>
-      <div class="side-btn" onclick="fillQ('Model Eagle Farm 5th April')"><span class="side-ico">📋</span>Eagle Farm</div>
-      <div class="side-btn" onclick="fillQ('Model Rosehill 12th April')"><span class="side-ico">📋</span>Rosehill</div>
-      <div class="side-btn" onclick="fillQ('Model Moonee Valley 19th April')"><span class="side-ico">📋</span>Moonee Valley</div>
-      <div class="side-btn" onclick="fillQ('Model Doomben 26th April')"><span class="side-ico">📋</span>Doomben</div>
-      <div class="side-label" style="margin-top:8px">Engine Info</div>
-      <div class="side-stats">
-        <div class="side-stat-row"><span class="side-stat-lbl">Engine</span><span class="side-stat-val">LOCAL JS</span></div>
-        <div class="side-stat-row"><span class="side-stat-lbl">APIs</span><span class="side-stat-val" style="color:var(--red)">NONE</span></div>
-        <div class="side-stat-row"><span class="side-stat-lbl">Data</span><span class="side-stat-val">SIMULATED</span></div>
-        <div class="side-stat-row"><span class="side-stat-lbl">Keys</span><span class="side-stat-val" style="color:var(--red)">NOT REQUIRED</span></div>
+      <div class="sl">Simulate</div>
+      <div class="sitem active"><span>🏇</span><span id="cur-lbl">New Session</span></div>
+      <div class="sitem" onclick="fillQ('Model Flemington Saturday')"><span>📋</span>Flemington</div>
+      <div class="sitem" onclick="fillQ('Model Randwick Saturday')"><span>📋</span>Randwick</div>
+      <div class="sitem" onclick="fillQ('Model Caulfield Saturday')"><span>📋</span>Caulfield</div>
+      <div class="sitem" onclick="fillQ('Model Eagle Farm Saturday')"><span>📋</span>Eagle Farm</div>
+      <div class="sitem" onclick="fillQ('Model Rosehill Saturday')"><span>📋</span>Rosehill</div>
+      <div class="sitem" onclick="fillQ('Model Moonee Valley Saturday')"><span>📋</span>Moonee Valley</div>
+      <div class="sl" style="margin-top:8px">Paste Real Data</div>
+      <div class="sitem sitem-paste" onclick="loadPasteExample()"><span>⚡</span>Load Example</div>
+      <div class="sitem sitem-paste" onclick="togglePastePanel()"><span>📋</span>Paste Panel</div>
+      <div class="sl" style="margin-top:8px">Engine</div>
+      <div class="side-box">
+        <div class="sbrow"><span class="sbk">Mode</span><span class="sbv green" id="eng-mode">SIMULATE</span></div>
+        <div class="sbrow"><span class="sbk">APIs</span><span class="sbv red">NONE</span></div>
+        <div class="sbrow"><span class="sbk">Keys</span><span class="sbv red">NOT REQUIRED</span></div>
+        <div class="sbrow"><span class="sbk">Data</span><span class="sbv green" id="eng-data">INTERNAL</span></div>
       </div>
-      <div class="side-foot">
-        <button class="side-new" onclick="location.reload()">+ New Session</button>
+      <div class="sfoot">
+        <button class="snew" onclick="location.reload()">+ New Session</button>
       </div>
     </nav>
 
     <div id="chat-col">
-      <div id="msgs-scroll">
+      <div id="msgs-wrap">
         <div id="msgs">
           <div id="welcome">
             <div class="wlc">
-              <div class="wlc-chip"><div class="etag-dot"></div><span>ZERO-API · FULLY LOCAL ENGINE</span></div>
-              <h1>Race Intelligence.<br/><em>No Keys Required.</em></h1>
-              <p>Betrich runs entirely in your browser. No API keys, no external calls, no data fees. Pure JavaScript modeling.</p>
+              <div class="wchip"><div class="epulse"></div><span>ZERO-API · LOCAL ENGINE · PASTE REAL DATA</span></div>
+              <h1>Simulate. Or<br/><em>Use Real Data.</em></h1>
+              <p class="wsub">Betrich runs fully offline — simulate any race meeting, or paste real race data from Racing Australia, TAB, or Sky Racing for instant AI modeling.</p>
             </div>
-            <div class="wlc-grid">
-              <div class="wlc-card" onclick="fillQ('Model Flemington 15th March')">
-                <div class="ci">🏇</div><div class="ct">Melbourne Racing</div><div class="cs">Flemington 15 Mar</div>
+            <div class="wmodes">
+              <div class="wmode sim" onclick="fillQ('Model Flemington Saturday')">
+                <div class="mico">🎲</div>
+                <div class="mtit">Simulate a Meeting</div>
+                <div class="mdesc">Generate a full race card with AI-simulated horses, barriers, weights and odds</div>
               </div>
-              <div class="wlc-card" onclick="fillQ('Model Randwick 22nd March')">
-                <div class="ci">🎯</div><div class="ct">Sydney Carnival</div><div class="cs">Randwick 22 Mar</div>
+              <div class="wmode paste" onclick="loadPasteExample()">
+                <div class="mico">📋</div>
+                <div class="mtit">Paste Real Data</div>
+                <div class="mdesc">Copy real race runners from TAB or Racing Australia — Betrich models them instantly</div>
               </div>
-              <div class="wlc-card" onclick="fillQ('Model Caulfield 8th April')">
-                <div class="ci">📊</div><div class="ct">Autumn Stakes</div><div class="cs">Caulfield 8 Apr</div>
-              </div>
-              <div class="wlc-card" onclick="fillQ('Model Eagle Farm 5th April')">
-                <div class="ci">🌤</div><div class="ct">Queensland Cup</div><div class="cs">Eagle Farm 5 Apr</div>
-              </div>
+            </div>
+            <div class="wgrid">
+              <div class="wcard" onclick="fillQ('Model Flemington Saturday')"><div class="wi">🏇</div><div class="wt">Flemington</div><div class="ws">Simulate Saturday</div></div>
+              <div class="wcard" onclick="fillQ('Model Randwick Saturday')"><div class="wi">🎯</div><div class="wt">Randwick</div><div class="ws">Simulate Saturday</div></div>
+              <div class="wcard" onclick="fillQ('Model Caulfield Saturday')"><div class="wi">📊</div><div class="wt">Caulfield</div><div class="ws">Simulate Saturday</div></div>
+              <div class="wcard" onclick="fillQ('Model Eagle Farm Saturday')"><div class="wi">🌤</div><div class="wt">Eagle Farm</div><div class="ws">Simulate Saturday</div></div>
             </div>
           </div>
         </div>
       </div>
 
-      <div id="input-zone">
-        <div class="inp-inner">
-          <textarea id="inp" rows="1"
-            placeholder='Try: "Model Flemington 15th March"'
-            onkeydown="handleKey(event)"
-            oninput="autoResize(this)"></textarea>
-          <button id="sendbtn" onclick="submitMsg()" title="Send">
-            <svg width="15" height="15" viewBox="0 0 16 16"><path d="M14.5 8L2 14l2.5-6H14.5zm0 0L2 2l2.5 6H14.5z"/></svg>
-          </button>
+      <!-- PASTE PANEL -->
+      <div id="paste-panel">
+        <div class="pp-head">
+          <span class="pp-title">📋 Paste Real Race Data</span>
+          <button class="pp-close" onclick="togglePastePanel()">✕</button>
         </div>
-        <p class="inp-hint">↵ submit &nbsp;·&nbsp; Shift+↵ new line &nbsp;·&nbsp; Zero external dependencies — runs 100% locally</p>
+        <div class="pp-instructions">
+          Copy and paste real race runner data from <strong>TAB, Racing Australia, Sky Racing</strong> or any racing site. Format each runner on a new line:<br/><br/>
+          <code>Horse Name | Barrier | Weight | Jockey | Trainer | Form | Market Odds</code><br/><br/>
+          Start with a line like <code>Race 1 — 1400m BM78 — Good 4 — Flemington</code> then list runners below.
+          You can paste multiple races. Missing fields are estimated by the engine.
+        </div>
+        <div class="pp-example">Race 1 — 1200m Maiden — Good 4 — Flemington
+1. Zoustyle | 3 | 56.5 | J. McDonald | C. Waller | 1-2-1-3-2 | 2.80
+2. Ayrton | 7 | 57.0 | D. Oliver | T. McEvoy | 3-1-2-1-4 | 3.50
+3. Broadsword | 1 | 58.0 | H. Coffey | G. Waterhouse | 2-1-3-2-1 | 5.00
+4. Lighthouse | 11 | 55.5 | T. Berry | D. Hayes | 5-3-4-2-3 | 9.00
+5. Crimson Edge | 5 | 57.5 | J. Bowman | P. Moody | 4-2-5-1-3 | 12.00</div>
+        <button class="pp-load" onclick="loadPasteExample()">⚡ Load This Example</button>
+      </div>
+
+      <div id="izone">
+        <div class="iwrap">
+          <div class="irow">
+            <textarea id="inp" rows="1"
+              placeholder='Simulate: "Model Flemington Saturday"  |  Or paste real race data below'
+              onkeydown="hk(event)"
+              oninput="onInput(this)"></textarea>
+            <button id="sbtn" onclick="submit()" title="Submit">
+              <svg width="15" height="15" viewBox="0 0 16 16"><path d="M14.5 8L2 14l2.5-6H14.5zm0 0L2 2l2.5 6H14.5z"/></svg>
+            </button>
+          </div>
+          <div class="itools">
+            <div class="itool-left">
+              <div class="imode"><div class="imode-dot sim" id="mode-dot"></div><span id="mode-txt">SIMULATE MODE</span></div>
+              <button class="ipaste-btn" onclick="togglePastePanel()">+ Paste Data</button>
+              <button class="iclear-btn" id="clear-btn" onclick="clearPaste()">✕ Clear Paste</button>
+            </div>
+            <span class="ihint">↵ submit · Shift+↵ newline</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -293,428 +350,516 @@ table.rt tbody tr:hover{background:rgba(255,255,255,.012)}
 
 <script>
 'use strict';
-// ═══════════════════════════════════════════════════════════════
-//  BETRICH MODELING ENGINE  —  Pure JavaScript, Zero APIs
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+//  BETRICH v5  ·  Zero-API  ·  Simulate + Paste Real Data
+// ═══════════════════════════════════════════════════════════
 
-// ── DATA POOLS ──────────────────────────────────────────────────
-const HORSES = [
-  'Starfall','Thunder Run','Crimson Ace','Night Rider','Golden Edge',
-  'Pacific Storm','Iron Fist','Silent Echo','Rapid Fire','Dark Matter',
-  'Silver Streak','Viper King','Blue Horizon','Wind Dancer','Steel Arrow',
-  'Phantom Blaze','Ruby Crown','Crystal Bay','Desert Prince','Morning Light',
-  'Shadow Racer','Blazing Trail','Copper King','Wild Spirit','Storm Chaser',
-  'Midnight Blue','Emerald Coast','True North','Diamond Rush','Flash Point',
-  'Jungle Run','Solar Flare','Arctic Chill','River Stone','Velocity',
-  'Timber Wolf','Sacred Flame','Outback Hero','Prism Light','Maverick Star',
-  'Noble Quest','Bold Venture','Titan Force','Reef Runner','Canyon Blaze',
-  'Twilight Run','Summit Peak','Rapid Surge','Iron Duke','Sunfire',
-  'Quantum Leap','Echo Ridge','Swift Blade','Coastal Dream','Urban Legend',
-  'High Noon','Mystic Wave','Red Rover','Black Opal','Golden Gate',
-  'Thunder Bay','Sapphire Sky','Crimson Wings','Silent Storm','Blazing Sun',
-  'Coral Reef','Desert Wind','Forest King','Harbor Light','Island Breeze',
-  'Jungle Cat','Keen Edge','Lightning Rod','Mountain Man','Northern Star',
-  'Orbit One','Polar Star','Quest Runner','Raging Bull','Sand Storm',
-  'Tidal Force','Ultra Sound','Volcanic Sky','Warp Speed','Xcalibur',
-  'Yellow Brick','Zenith Star','Alpha Wave','Beta Force','Celestial Run'
+// ── DATA POOLS ───────────────────────────────────────────────
+const H=[
+  'Zoustyle','Thunder Run','Crimson Ace','Night Rider','Golden Edge','Pacific Storm',
+  'Iron Fist','Silent Echo','Rapid Fire','Dark Matter','Silver Streak','Viper King',
+  'Blue Horizon','Wind Dancer','Steel Arrow','Phantom Blaze','Ruby Crown','Crystal Bay',
+  'Desert Prince','Morning Light','Shadow Racer','Blazing Trail','Copper King','Wild Spirit',
+  'Storm Chaser','Midnight Blue','Emerald Coast','True North','Diamond Rush','Flash Point',
+  'Jungle Run','Solar Flare','Arctic Chill','River Stone','Velocity Max','Timber Wolf',
+  'Sacred Flame','Outback Hero','Prism Light','Maverick Star','Noble Quest','Bold Venture',
+  'Titan Force','Reef Runner','Canyon Blaze','Twilight Run','Summit Peak','Rapid Surge',
+  'Iron Duke','Sunfire King','Quantum Leap','Echo Ridge','Swift Blade','Coastal Dream',
+  'Urban Legend','High Noon Hero','Mystic Wave','Red Rover','Black Opal','Golden Gate',
+  'Thunder Bay','Sapphire Sky','Crimson Wings','Silent Storm','Blazing Sun','Coral King',
+  'Desert Wind','Forest King','Harbor Light','Island Breeze','Jungle Cat','Keen Edge',
+  'Lightning Rod','Mountain Man','Northern Star','Orbit One','Polar Star','Quest Runner',
+  'Raging Bull','Sand Storm','Tidal Force','Ultra Sound','Volcanic Sky','Warp Speed',
+  'Xcalibur Prime','Yellow Brick','Zenith Star','Alpha Wave','Beta Force','Celestial Run',
+  'Delta Storm','Epsilon Dawn','Foxtrot King','Gamma Ray','Horizon Blue','Impact Zone',
 ];
-
-const JOCKEYS = [
-  'J. McDonald','D. Oliver','H. Coffey','T. Berry','J. Bowman',
-  'R. Bayliss','C. Williams','M. Dee','B. Shinn','K. McEvoy',
-  'J. Byrne','S. Clipperton','T. Clark','Z. Purton','H. Moreira',
-  'R. Moore','F. Dettori','N. Rawiller','B. Prebble','D. Dunn',
-  'L. Dittman','P. Moloney','M. Walker','A. Hyeronimus','J. Childs',
-  'W. Pike','T. Picconi','M. Nolen','G. Boss','C. Brown',
+const J=['J. McDonald','D. Oliver','H. Coffey','T. Berry','J. Bowman','R. Bayliss',
+  'C. Williams','M. Dee','B. Shinn','K. McEvoy','J. Byrne','S. Clipperton',
+  'T. Clark','Z. Purton','H. Moreira','N. Rawiller','B. Prebble','D. Dunn',
+  'W. Pike','T. Picconi','M. Walker','A. Hyeronimus','P. Moloney','G. Boss'];
+const TR=['C. Waller','D. Hayes','J. Size','A. Freedman','P. Moody','T. McEvoy',
+  'L. Maher','M. Moroney','G. Waterhouse','B. Hayes','M. Price','T. Dabernig',
+  'S. Nichols','R. Griffiths','J. Warren','P. Snowden','C. Maher','D. Weir',
+  'N. Burke','J. Thompson','A. Payne','M. Smith','B. Cummings','G. Milligan'];
+const RNAMES=[
+  ['Autumn Sprint','Summer Classic','Winter Cup','Spring Stakes','Heritage Mile','Plate Qualifier'],
+  ['Galilee Series','Moonlight Stakes','Coastal Cup','Bayside Classic','Sprint Final','Speed Cup'],
+  ['Fillies Final','Mares Classic','Nursery Stakes','Sires Produce','Juvenile Sprint','Rising Stars'],
+  ['Distance Classic','Marathon Cup','Staying Series','Stayers Final','Long Course Classic','Endurance Cup'],
 ];
+const RTYPES=['Maiden','BM64','BM72','BM78','BM88','3YO Maiden','3YO BM64','4YO+','Listed','Group 3'];
+const DISTS=[1000,1100,1200,1300,1400,1600,1800,2000,2200,2400];
+const CONDS=['Good 3','Good 4','Soft 5','Soft 6','Heavy 8','Heavy 9'];
+const PACES=['Slow','Moderate','Fast'];
 
-const TRAINERS = [
-  'C. Waller','D. Hayes','J. Size','A. Freedman','P. Moody',
-  'T. McEvoy','L. Maher','M. Moroney','G. Waterhouse','B. Hayes',
-  'M. Price','T. Dabernig','S. Nichols','R. Griffiths','J. Warren',
-  'P. Snowden','C. Maher','D. Weir','N. Burke','J. Thompson',
-  'A. Payne','M. Smith','B. Cummings','G. Milligan','T. Vasil',
-];
+// ── SEEDED RNG ────────────────────────────────────────────────
+function rng(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;return()=>{s=s*16807%2147483647;return(s-1)/2147483646}}
+function hash(str){let h=5381;for(let i=0;i<str.length;i++)h=(h*33^str.charCodeAt(i))>>>0;return h}
 
-const RACE_NAMES = [
-  ['Autumn Sprint','Summer Classic','Winter Cup','Spring Stakes','Heritage Mile'],
-  ['Galilee Series','Moonlight Stakes','Coastal Cup','Bayside Classic','Harbour Sprint'],
-  ['Plate Qualifier','Provincial Championship','Country Classic','Benchmark Series','Rising Stars'],
-  ['Juvenile Sprint','Nursery Stakes','Two Year Old Plate','Debutante Classic','Sires Produce'],
-  ['Fillies Final','Mares Classic','Ladies Day Cup','Queen Stakes','Empress Sprint'],
-  ['Distance Classic','Marathon Cup','Staying Series','Stayers Final','Long Run Classic'],
-  ['Sprint Final','Speed Classic','Flash Stakes','Lightning Cup','Rocket Sprint'],
-];
+// ── SIMULATION ENGINE ─────────────────────────────────────────
+function simulateMeeting(track, date){
+  const r=rng(hash((track+date).toLowerCase().trim()));
+  const ri=n=>Math.floor(r()*n);
+  const rf=(lo,hi)=>lo+r()*(hi-lo);
+  const pick=a=>a[ri(a.length)];
+  const cond=pick(CONDS);
+  const numRaces=6+ri(3);
+  const races=[];
+  const pool=[...H].sort(()=>r()-.5);
+  let pi=0;
 
-const RACE_TYPES = ['Maiden','BM64','BM72','BM78','BM88','3YO Maiden','3YO BM64','4YO+','Listed','Group 3'];
-const DISTANCES = [1000,1100,1200,1300,1400,1600,1800,2000,2200,2400,2500];
-const CONDITIONS = ['Good 3','Good 4','Soft 5','Soft 6','Heavy 8','Heavy 9'];
-const PACES = ['Slow','Moderate','Fast'];
-
-// ── SEEDED RNG (deterministic per track+date) ───────────────────
-function seededRNG(seed){
-  let s=seed%2147483647;if(s<=0)s+=2147483646;
-  return function(){s=s*16807%2147483647;return(s-1)/2147483646};
+  for(let n=0;n<numRaces;n++){
+    const dist=pick(DISTS);
+    const rtype=pick(RTYPES);
+    const rcond=r()<.65?cond:pick(CONDS);
+    const pace=pick(PACES);
+    const rname=pick(pick(RNAMES));
+    const fs=9+ri(6);
+    const runners=[];
+    const jp=[...J].sort(()=>r()-.5);
+    const tp=[...TR].sort(()=>r()-.5);
+    for(let h=0;h<fs;h++){
+      const horse=pool[(pi++)%pool.length];
+      const raw=40+r()*60;
+      const barrier=h+1;
+      const bs=dist<=1400?Math.max(0,1-((barrier-1)/(fs-1)))*15:10-(barrier/fs)*5;
+      const wgt=parseFloat((53+r()*7).toFixed(1));
+      const wp=(wgt-56)*1.5;
+      const fa=[];
+      for(let f=0;f<5;f++)fa.push(r()<.06?'x':String(Math.min(9,1+ri(9))));
+      const form=fa.join('-');
+      const fns=fa.filter(x=>x!=='x').map(Number);
+      const avg=fns.length?fns.reduce((a,b)=>a+b,0)/fns.length:5;
+      const fs2=Math.max(0,10-(avg-1)*1.8);
+      const score=Math.max(1,raw+bs-wp+fs2+rf(-5,5));
+      runners.push({horse,barrier,weight:wgt+'kg',jockey:jp[h%jp.length],trainer:tp[h%tp.length],form,score,isReal:false});
+    }
+    // Shuffle barriers
+    const bars=[...Array(fs)].map((_,i)=>i+1).sort(()=>r()-.5);
+    runners.forEach((r2,i)=>r2.barrier=bars[i]);
+    finalise(runners,dist);
+    const race=buildRace(n+1,rname,dist+'m',rtype,rcond,pace,runners);
+    races.push(race);
+  }
+  return{track,date,condition:cond,mode:'simulated',races};
 }
-function strHash(str){
-  let h=5381;for(let i=0;i<str.length;i++)h=(h*33^str.charCodeAt(i))>>>0;return h;
-}
 
-// ── MODELING ENGINE ─────────────────────────────────────────────
-function generateMeeting(track, date){
-  const seed = strHash((track+date).toLowerCase().trim());
-  const rng = seededRNG(seed);
-  const ri = n => Math.floor(rng()*n);
-  const rf = (lo,hi) => lo+rng()*(hi-lo);
-  const pick = arr => arr[ri(arr.length)];
+// ── REAL DATA PARSER ─────────────────────────────────────────
+function parseRealData(rawText){
+  const lines=rawText.split('\n').map(l=>l.trim()).filter(Boolean);
+  const races=[];
+  let currentRace=null;
 
-  const cond = pick(CONDITIONS);
-  const numRaces = 6 + ri(3); // 6-8
+  for(const line of lines){
+    // Race header detection
+    const raceHeader=line.match(/race\s*(\d+)[^\n]*?(\d{3,4}m)[^\n]*?([A-Z][a-z]{1,}[\d\s]+)?/i)
+      || line.match(/^race\s*(\d+)/i)
+      || line.match(/—[^—]*(\d{3,4}m)/i)
+      || (line.toLowerCase().includes('race') && line.match(/\d/));
 
-  const races = [];
-  // Shuffle horse pool per meeting
-  const horsePool = [...HORSES].sort(()=>rng()-.5);
-  let horseIdx = 0;
+    // Detect race header line (has "Race" + distance or separator)
+    if((line.toLowerCase().includes('race')||line.includes('—')||line.includes('-')) &&
+       (line.match(/\d{3,4}m/i)||line.toLowerCase().includes('maiden')||
+        line.toLowerCase().includes('bm')||line.toLowerCase().includes('group'))){
+      // Parse race metadata
+      const distMatch=line.match(/(\d{3,4})\s*m/i);
+      const typeMatch=line.match(/\b(maiden|bm\s*\d+|group\s*\d+|listed|3yo|4yo\+?|class\s*\d+)\b/i);
+      const condMatch=line.match(/\b(good\s*[1-4]|soft\s*[5-7]|heavy\s*[8-9]|firm\s*[1-2])\b/i);
+      const trackMatch=line.match(/—\s*([A-Za-z\s]+)$/) || line.match(/at\s+([A-Za-z\s]+)$/i);
+      const raceNumMatch=line.match(/race\s*(\d+)/i);
+      const raceNameMatch=line.match(/—\s*([A-Z][^—]+?)\s*—/);
 
-  for(let r=0;r<numRaces;r++){
-    const raceType = RACE_TYPES[ri(RACE_TYPES.length)];
-    const dist = pick(DISTANCES);
-    const raceCond = rng()<.7 ? cond : pick(CONDITIONS);
-    const pace = pick(PACES);
-    const nameGroup = RACE_NAMES[ri(RACE_NAMES.length)];
-    const raceName = pick(nameGroup);
-    const fieldSize = 9 + ri(6); // 9-14
-    const runners = [];
-    const jockeyPool = [...JOCKEYS].sort(()=>rng()-.5);
-    const trainerPool = [...TRAINERS].sort(()=>rng()-.5);
-
-    for(let h=0;h<fieldSize;h++){
-      const horse = horsePool[(horseIdx++)%horsePool.length];
-      // Performance rating: raw talent
-      const rawRating = 40 + rng()*60;
-      // Barrier: 1 to fieldSize, affects score
-      const barrier = h+1; // will be shuffled
-      const barrierScore = dist<=1400
-        ? Math.max(0,1-((barrier-1)/(fieldSize-1)))*15 // inside gate advantage for sprints
-        : 10-(barrier/fieldSize)*5; // less impactful over distance
-      // Weight: 53-60kg
-      const weight = parseFloat((53+rng()*7).toFixed(1));
-      const weightPenalty = (weight-56)*1.5; // penalty above 56kg
-      // Form: 5 results 1-9, x=scratched
-      const formArr = [];
-      for(let f=0;f<5;f++){
-        const r2=rng();
-        if(r2<.06)formArr.push('x');
-        else formArr.push(String(Math.min(9,1+ri(9))));
-      }
-      const form = formArr.join('-');
-      // Form consistency score
-      const formNums = formArr.filter(x=>x!=='x').map(Number);
-      const avgPlace = formNums.length ? formNums.reduce((a,b)=>a+b,0)/formNums.length : 5;
-      const formScore = Math.max(0,10-(avgPlace-1)*1.8);
-      // Composite score
-      const score = Math.max(1, rawRating + barrierScore - weightPenalty + formScore + rf(-5,5));
-      runners.push({
-        horse, barrier, weight, score,
-        jockey: jockeyPool[h%jockeyPool.length],
-        trainer: trainerPool[h%trainerPool.length],
-        form,
-      });
+      currentRace={
+        raceNum:raceNumMatch?parseInt(raceNumMatch[1]):races.length+1,
+        raceName:raceNameMatch?raceNameMatch[1].trim():'Race '+(races.length+1),
+        distance:distMatch?distMatch[1]+'m':'1200m',
+        raceType:typeMatch?typeMatch[1].trim().toUpperCase():'BM78',
+        condition:condMatch?condMatch[1].trim():'Good 4',
+        pace:PACES[Math.floor(Math.random()*3)],
+        track:trackMatch?trackMatch[1].trim():'',
+        runners:[],
+        rawLines:[],
+      };
+      races.push(currentRace);
+      continue;
     }
 
-    // Shuffle barriers realistically
-    const barriers = Array.from({length:fieldSize},(_,i)=>i+1).sort(()=>rng()-.5);
-    runners.forEach((r,i)=>r.barrier=barriers[i]);
+    if(!currentRace){
+      // Create a default race if none detected
+      currentRace={raceNum:1,raceName:'Race 1',distance:'1200m',raceType:'BM78',condition:'Good 4',pace:'Moderate',track:'',runners:[],rawLines:[]};
+      races.push(currentRace);
+    }
 
-    // Softmax-style win probabilities
-    const totalScore = runners.reduce((a,b)=>a+b.score,0);
-    runners.forEach(r=>{r.winPct=parseFloat(((r.score/totalScore)*100).toFixed(1))});
+    // Runner line: number, name, barrier, weight, jockey, trainer, form, odds
+    // Support formats: "1. Horse | 3 | 56.5 | J.McDonald | C.Waller | 1-2-3 | 2.80"
+    // or "Horse Name   3   56.5   J McDonald   ..."
+    const runnerPipe=line.match(/^(\d+[\.\)]\s*)?([A-Za-z\s\(\)'&-]+?)\s*[\|,]\s*(\d{1,2})\s*[\|,]\s*([\d\.]+)\s*[\|,]\s*([A-Za-z\s\.]+?)\s*[\|,]\s*([A-Za-z\s\.]+?)\s*[\|,]\s*([\dx\-]+)\s*[\|,]\s*([\d\.]+)/i);
+    const runnerSimple=line.match(/^(\d+[\.\)]\s*)?([A-Za-z][A-Za-z\s'()-]+?)(?:\s{2,}|\t)(.+)/);
 
-    // Normalise to exactly 100
-    const pctSum = runners.reduce((a,b)=>a+b.winPct,0);
-    const diff = parseFloat((100-pctSum).toFixed(1));
-    runners[0].winPct = parseFloat((runners[0].winPct+diff).toFixed(1));
-
-    // Market odds: slightly bookmaker-shaded
-    runners.forEach(r=>{
-      const fairOdds = parseFloat((100/r.winPct).toFixed(2));
-      const shade = rf(.82,.97); // bookmaker margin
-      const rawMkt = parseFloat((fairOdds*shade).toFixed(2));
-      // Round to realistic betting increments
-      r.fairOdds = fairOdds;
-      r.marketOdds = roundOdds(rawMkt);
-      const gap = r.marketOdds - r.fairOdds;
-      if(gap > 0.25) r.value = 'Overs';
-      else if(gap < -0.25) r.value = 'Unders';
-      else r.value = 'Fair';
-    });
-
-    // Sort by win% descending → predicted finishing order
-    runners.sort((a,b)=>b.winPct-a.winPct);
-    runners.forEach((r,i)=>r.pos=i+1);
-
-    // RSI: based on spread between 1st and field
-    const top = runners[0].winPct;
-    const second = runners[1].winPct;
-    const gap = top - second;
-    const spread = runners[fieldSize-1].winPct;
-    const rsi = Math.round(Math.min(95, Math.max(40,
-      40 + gap*2.2 + (top-20)*0.5 - spread*0.8
-    )));
-
-    // Top rated & best value
-    const topRated = runners[0].horse;
-    const bestValue = runners.reduce((a,b)=>
-      (b.marketOdds-b.fairOdds > a.marketOdds-a.fairOdds)?b:a
-    ).horse;
-
-    // Volatility comment
-    const volatilities = [
-      `With a field of ${fieldSize}, pace maps create genuine query for midfielders.`,
-      `Barrier draw heavily influences outcome at this distance — watch for wide runners.`,
-      `Heavy track condition adds randomness; form figures less reliable.`,
-      `Open race with several genuine chances — value lies in the deeper market.`,
-      `Tight win probabilities suggest a highly competitive affair; back the value.`,
-      `Strong favourite indicates stable form; top-rated should handle the conditions.`,
-      `Pace scenario projects ${pace.toLowerCase()} — suits front-runners if true.`,
-    ];
-    const riskFactor = volatilities[ri(volatilities.length)];
-
-    // Analysis paragraph
-    const analyses = [
-      `${runners[0].horse} emerges as the dominant force in race ${r+1}, carrying a model win probability of ${runners[0].winPct}%. The barrier draw at gate ${runners[0].barrier} is workable and recent form indicates consistency. ${runners[1].horse} at ${runners[1].winPct}% represents the main danger and should be respected in trifecta coverage.`,
-      `This ${dist}m ${raceType} over ${raceCond} conditions presents a clear market leader in ${runners[0].horse}, supported by favorable weight and form metrics. At market odds of $${runners[0].marketOdds}, the model rates this ${runners[0].value.toLowerCase()}, suggesting ${runners[0].value==='Overs'?'genuine value':'the market has this right'}. Second pick ${runners[1].horse} at $${runners[1].marketOdds} is the logical saver.`,
-      `The ${pace.toLowerCase()} projected tempo suits hold-up runners in race ${r+1}. ${runners[0].horse} profiles perfectly for these conditions with a class edge over the field. The RSI of ${rsi} indicates ${rsi>=75?'a stable race structure with a clear top selection':'a more open affair where value may exist deeper in the market'}. Monitor late market movements for confirmation.`,
-    ];
-    const analysis = analyses[ri(analyses.length)];
-
-    races.push({
-      raceNum:r+1, raceName, distance:`${dist}m`,
-      raceType, condition:raceCond, pace, rsi,
-      runners, topRated, bestValue, riskFactor, analysis
-    });
+    if(runnerPipe){
+      const[,_pos,horse,barrier,weight,jockey,trainer,form,odds]=runnerPipe;
+      currentRace.runners.push({
+        horse:horse.trim(),
+        barrier:parseInt(barrier),
+        weight:parseFloat(weight)+'kg',
+        jockey:jockey.trim(),
+        trainer:trainer.trim(),
+        form:form.trim(),
+        marketOdds:parseFloat(odds),
+        isReal:true,
+        score:null,
+      });
+    } else if(runnerSimple && line.match(/[A-Za-z]{3,}/)){
+      // Try to extract what we can
+      const parts=line.split(/[\|\s]{2,}|\t/);
+      if(parts.length>=2){
+        const nameMatch=line.match(/^(\d+[\.\)]\s*)?([A-Za-z][A-Za-z\s'()-]{2,30})/);
+        if(nameMatch){
+          const nums=line.match(/\d+[\.\d]*/g)||[];
+          currentRace.runners.push({
+            horse:nameMatch[2].trim(),
+            barrier:nums[1]?parseInt(nums[1]):Math.floor(Math.random()*14)+1,
+            weight:nums[2]?parseFloat(nums[2])+'kg':'57.0kg',
+            jockey:J[Math.floor(Math.random()*J.length)],
+            trainer:TR[Math.floor(Math.random()*TR.length)],
+            form:'x-x-x-x-x',
+            marketOdds:nums[nums.length-1]?parseFloat(nums[nums.length-1]):10.0,
+            isReal:true,
+            score:null,
+          });
+        }
+      }
+    }
   }
 
-  return {track, date, condition:cond, races};
+  // Filter races with actual runners
+  const validRaces=races.filter(r=>r.runners.length>0);
+  if(!validRaces.length)return null;
+
+  // Apply modeling to each real race
+  for(const race of validRaces){
+    // Calculate scores from provided data
+    for(const runner of race.runners){
+      const distNum=parseInt(race.distance)||1200;
+      const bs=distNum<=1400?Math.max(0,1-((runner.barrier-1)/(race.runners.length-1)))*15:8;
+      const wgt=parseFloat(runner.weight)||57;
+      const wp=(wgt-56)*1.5;
+      const fns=runner.form.split('-').filter(x=>x!=='x'&&x!=='d').map(Number).filter(n=>!isNaN(n));
+      const avg=fns.length?fns.reduce((a,b)=>a+b,0)/fns.length:5;
+      const fs2=Math.max(0,10-(avg-1)*1.8);
+      // Use market odds as signal
+      const oddsSignal=runner.marketOdds?Math.max(5,60-(runner.marketOdds*1.5)):20;
+      runner.score=Math.max(1,50+bs-wp+fs2+oddsSignal+(Math.random()*10-5));
+    }
+    finalise(race.runners,parseInt(race.distance)||1200);
+  }
+
+  // Build structured races
+  const track=validRaces[0].track||'Unknown Track';
+  const structuredRaces=validRaces.map((race,i)=>{
+    return buildRace(i+1,race.raceName,race.distance,race.raceType,race.condition,race.pace,race.runners);
+  });
+
+  return{track,date:'User-Provided Data',condition:validRaces[0].condition,mode:'real',races:structuredRaces};
+}
+
+// ── SHARED FINALIZE (normalise win %, odds, value) ────────────
+function finalise(runners,dist){
+  const tot=runners.reduce((a,b)=>a+b.score,0);
+  runners.forEach(r=>{r.winPct=parseFloat(((r.score/tot)*100).toFixed(1))});
+  // Normalise to 100
+  const s=runners.reduce((a,b)=>a+b.winPct,0);
+  const d=parseFloat((100-s).toFixed(1));
+  runners[0].winPct=parseFloat((runners[0].winPct+d).toFixed(1));
+  // Odds
+  runners.forEach(r=>{
+    r.fairOdds=parseFloat((100/r.winPct).toFixed(2));
+    if(!r.marketOdds||r.isReal===false){
+      const shade=0.83+Math.random()*0.14;
+      r.marketOdds=roundOdds(r.fairOdds*shade);
+    }
+    const gap=r.marketOdds-r.fairOdds;
+    r.value=gap>0.28?'Overs':gap<-0.28?'Unders':'Fair';
+  });
+}
+
+function buildRace(num,name,distance,type,condition,pace,runners){
+  // Sort by winPct desc → predicted finishing position
+  runners.sort((a,b)=>b.winPct-a.winPct);
+  runners.forEach((r,i)=>r.pos=i+1);
+  const top=runners[0].winPct,second=runners[1].winPct;
+  const gap=top-second;
+  const rsi=Math.round(Math.min(95,Math.max(40,40+gap*2.2+(top-20)*.5-(runners[runners.length-1].winPct)*.7)));
+  const topRated=runners[0].horse;
+  const bestValue=runners.reduce((a,b)=>(b.marketOdds-b.fairOdds>a.marketOdds-a.fairOdds)?b:a).horse;
+  const riskFactor=[
+    `With a ${runners.length}-horse field, the pace map creates genuine complexity for midfield runners.`,
+    `Barrier positions play a significant role at ${distance} — wide barriers face extra ground.`,
+    `Form figures suggest genuine uncertainty; the market may be underestimating depth in this race.`,
+    `${pace} projected tempo suits front-runners — watch for any last-minute jockey changes.`,
+    `Tight win probabilities across the field suggest a highly competitive betting race.`,
+    `${top.toFixed(1)}% model confidence for the top pick indicates ${rsi>70?'a solid standout':'a contested affair'}.`,
+  ][Math.floor(Math.random()*6)];
+  const analysis=[
+    `${runners[0].horse} tops the model at ${runners[0].winPct}% with barrier ${runners[0].barrier} over ${distance}. Trainer and jockey combination rates highly in similar conditions. ${runners[1].horse} at ${runners[1].winPct}% is the principal danger and should be included in combination bets.`,
+    `This ${distance} ${type} shapes as a clash between ${runners[0].horse} and ${runners[1].horse}. The model gives ${runners[0].horse} a clear edge at ${runners[0].winPct}% but the RSI of ${rsi} suggests ${rsi>70?'a relatively predictable structure':'this is a harder race to assess'}. Best value runner ${bestValue} is rated ${runners.find(r=>r.horse===bestValue)?.value} at current market pricing.`,
+    `Model projects ${runners[0].horse} as the dominant force in this race, supported by barrier suitability and form consistency. At $${runners[0].marketOdds}, this runner is rated ${runners[0].value} relative to model fair odds of $${runners[0].fairOdds}. The ${condition} surface is factored into all runner scores.`,
+  ][Math.floor(Math.random()*3)];
+  return{raceNum:num,raceName:name,distance,raceType:type,condition,pace,rsi,runners,topRated,bestValue,riskFactor,analysis};
 }
 
 function roundOdds(o){
-  if(o<3) return parseFloat(o.toFixed(2));
-  if(o<6) return Math.round(o*4)/4;
-  if(o<15) return Math.round(o*2)/2;
+  if(o<3)return parseFloat(o.toFixed(2));
+  if(o<6)return Math.round(o*4)/4;
+  if(o<15)return Math.round(o*2)/2;
   return Math.round(o);
 }
 
-// ── PARSER ──────────────────────────────────────────────────────
-function parseInput(txt){
-  const lower = txt.toLowerCase().trim();
-  const isModel = /\bmodel\b/.test(lower);
-
-  const tracks = ['flemington','randwick','caulfield','eagle farm','rosehill','moonee valley',
-    'doomben','sandown','geelong','ballarat','bendigo','pakenham','cranbourne',
-    'morphettville','ascot','gold coast','the valley','mrc','avc'];
-  let detectedTrack = null;
-  for(const t of tracks){
-    if(lower.includes(t)){detectedTrack=t.split(' ').map(w=>w[0].toUpperCase()+w.slice(1)).join(' ');break}
-  }
-
-  const months = ['january','february','march','april','may','june','july','august','september','october','november','december'];
-  let detectedDate = null;
-  for(const m of months){
-    if(lower.includes(m)){
-      const dayMatch = lower.match(/(\d+)(st|nd|rd|th)?\s+/);
-      const day = dayMatch ? dayMatch[1] : '1';
-      detectedDate = `${day} ${m.charAt(0).toUpperCase()+m.slice(1)} 2025`;
-      break;
-    }
-  }
-
-  const parts = lower.replace(/\bmodel\b/,'').trim().split(/\s+/);
-  if(!detectedTrack && parts[0]){
-    detectedTrack = parts[0].charAt(0).toUpperCase()+parts[0].slice(1);
-  }
-  if(!detectedDate) detectedDate = 'Today';
-
-  return {isModel, track:detectedTrack||'Flemington', date:detectedDate};
+// ── INPUT DETECTION ───────────────────────────────────────────
+function detectMode(txt){
+  // Real data: has pipe chars, numbered list with numbers, multiple lines with numeric patterns
+  if(txt.includes('|'))return 'real';
+  if(txt.split('\n').filter(l=>l.trim()).length>3 && txt.match(/\d{1,2}\.\s+[A-Z]/))return 'real';
+  return 'sim';
 }
 
-// ── UI HELPERS ──────────────────────────────────────────────────
-let busy = false;
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function scrollBot(){const w=document.getElementById('msgs-scroll');w.scrollTop=w.scrollHeight}
-function hideWelcome(){const w=document.getElementById('welcome');if(w)w.style.display='none'}
-function fillQ(t){document.getElementById('inp').value=t;autoResize(document.getElementById('inp'));document.getElementById('inp').focus()}
-function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px'}
-function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitMsg()}}
+// ── UI STATE ──────────────────────────────────────────────────
+let busy=false;
+let pasteOpen=false;
 
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const scrollBot=()=>{const w=document.getElementById('msgs-wrap');w.scrollTop=w.scrollHeight};
+const hideWelcome=()=>{const w=document.getElementById('welcome');if(w)w.style.display='none'};
+
+function fillQ(t){document.getElementById('inp').value=t;onInput(document.getElementById('inp'));document.getElementById('inp').focus()}
+function hk(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submit()}}
+
+function onInput(el){
+  el.style.height='auto';el.style.height=Math.min(el.scrollHeight,200)+'px';
+  const mode=detectMode(el.value);
+  const dot=document.getElementById('mode-dot');
+  const txt=document.getElementById('mode-txt');
+  const clr=document.getElementById('clear-btn');
+  const eng=document.getElementById('eng-mode');
+  const engd=document.getElementById('eng-data');
+  if(mode==='real'){
+    el.classList.add('paste-mode');dot.className='imode-dot paste';
+    txt.textContent='REAL DATA MODE';
+    clr.style.display='block';
+    if(eng)eng.textContent='REAL DATA';if(eng)eng.className='sbv purple';
+    if(engd)engd.textContent='USER INPUT';if(engd)engd.className='sbv purple';
+  } else {
+    el.classList.remove('paste-mode');dot.className='imode-dot sim';
+    txt.textContent='SIMULATE MODE';
+    clr.style.display='none';
+    if(eng)eng.textContent='SIMULATE';if(eng)eng.className='sbv green';
+    if(engd)engd.textContent='INTERNAL';if(engd)engd.className='sbv green';
+  }
+}
+
+function clearPaste(){document.getElementById('inp').value='';onInput(document.getElementById('inp'))}
+
+function togglePastePanel(){
+  pasteOpen=!pasteOpen;
+  document.getElementById('paste-panel').style.display=pasteOpen?'block':'none';
+}
+
+function loadPasteExample(){
+  const ex=`Race 1 — 1200m Maiden — Good 4 — Flemington
+1. Zoustyle | 3 | 56.5 | J. McDonald | C. Waller | 1-2-1-3-2 | 2.80
+2. Ayrton | 7 | 57.0 | D. Oliver | T. McEvoy | 3-1-2-1-4 | 3.50
+3. Broadsword | 1 | 58.0 | H. Coffey | G. Waterhouse | 2-1-3-2-1 | 5.00
+4. Lighthouse | 11 | 55.5 | T. Berry | D. Hayes | 5-3-4-2-3 | 9.00
+5. Crimson Edge | 5 | 57.5 | J. Bowman | P. Moody | 4-2-5-1-3 | 12.00
+6. Pacific Reign | 9 | 56.0 | K. McEvoy | M. Price | 6-4-3-5-2 | 15.00
+7. Viper King | 2 | 57.0 | B. Shinn | T. Dabernig | 7-6-5-4-6 | 26.00
+8. Storm Front | 14 | 56.5 | C. Williams | N. Burke | 8-7-5-6-7 | 34.00
+
+Race 2 — 1400m BM78 — Good 4 — Flemington
+1. Midnight Blue | 4 | 58.5 | J. McDonald | C. Waller | 1-1-2-1-1 | 2.20
+2. Thunder Bay | 8 | 57.0 | H. Coffey | P. Snowden | 2-3-1-2-3 | 4.50
+3. Crystal Bay | 2 | 56.5 | D. Oliver | C. Maher | 3-2-4-1-2 | 6.00
+4. Coastal Dream | 12 | 55.5 | T. Berry | L. Maher | 4-5-3-4-5 | 11.00
+5. Iron Duke | 6 | 57.5 | J. Byrne | D. Hayes | 5-4-6-3-4 | 14.00
+6. Solar Flare | 10 | 56.0 | M. Dee | M. Moroney | 6-7-5-6-7 | 21.00`;
+  document.getElementById('inp').value=ex;
+  onInput(document.getElementById('inp'));
+  if(pasteOpen)togglePastePanel();
+  document.getElementById('inp').focus();
+}
+
+// ── MESSAGE HELPERS ───────────────────────────────────────────
 function addUserMsg(t){
-  const d=document.createElement('div');d.className='msg msg-user';
-  d.innerHTML=`<div class="msg-label">You</div><div class="bbl-user">${esc(t)}</div>`;
+  const preview=t.length>120?t.substring(0,120)+'…':t;
+  const d=document.createElement('div');d.className='msg mu';
+  d.innerHTML=`<div class="mwho">You</div><div class="bbu">${esc(preview)}</div>`;
   document.getElementById('msgs').appendChild(d);scrollBot();
 }
 
-function addTypingWithSteps(steps){
-  const d=document.createElement('div');d.className='msg msg-ai';d.id='typing-el';
-  d.innerHTML=`<div class="msg-label">Betrich</div><div class="bbl-ai" style="padding:14px 18px" id="typing-inner">
-    <div class="proc-steps" id="proc-steps"></div>
-  </div>`;
+let stepInt;
+function addStepMsg(steps,isReal){
+  const d=document.createElement('div');d.className='msg ma';d.id='step-msg';
+  d.innerHTML=`<div class="mwho">Betrich</div><div class="bba ${isReal?'bba-paste':''}" style="padding:16px 20px"><div class="proc" id="proc"></div></div>`;
   document.getElementById('msgs').appendChild(d);scrollBot();
-  let i=0;
-  const container=document.getElementById('proc-steps');
-  function addStep(){
+  let i=0;const cont=document.getElementById('proc');
+  function next(){
     if(i>=steps.length)return;
-    const row=document.createElement('div');
-    row.className='proc-step';
-    row.style.animationDelay=(i*0.28)+'s';
-    row.innerHTML=`<span class="ps-icon">›</span>${esc(steps[i])}`;
-    container.appendChild(row);
-    i++;scrollBot();
+    const row=document.createElement('div');row.className='prow';row.style.animationDelay=(i*.22)+'s';
+    row.innerHTML=`<div class="pico">${i===0?'⚡':i===steps.length-1?'⏳':'›'}</div>${esc(steps[i])}`;
+    cont.appendChild(row);i++;scrollBot();
   }
-  const interval=setInterval(()=>{addStep();if(i>=steps.length)clearInterval(interval)},300);
-  return interval;
+  next();stepInt=setInterval(next,320);
 }
+function rmStep(){clearInterval(stepInt);const t=document.getElementById('step-msg');if(t)t.remove()}
 
-function removeTyping(){
-  clearInterval(window._stepInterval);
-  const t=document.getElementById('typing-el');if(t)t.remove();
-}
-
-function addAIMsg(html){
-  const d=document.createElement('div');d.className='msg msg-ai';
-  d.innerHTML=`<div class="msg-label">Betrich</div><div class="bbl-ai">${html}</div>`;
+function addAIMsg(html,isReal){
+  const d=document.createElement('div');d.className='msg ma';
+  d.innerHTML=`<div class="mwho">Betrich</div><div class="bba ${isReal?'bba-paste':''}">${html}</div>`;
   document.getElementById('msgs').appendChild(d);scrollBot();
 }
 
-// ── SUBMIT ──────────────────────────────────────────────────────
-function submitMsg(){
+// ── SUBMIT ────────────────────────────────────────────────────
+function submit(){
   if(busy)return;
   const inp=document.getElementById('inp');
   const txt=inp.value.trim();if(!txt)return;
-  busy=true;inp.value='';autoResize(inp);
-  document.getElementById('sendbtn').disabled=true;
-  hideWelcome();addUserMsg(txt);
+  busy=true;inp.value='';onInput(inp);
+  document.getElementById('sbtn').disabled=true;
+  hideWelcome();
+  const mode=detectMode(txt);
+  const isReal=mode==='real';
+  addUserMsg(txt);
 
-  const parsed=parseInput(txt);
+  const steps=isReal?[
+    'Detecting pasted race data...',
+    'Parsing horse names, barriers, weights...',
+    'Reading jockey and trainer assignments...',
+    'Extracting market odds...',
+    'Running barrier advantage calculations...',
+    'Applying weight penalty modeling...',
+    'Computing form consistency scores...',
+    'Calculating probabilistic win percentages...',
+    'Generating RSI and value ratings...',
+    'Rendering complete race card...',
+  ]:[
+    'Parsing race meeting request...',
+    'Seeding race generation engine...',
+    'Building simulated field entries...',
+    'Running barrier & weight model...',
+    'Calculating win probabilities...',
+    'Scoring RSI and value ratings...',
+    'Rendering race card...',
+  ];
 
-  const steps=[
-    `Parsing input: "${txt}"`,
-    `Track identified: ${parsed.track}`,
-    `Generating ${parsed.isModel?'race meeting':'response'}...`,
-    parsed.isModel?`Running barrier & weight modeling engine...`:`Processing query...`,
-    parsed.isModel?`Calculating probabilistic win percentages...`:`Formulating answer...`,
-    parsed.isModel?`Computing RSI scores and value ratings...`:`Complete.`,
-    parsed.isModel?`Rendering full race card...`:``,
-  ].filter(Boolean);
+  addStepMsg(steps,isReal);
 
-  window._stepInterval=addTypingWithSteps(steps);
-
-  // Delay to simulate processing
-  const delay=1800+steps.length*280;
+  const delay=1600+steps.length*260;
   setTimeout(()=>{
-    removeTyping();
-    let html;
-    if(parsed.isModel){
-      const meeting=generateMeeting(parsed.track,parsed.date);
-      html=renderMeeting(meeting);
-      const sideLabel=document.getElementById('side-cur-txt');
-      if(sideLabel)sideLabel.textContent=parsed.track;
+    rmStep();
+    let meeting=null;
+    let errorMsg=null;
+    try{
+      if(isReal){
+        meeting=parseRealData(txt);
+        if(!meeting)throw new Error('Could not detect valid race runner data. Please check the format — each runner needs a name, barrier, weight and odds separated by | characters.');
+      } else {
+        const mMatch=txt.match(/model\s+(\w+)/i);
+        const track=mMatch?mMatch[1]:'Flemington';
+        const dMatch=txt.match(/(\d+)(st|nd|rd|th)?\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*/i);
+        const date=dMatch?`${dMatch[1]} ${dMatch[3]} 2025`:'Saturday';
+        meeting=simulateMeeting(track,date);
+      }
+    }catch(e){errorMsg=e.message}
+
+    if(errorMsg){
+      addAIMsg(`<div class="err">⚠ ${esc(errorMsg)}</div>`,isReal);
     } else {
-      html=renderGenericResponse(txt);
+      addAIMsg(renderMeeting(meeting),isReal);
+      const m=txt.match(/model\s+(\w+)/i);
+      if(m){const l=document.getElementById('cur-lbl');if(l)l.textContent=m[1]}
+      else if(isReal){const l=document.getElementById('cur-lbl');if(l)l.textContent='Real Data'}
     }
-    addAIMsg(html);
-    busy=false;
-    document.getElementById('sendbtn').disabled=false;
-    inp.focus();scrollBot();
+    busy=false;document.getElementById('sbtn').disabled=false;inp.focus();scrollBot();
   },delay);
 }
 
-// ── GENERIC RESPONSE ──────────────────────────────────────────────
-function renderGenericResponse(txt){
-  const responses=[
-    `To model a race meeting, simply type: <strong style="color:var(--green)">Model [Track] [Date]</strong><br>For example: <em>Model Flemington 15th March</em>`,
-    `Betrich can model any Australian racing venue. Try: <strong style="color:var(--green)">Model Randwick 22nd March</strong> to generate a complete race card with all runners, probabilities and value ratings.`,
-    `The Betrich engine generates complete race meetings with full runner analysis. Type <strong style="color:var(--green)">Model [Track] [Date]</strong> to get started.`,
-  ];
-  return responses[Math.floor(Math.random()*responses.length)];
-}
-
-// ── RENDER MEETING ───────────────────────────────────────────────
+// ── RENDER ────────────────────────────────────────────────────
 function renderMeeting(m){
+  const isReal=m.mode==='real';
   let h='';
-  h+=`<div class="rc-hdr">
+  h+=`<div class="rctop">
     <div>
-      <div class="rc-title">🏇 ${esc(m.track)} Racecourse</div>
-      <div class="rc-sub">${esc(m.date)} &nbsp;·&nbsp; Track: ${esc(m.condition)}</div>
+      <div class="rctitle">🏇 ${esc(m.track)}</div>
+      <div class="rcdate">${esc(m.date)} · Track: ${esc(m.condition)}</div>
     </div>
-    <span class="rc-pill">${m.races.length} RACES MODELED</span>
-  </div>`;
+    <span class="rcpill ${isReal?'real':'sim'}">${m.races.length} RACES ${isReal?'· REAL DATA':'· SIMULATED'}</span>
+  </div>
+  <div class="data-badge ${isReal?'real':'sim'}">${isReal?'⚡ User-provided real race data — modeled by Betrich engine':'🎲 Fully simulated by Betrich internal engine'}</div>`;
 
   for(const race of m.races){
-    const rsi=race.rsi;
-    const rsiClass=rsi>=75?'rsi-h':rsi>=58?'rsi-m':'rsi-l';
-    const rsiCol=rsi>=75?'var(--green)':rsi>=58?'var(--amber)':'var(--red)';
-
+    const rsi=Math.max(40,Math.min(95,+race.rsi||65));
+    const rc=rsi>=75?'rh':rsi>=58?'rm':'rl';
+    const rcol=rsi>=75?'var(--green)':rsi>=58?'var(--amber)':'var(--red)';
     h+=`<div class="rb">
-      <div class="rb-head">
+      <div class="rbh">
         <span class="rnum">RACE ${race.raceNum}</span>
-        <span class="rname">${esc(race.raceName)}</span>
-        <div class="tags">
+        <span class="rnm">${esc(race.raceName)}</span>
+        <div class="rtags">
           <span class="tag td">${esc(race.distance)}</span>
           <span class="tag tt">${esc(race.raceType)}</span>
           <span class="tag tc">${esc(race.condition)}</span>
+          ${isReal?'<span class="tag treal">REAL DATA</span>':''}
         </div>
       </div>
-      <div class="rb-stats">
-        <div class="stat"><span class="stat-l">Pace</span><span class="stat-v">${esc(race.pace)}</span></div>
-        <div class="stat"><span class="stat-l">RSI</span>
-          <div class="rsi-row ${rsiClass}">
-            <span class="stat-v" style="color:${rsiCol}">${rsi}</span>
-            <div class="rsi-bar"><div class="rsi-fill" style="width:${rsi}%"></div></div>
+      <div class="rbstats">
+        <div class="stat"><span class="sl2">Pace</span><span class="sv">${esc(race.pace)}</span></div>
+        <div class="stat"><span class="sl2">RSI</span>
+          <div class="rsirow ${rc}">
+            <span class="sv" style="color:${rcol}">${rsi}</span>
+            <div class="rsibar"><div class="rsifill" style="width:${rsi}%"></div></div>
           </div>
         </div>
-        <div class="stat"><span class="stat-l">Field</span><span class="stat-v">${race.runners.length} runners</span></div>
+        <div class="stat"><span class="sl2">Field</span><span class="sv">${race.runners.length} runners</span></div>
       </div>
       <div class="tscroll"><table class="rt"><thead><tr>
-        <th style="width:32px">POS</th>
-        <th>Horse</th><th>BRR</th><th>WGT</th>
+        <th style="width:32px">POS</th><th>Horse</th><th>BRR</th><th>WGT</th>
         <th>Jockey</th><th>Trainer</th><th>Form</th>
         <th>Mkt $</th><th>Win%</th><th>Fair $</th><th>Value</th>
       </tr></thead><tbody>`;
 
     for(const r of race.runners){
-      const pc=r.pos===1?'r1':r.pos===2?'r2':r.pos===3?'r3':'';
-      const nc=r.pos===1?'hname fav':'hname';
-      const mk=r.pos===1?' ★':'';
-      const vl=r.value.toLowerCase();
+      const p=+r.pos;
+      const pc=p===1?'p1':p===2?'p2':p===3?'p3':'';
+      const nc=p===1?(isReal?'hn real':'hn fav'):'hn';
+      const mk=p===1?' ★':'';
+      const vl=(r.value||'').toLowerCase();
       const vc=vl==='overs'?'vo':vl==='unders'?'vu':'vf';
       h+=`<tr>
-        <td class="pos ${pc}">${r.pos}</td>
+        <td class="pc ${pc}">${p}</td>
         <td><span class="${nc}">${esc(r.horse)}${mk}</span></td>
-        <td class="mn">${r.barrier}</td>
-        <td class="mn">${r.weight}kg</td>
-        <td style="font-size:11px;color:var(--muted)">${esc(r.jockey)}</td>
-        <td style="font-size:11px;color:var(--muted)">${esc(r.trainer)}</td>
-        <td><span class="fstr">${esc(r.form)}</span></td>
-        <td class="mn">$${r.marketOdds.toFixed(2)}</td>
-        <td class="mnw">${r.winPct.toFixed(1)}%</td>
-        <td class="mn">$${r.fairOdds.toFixed(2)}</td>
-        <td><span class="vbadge ${vc}">${esc(r.value)}</span></td>
+        <td class="mn">${r.barrier||'–'}</td>
+        <td class="mn">${esc(r.weight||'–')}</td>
+        <td style="font-size:11px;color:var(--muted)">${esc(r.jockey||'–')}</td>
+        <td style="font-size:11px;color:var(--muted)">${esc(r.trainer||'–')}</td>
+        <td><span class="fs">${esc(r.form||'–')}</span></td>
+        <td class="mn">$${(+r.marketOdds||0).toFixed(2)}</td>
+        <td class="mnb">${(+r.winPct||0).toFixed(1)}%</td>
+        <td class="mn">$${(+r.fairOdds||0).toFixed(2)}</td>
+        <td><span class="vb ${vc}">${esc(r.value||'–')}</span></td>
       </tr>`;
     }
-
     h+=`</tbody></table></div>
-      <div class="rb-sum">
-        <div class="sum-cards">
-          <div class="sum-card"><div class="sc-ico">🏆</div><div class="sc-lbl">Top Rated</div><div class="sc-val">${esc(race.topRated)}</div><div class="sc-sub">Model #1 selection</div></div>
-          <div class="sum-card"><div class="sc-ico">📊</div><div class="sc-lbl">Best Value</div><div class="sc-val">${esc(race.bestValue)}</div><div class="sc-sub">Exceeds model fair odds</div></div>
+      <div class="rbs">
+        <div class="scrow">
+          <div class="sc"><div class="ico">🏆</div><div class="lbl">Top Rated</div><div class="val">${esc(race.topRated||'–')}</div><div class="sub">Model #1 selection</div></div>
+          <div class="sc"><div class="ico">📊</div><div class="lbl">Best Value</div><div class="val">${esc(race.bestValue||'–')}</div><div class="sub">Price above fair odds</div></div>
         </div>
-        <div class="risk-box"><b>⚠ Volatility:</b> ${esc(race.riskFactor)}</div>
-        <p class="analysis">${esc(race.analysis)}</p>
+        ${race.riskFactor?`<div class="riskbox"><b>⚠ Volatility:</b> ${esc(race.riskFactor)}</div>`:''}
+        ${race.analysis?`<p class="atxt">${esc(race.analysis)}</p>`:''}
       </div>
     </div>`;
   }
-
-  h+=`<p class="disclaimer">Betrich uses simulated race data and internal modeling logic. Not betting advice.</p>`;
+  h+=`<p class="disc">Betrich uses ${isReal?'user-provided race data':'simulated race data'} and internal modeling logic. Not betting advice.</p>`;
   return h;
 }
 </script>
