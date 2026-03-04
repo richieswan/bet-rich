@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Betrich — AI Racing Model</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -18,7 +18,7 @@
   --amber:#ffb22e;--abg:rgba(255,178,46,.08);--abdr:rgba(255,178,46,.22);
   --blue:#4f96ff;--bbg:rgba(79,150,255,.09);--bbdr:rgba(79,150,255,.22);
   --purple:#a78bfa;--pbg:rgba(167,139,250,.1);--pbdr:rgba(167,139,250,.22);
-  --gold:#ffd700;--goldbg:rgba(255,215,0,.08);--goldbdr:rgba(255,215,0,.25);
+  --gold:#ffd700;--goldbg:rgba(255,215,0,.08);--goldbdr:rgba(255,215,0,.28);
   --teal:#2dd4bf;--tealbg:rgba(45,212,191,.08);--tealbdr:rgba(45,212,191,.22);
   --r:10px;--r2:14px;
 }
@@ -30,7 +30,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background:radial-gradient(ellipse 60% 40% at 50% -5%,rgba(0,232,154,.03) 0%,transparent 70%)}
 #app{display:flex;flex-direction:column;height:100vh;position:relative;z-index:1}
 
-/* ── HEADER ── */
+/* HEADER */
 #hdr{display:flex;align-items:center;justify-content:space-between;height:55px;padding:0 20px;flex-shrink:0;
   background:rgba(7,9,12,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
 .logo{display:flex;align-items:center;gap:11px}
@@ -45,116 +45,104 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .epulse{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);animation:blink 2.2s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 .etxt{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--green);letter-spacing:.07em}
+.hdr-key-btn{display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:7px;padding:5px 11px;cursor:pointer;font-family:'IBM Plex Mono',monospace;
+  font-size:10px;color:var(--muted);letter-spacing:.05em;transition:all .2s}
+.hdr-key-btn:hover{border-color:var(--green);color:var(--green)}
+.hdr-key-btn.has-key{border-color:var(--gbdr);color:var(--green);background:var(--gbg)}
 .hdr-paste-btn{display:flex;align-items:center;gap:6px;background:var(--pbg);border:1px solid var(--pbdr);
   border-radius:7px;padding:5px 12px;cursor:pointer;font-family:'IBM Plex Mono',monospace;
   font-size:10px;color:var(--purple);letter-spacing:.05em;transition:all .2s}
 .hdr-paste-btn:hover{background:rgba(167,139,250,.18)}
 
-/* ── LAYOUT ── */
+/* API KEY MODAL */
+#key-modal{display:none;position:fixed;inset:0;z-index:999;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.72);backdrop-filter:blur(6px)}
+#key-modal.open{display:flex}
+.km-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);
+  padding:28px 28px 24px;width:100%;max-width:460px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.km-title{font-weight:800;font-size:17px;margin-bottom:6px}
+.km-sub{font-size:12.5px;color:var(--muted);line-height:1.7;margin-bottom:18px}
+.km-sub a{color:var(--blue);text-decoration:none}.km-sub a:hover{text-decoration:underline}
+.km-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--t2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.km-inp{width:100%;background:var(--panel);border:1px solid var(--border2);border-radius:9px;color:var(--text);
+  font-family:'IBM Plex Mono',monospace;font-size:13px;padding:11px 14px;outline:none;transition:border-color .2s}
+.km-inp:focus{border-color:rgba(0,232,154,.35)}
+.km-row{display:flex;gap:9px;margin-top:14px}
+.km-save{flex:1;background:var(--green);color:#000;border:none;border-radius:8px;padding:10px;
+  font-weight:700;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .18s}
+.km-save:hover{background:var(--g2)}
+.km-cancel{background:var(--bg3);color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif}
+.km-clear{background:var(--rbg);color:var(--red);border:1px solid var(--rbdr);border-radius:8px;padding:10px 14px;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif}
+.km-st{margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:10px;border-radius:6px;padding:7px 10px;display:none}
+.km-st.ok{display:block;background:var(--gbg);border:1px solid var(--gbdr);color:var(--green)}
+.km-st.err{display:block;background:var(--rbg);border:1px solid var(--rbdr);color:var(--red)}
+
+/* LAYOUT */
 #layout{display:flex;flex:1;overflow:hidden}
 
-/* ══════════════════════════════════════════
-   SIDEBAR
-══════════════════════════════════════════ */
-#side{width:228px;flex-shrink:0;border-right:1px solid var(--border);
-  display:flex;flex-direction:column;overflow:hidden;background:rgba(7,9,12,.5)}
+/* SIDEBAR */
+#side{width:232px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;background:rgba(7,9,12,.5)}
 @media(max-width:700px){#side{display:none}}
-
-#side-scroll{flex:1;overflow-y:auto;padding:12px 10px 6px}
+#side-scroll{flex:1;overflow-y:auto;padding:10px 8px 6px}
 #side-scroll::-webkit-scrollbar{width:2px}
 #side-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-
-/* Section labels */
 .sl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--dim);padding:2px 8px;margin:8px 0 4px;display:flex;align-items:center;justify-content:space-between}
-.sl-count{background:var(--border);border-radius:10px;padding:1px 6px;font-size:9px;color:var(--muted)}
+  color:var(--dim);padding:2px 8px;margin:10px 0 4px;display:flex;align-items:center;justify-content:space-between}
+.sl-badge{background:var(--border);border-radius:10px;padding:1px 6px;font-size:9px;color:var(--muted)}
+.ci{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:8px;color:var(--muted);
+  font-size:12px;cursor:pointer;transition:all .15s;border:1px solid transparent;position:relative}
+.ci:hover{background:var(--bg3);color:var(--t2);border-color:var(--border)}
+.ci.active{background:var(--gbg);color:var(--green);border-color:var(--gbdr)}
+.ci .ci-ico{font-size:13px;flex-shrink:0;width:18px;text-align:center}
+.ci .ci-name{flex:1;font-weight:500;font-size:12px}
+.ci .ci-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;background:var(--border);
+  border-radius:10px;padding:1px 6px;color:var(--muted);flex-shrink:0;min-width:20px;text-align:center}
+.ci.lit .ci-badge{background:var(--gbg);border:1px solid var(--gbdr);color:var(--green)}
+/* State colors */
+.ci.s-vic.active{background:rgba(0,122,255,.1);color:#4f96ff;border-color:rgba(0,122,255,.25)}
+.ci.s-nsw.active{background:rgba(255,59,48,.08);color:#ff6b6b;border-color:rgba(255,59,48,.2)}
+.ci.s-wa.active{background:rgba(255,204,0,.08);color:#ffd700;border-color:rgba(255,204,0,.22)}
+.ci.s-sa.active{background:rgba(175,82,222,.1);color:#b88dfa;border-color:rgba(175,82,222,.25)}
+.ci.s-tas.active{background:rgba(52,199,89,.1);color:#4ade80;border-color:rgba(52,199,89,.25)}
+.ci.s-qld.active{background:rgba(255,149,0,.1);color:#ffb22e;border-color:rgba(255,149,0,.25)}
+.ci.s-locks.active{background:var(--goldbg);color:var(--gold);border-color:var(--goldbdr)}
+.ci.s-place.active{background:var(--tealbg);color:var(--teal);border-color:var(--tealbdr)}
+/* Unread dot */
+.ci .ci-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;display:none}
+.ci.new-content .ci-dot{display:block;background:var(--green);box-shadow:0 0 5px var(--green);animation:blink 1.5s ease-in-out infinite}
+.ci.s-locks.new-content .ci-dot{background:var(--gold);box-shadow:0 0 5px var(--gold)}
+.ci.s-place.new-content .ci-dot{background:var(--teal);box-shadow:0 0 5px var(--teal)}
 
-/* Chat items */
-.chat-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;
-  color:var(--muted);font-size:12px;cursor:pointer;transition:all .15s;border:1px solid transparent;
-  position:relative;user-select:none}
-.chat-item:hover{background:var(--bg3);color:var(--t2);border-color:var(--border)}
-.chat-item.active{background:var(--gbg);color:var(--green);border-color:var(--gbdr)}
-.chat-item .ci-ico{font-size:13px;flex-shrink:0;width:18px;text-align:center}
-.chat-item .ci-name{flex:1;font-weight:500}
-.chat-item .ci-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;background:var(--border);
-  border-radius:10px;padding:1px 6px;color:var(--muted);flex-shrink:0}
-.chat-item.has-content .ci-badge{background:var(--gbg);border:1px solid var(--gbdr);color:var(--green)}
-.chat-item.readonly .ci-name::after{content:'';display:inline-block;width:5px;height:5px;
-  border-radius:50%;background:var(--dim);margin-left:6px;vertical-align:middle}
-.chat-item.readonly.has-content .ci-name::after{background:var(--green);box-shadow:0 0 5px var(--green)}
-
-/* State chat items */
-.chat-item.state-vic.active{background:rgba(0,122,255,.1);color:#4f96ff;border-color:rgba(0,122,255,.25)}
-.chat-item.state-nsw.active{background:rgba(255,59,48,.08);color:#ff6b6b;border-color:rgba(255,59,48,.2)}
-.chat-item.state-wa.active{background:rgba(255,204,0,.08);color:#ffd700;border-color:rgba(255,204,0,.22)}
-.chat-item.state-sa.active{background:rgba(175,82,222,.1);color:#b88dfa;border-color:rgba(175,82,222,.25)}
-.chat-item.state-tas.active{background:rgba(52,199,89,.1);color:#4ade80;border-color:rgba(52,199,89,.25)}
-.chat-item.state-qld.active{background:rgba(255,149,0,.1);color:#ffb22e;border-color:rgba(255,149,0,.25)}
-
-/* ── LOCKS + PLACE LOCKS ── */
-.locks-block{padding:6px 10px}
-.locks-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
-.locks-title{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;
-  text-transform:uppercase;display:flex;align-items:center;gap:5px}
-.locks-title.win-title{color:var(--gold)}
-.locks-title.place-title{color:var(--teal)}
-.lk-count{font-family:'IBM Plex Mono',monospace;font-size:9px;border-radius:10px;padding:1px 6px;display:none}
-.lk-count.vis{display:block}
-.lk-count.win{background:var(--goldbg);border:1px solid var(--goldbdr);color:var(--gold)}
-.lk-count.place{background:var(--tealbg);border:1px solid var(--tealbdr);color:var(--teal)}
-.lock-list{display:flex;flex-direction:column;gap:3px;margin-bottom:6px}
-.lock-empty{padding:7px 10px;border-radius:7px;border:1px dashed var(--dim);font-size:10px;
-  color:var(--dim);text-align:center;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em}
-.lock-item{border-radius:8px;padding:8px 10px;animation:lockIn .35s ease}
-@keyframes lockIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
-.lock-item.win-lock{background:var(--goldbg);border:1px solid var(--goldbdr)}
-.lock-item.place-lock{background:var(--tealbg);border:1px solid var(--tealbdr)}
-.lk-horse{font-weight:700;font-size:11.5px;display:flex;align-items:center;gap:4px;margin-bottom:2px}
-.lk-horse.win{color:var(--gold)}.lk-horse.place{color:var(--teal)}
-.lk-meta{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);display:flex;flex-direction:column;gap:1px}
-.lk-meta .lm-race{color:var(--t2);font-size:9.5px}
-.lk-meta .lm-conf{color:var(--green)}
-.lk-meta .lm-odds{color:var(--amber)}
-.lk-divider{height:1px;background:var(--border);margin:3px 0;opacity:.5}
-
-/* Side footer */
 #side-foot{padding:10px;border-top:1px solid var(--border);flex-shrink:0}
 .snew{width:100%;background:var(--green);color:#000;border:none;border-radius:8px;padding:9px;
   font-weight:700;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .18s}
 .snew:hover{background:var(--g2)}
 
-/* ══════════════════════════════════════════
-   CHAT COLUMN
-══════════════════════════════════════════ */
+/* CHAT COLUMN */
 #chat-col{flex:1;display:flex;flex-direction:column;overflow:hidden}
-
-/* CHAT HEADER BAR (shows current chat name) */
-#chat-topbar{display:flex;align-items:center;gap:10px;padding:9px 20px;
+#ctopbar{display:flex;align-items:center;gap:10px;padding:9px 20px;
   border-bottom:1px solid var(--border);background:rgba(7,9,12,.6);backdrop-filter:blur(10px);flex-shrink:0}
-#chat-topbar .ctb-ico{font-size:16px}
-#chat-topbar .ctb-name{font-weight:700;font-size:14px}
-#chat-topbar .ctb-sub{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--muted);letter-spacing:.04em;margin-left:auto}
-#chat-topbar .ctb-ro{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--amber);
+#ctopbar .ctb-ico{font-size:16px}
+#ctopbar .ctb-name{font-weight:700;font-size:14px}
+#ctopbar .ctb-sub{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--muted);letter-spacing:.04em;margin-left:auto}
+#ctopbar .ctb-ro{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--amber);
   background:var(--abg);border:1px solid var(--abdr);border-radius:4px;padding:2px 7px;display:none}
-#chat-topbar .ctb-ro.show{display:block}
-
-/* Messages area */
+#ctopbar .ctb-ro.show{display:block}
 #msgs-wrap{flex:1;overflow-y:auto;padding:22px 20px 14px;scroll-behavior:smooth}
 #msgs-wrap::-webkit-scrollbar{width:3px}
 #msgs-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 #msgs{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
 
 /* WELCOME */
-#welcome{animation:rise .5s ease}
 @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.wlc{text-align:center;padding:34px 0 24px}
+.wlc{text-align:center;padding:32px 0 20px;animation:rise .5s ease}
 .wchip{display:inline-flex;align-items:center;gap:7px;background:var(--gbg);border:1px solid var(--gbdr);
   border-radius:20px;padding:5px 13px;margin-bottom:14px}
 .wchip span{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--green);letter-spacing:.08em}
-.wlc h1{font-weight:800;font-size:26px;letter-spacing:-.5px;line-height:1.2;margin-bottom:9px}
+.wlc h1{font-weight:800;font-size:25px;letter-spacing:-.5px;line-height:1.2;margin-bottom:9px}
 .wlc h1 em{font-style:normal;color:var(--green)}
-.wsub{color:var(--muted);font-size:13px;max-width:420px;margin:0 auto 24px;line-height:1.65}
+.wsub{color:var(--muted);font-size:13px;max-width:440px;margin:0 auto 22px;line-height:1.65}
 .wmodes{display:grid;grid-template-columns:1fr 1fr;gap:9px;max-width:540px;margin:0 auto 12px}
 .wmode{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:14px 16px;text-align:left;cursor:pointer;transition:all .2s}
 .wmode:hover{transform:translateY(-2px)}
@@ -164,42 +152,50 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .wmode .mtit{font-weight:700;font-size:13px;margin-bottom:3px}
 .wmode .mdesc{font-size:11px;color:var(--muted);line-height:1.5}
 
-/* State read-only placeholder */
-.state-empty{text-align:center;padding:60px 20px}
-.se-ico{font-size:42px;margin-bottom:14px}
-.se-title{font-weight:700;font-size:16px;margin-bottom:6px}
-.se-sub{color:var(--muted);font-size:12.5px;max-width:320px;margin:0 auto;line-height:1.65}
-.se-hint{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);margin-top:14px;
+/* STATE / LOCKS EMPTY PLACEHOLDER */
+.ch-empty{text-align:center;padding:56px 20px;animation:rise .4s ease}
+.che-ico{font-size:40px;margin-bottom:14px}
+.che-title{font-weight:700;font-size:16px;margin-bottom:6px}
+.che-sub{color:var(--muted);font-size:12.5px;max-width:300px;margin:0 auto;line-height:1.65}
+.che-hint{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);margin-top:14px;
   background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 12px;display:inline-block}
 
-/* State race card header */
-.state-card-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
-  padding:14px 0 14px;border-bottom:1px solid var(--border);margin-bottom:16px}
-.sch-left .sch-venue{font-weight:800;font-size:19px;letter-spacing:-.3px}
-.sch-left .sch-meta{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px;letter-spacing:.04em}
-.sch-pill{border-radius:20px;padding:4px 11px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em}
-.sch-pill.real{background:var(--pbg);color:var(--purple);border:1px solid var(--pbdr)}
-.sch-pill.sim{background:var(--gbg);color:var(--green);border:1px solid var(--gbdr)}
+/* LOCK CHANNEL CARDS */
+.lch-card{border-radius:var(--r2);padding:16px 18px;margin-bottom:12px;animation:rise .35s ease}
+.lch-card.win{background:rgba(255,215,0,.06);border:1px solid var(--goldbdr)}
+.lch-card.place{background:rgba(45,212,191,.06);border:1px solid var(--tealbdr)}
+.lch-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+.lch-horse{font-weight:800;font-size:17px;letter-spacing:-.2px}
+.lch-horse.win{color:var(--gold)}.lch-horse.place{color:var(--teal)}
+.lch-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 9px;border-radius:20px;letter-spacing:.06em;white-space:nowrap}
+.lch-badge.win{background:var(--goldbg);color:var(--gold);border:1px solid var(--goldbdr)}
+.lch-badge.place{background:var(--tealbg);color:var(--teal);border:1px solid var(--tealbdr)}
+.lch-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.lch-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:3px 9px;border-radius:5px;border:1px solid}
+.lch-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.lch-stat{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
+.lch-stat .ls-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:2px}
+.lch-stat .ls-val{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500}
+.lch-stat .ls-val.green{color:var(--green)}.lch-stat .ls-val.gold{color:var(--gold)}.lch-stat .ls-val.teal{color:var(--teal)}
+.lch-analysis{font-size:12px;color:var(--t2);line-height:1.75;padding-top:10px;border-top:1px solid var(--border)}
+.lch-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:4px 0 16px}
 
-/* Messages */
+/* MESSAGES */
 .msg{display:flex;flex-direction:column;animation:rise .2s ease}
 .mu{align-items:flex-end}.ma{align-items:flex-start}
 .mwho{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;padding:0 3px}
 .bbu{background:linear-gradient(135deg,var(--green),var(--g2));color:#000;font-weight:600;font-size:14px;
   padding:10px 16px;border-radius:16px 16px 4px 16px;max-width:460px;word-break:break-word}
 .bba{background:var(--bg2);border:1px solid var(--border);border-radius:4px 16px 16px 16px;padding:22px 26px;max-width:100%;width:100%}
-
-/* Typing/steps */
 .proc{display:flex;flex-direction:column;gap:6px}
 .prow{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;
   color:var(--muted);opacity:0;animation:pstep .28s ease forwards}
+.prow.ai-step{color:var(--green)}
 @keyframes pstep{to{opacity:1}}
-.pico{width:16px;height:16px;border-radius:50%;border:1px solid var(--gbdr);display:flex;align-items:center;
-  justify-content:center;font-size:9px;color:var(--green);flex-shrink:0}
+.pico{width:16px;height:16px;border-radius:50%;border:1px solid var(--gbdr);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--green);flex-shrink:0}
 
-/* ── INPUT ZONE ── */
-#izone{padding:10px 20px 15px;flex-shrink:0;background:linear-gradient(to top,var(--bg) 56%,transparent);transition:opacity .2s}
-#izone.disabled{opacity:.35;pointer-events:none}
+/* INPUT */
+#izone{padding:10px 20px 15px;flex-shrink:0;background:linear-gradient(to top,var(--bg) 56%,transparent)}
 .iwrap{max-width:900px;margin:0 auto}
 .irow{position:relative}
 #inp{width:100%;background:var(--panel);border:1px solid var(--border2);border-radius:var(--r2);
@@ -214,55 +210,44 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 #sbtn:disabled{background:var(--border);cursor:not-allowed;transform:none}
 #sbtn svg{fill:#000}
 .itools{display:flex;align-items:center;justify-content:space-between;margin-top:7px;padding:0 2px}
-.itool-l{display:flex;align-items:center;gap:7px}
-.imode{display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--dim);letter-spacing:.04em}
-.imode-dot{width:5px;height:5px;border-radius:50%}
-.imode-dot.sim{background:var(--green);box-shadow:0 0 5px var(--green)}
-.imode-dot.paste{background:var(--purple);box-shadow:0 0 5px var(--purple)}
-.ipaste-btn{background:var(--pbg);border:1px solid var(--pbdr);border-radius:5px;padding:3px 9px;
-  font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--purple);cursor:pointer;transition:all .2s;letter-spacing:.04em}
-.ipaste-btn:hover{background:rgba(167,139,250,.18)}
-.iclear-btn{background:var(--rbg);border:1px solid var(--rbdr);border-radius:5px;padding:3px 9px;
-  font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--red);cursor:pointer;transition:all .2s;display:none}
-.ihint{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--dim);letter-spacing:.04em}
+.itl{display:flex;align-items:center;gap:7px}
+.imode{display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--dim)}
+.imdot{width:5px;height:5px;border-radius:50%}
+.imdot.sim{background:var(--green);box-shadow:0 0 5px var(--green)}
+.imdot.paste{background:var(--purple);box-shadow:0 0 5px var(--purple)}
+.imdot.ai{background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 1.1s ease-in-out infinite}
+.ib{border-radius:5px;padding:3px 9px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;cursor:pointer;transition:all .2s;border:1px solid}
+.ib.paste{background:var(--pbg);border-color:var(--pbdr);color:var(--purple)}
+.ib.clear{background:var(--rbg);border-color:var(--rbdr);color:var(--red);display:none}
+.ihint{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--dim)}
+#robar{display:none;padding:10px 20px 15px;flex-shrink:0}
+#robar .ro-in{max-width:900px;margin:0 auto;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:13px 18px;display:flex;align-items:center;gap:10px;color:var(--dim)}
+#robar .ro-txt{font-size:12.5px;line-height:1.5}
+#robar .ro-txt strong{color:var(--t2)}
+#ppanel{display:none;padding:0 20px 12px;flex-shrink:0}
+.pp-w{max-width:900px;margin:0 auto;background:var(--pbg);border:1px solid var(--pbdr);border-radius:var(--r2);padding:14px 18px}
+.pp-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.pp-t{font-weight:700;font-size:13px;color:var(--purple)}
+.pp-x{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:2px 6px}
+.pp-d{font-size:12px;color:var(--t2);line-height:1.7;margin-bottom:8px}
+.pp-d code{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green)}
+.pp-eg{background:var(--purple);color:#fff;border:none;border-radius:7px;padding:7px 14px;font-family:'Outfit',sans-serif;font-weight:600;font-size:12px;cursor:pointer}
 
-/* readonly bar shown in state chats */
-#readonly-bar{display:none;padding:10px 20px 15px;flex-shrink:0}
-#readonly-bar .ro-inner{max-width:900px;margin:0 auto;background:var(--bg3);border:1px solid var(--border2);
-  border-radius:var(--r2);padding:13px 18px;display:flex;align-items:center;gap:10px;color:var(--dim)}
-#readonly-bar .ro-ico{font-size:16px}
-#readonly-bar .ro-txt{font-size:12.5px;line-height:1.5}
-#readonly-bar .ro-txt strong{color:var(--t2)}
-
-/* ── PASTE PANEL ── */
-#paste-panel{display:none;padding:0 20px 12px;flex-shrink:0}
-.pp-wrap{max-width:900px;margin:0 auto;background:var(--pbg);border:1px solid var(--pbdr);border-radius:var(--r2);padding:14px 18px}
-.pp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.pp-title{font-weight:700;font-size:13px;color:var(--purple)}
-.pp-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:2px 6px;transition:color .2s}
-.pp-close:hover{color:var(--text)}
-.pp-desc{font-size:12px;color:var(--t2);line-height:1.7;margin-bottom:8px}
-.pp-desc code{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green)}
-.pp-load{background:var(--purple);color:#fff;border:none;border-radius:7px;padding:7px 14px;font-family:'Outfit',sans-serif;font-weight:600;font-size:12px;cursor:pointer;transition:background .2s}
-.pp-load:hover{background:#9d74f0}
-
-/* ══════════════════════════════════════════
-   RACE CARD STYLES
-══════════════════════════════════════════ */
-.rctop{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;
-  padding-bottom:14px;margin-bottom:16px;border-bottom:1px solid var(--border)}
+/* RACE CARD */
+.rctop{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-bottom:14px;margin-bottom:16px;border-bottom:1px solid var(--border)}
 .rctitle{font-weight:800;font-size:20px;letter-spacing:-.4px}
-.rcdate{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:.04em}
+.rcdate{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:3px}
 .rcpill{border-radius:20px;padding:4px 11px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;white-space:nowrap}
 .rcpill.sim{background:var(--gbg);color:var(--green);border:1px solid var(--gbdr)}
 .rcpill.real{background:var(--pbg);color:var(--purple);border:1px solid var(--pbdr)}
-.data-badge{display:inline-flex;align-items:center;gap:5px;border-radius:5px;padding:3px 9px;
-  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.05em;margin-bottom:12px}
-.data-badge.sim{background:var(--gbg);border:1px solid var(--gbdr);color:var(--green)}
-.data-badge.real{background:var(--pbg);border:1px solid var(--pbdr);color:var(--purple)}
+.rcpill.ai{background:rgba(0,232,154,.14);color:var(--green);border:1px solid rgba(0,232,154,.38)}
+.dbadge{display:inline-flex;align-items:center;gap:5px;border-radius:5px;padding:3px 9px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.05em;margin-bottom:12px;border:1px solid}
+.dbadge.sim{background:var(--gbg);border-color:var(--gbdr);color:var(--green)}
+.dbadge.real{background:var(--pbg);border-color:var(--pbdr);color:var(--purple)}
+.dbadge.ai{background:rgba(0,232,154,.1);border-color:rgba(0,232,154,.3);color:var(--green)}
 .rb{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);margin-bottom:14px;overflow:hidden}
 .rbh{display:flex;align-items:center;flex-wrap:wrap;gap:7px;padding:12px 15px;background:rgba(255,255,255,.01);border-bottom:1px solid var(--border)}
-.rnum{font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:500;background:var(--gbg);color:var(--green);border:1px solid var(--gbdr);border-radius:4px;padding:3px 9px;letter-spacing:.06em}
+.rnum{font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:500;background:var(--gbg);color:var(--green);border:1px solid var(--gbdr);border-radius:4px;padding:3px 9px}
 .rnm{font-weight:700;font-size:13px;flex:1}
 .rtags{display:flex;gap:5px;flex-wrap:wrap}
 .tag{font-family:'IBM Plex Mono',monospace;font-size:9.5px;padding:2px 7px;border-radius:4px;letter-spacing:.04em;border:1px solid}
@@ -270,6 +255,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .tt{color:var(--muted);background:rgba(255,255,255,.03);border-color:var(--border)}
 .tc{color:var(--amber);background:var(--abg);border-color:var(--abdr)}
 .treal{color:var(--purple);background:var(--pbg);border-color:var(--pbdr)}
+.tai{color:var(--green);background:rgba(0,232,154,.07);border-color:rgba(0,232,154,.28)}
 .tlock{color:var(--gold);background:var(--goldbg);border-color:var(--goldbdr)}
 .tplace{color:var(--teal);background:var(--tealbg);border-color:var(--tealbdr)}
 .rbstats{display:flex;gap:20px;flex-wrap:wrap;padding:10px 15px;border-bottom:1px solid var(--border)}
@@ -286,7 +272,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .tscroll{overflow-x:auto}
 .tscroll::-webkit-scrollbar{height:3px}
 .tscroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
-table.rt{width:100%;border-collapse:collapse;min-width:830px}
+table.rt{width:100%;border-collapse:collapse;min-width:860px}
 table.rt th{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;
   color:var(--dim);padding:7px 11px;text-align:left;border-bottom:1px solid var(--border);background:var(--bg1);white-space:nowrap}
 table.rt td{padding:8px 11px;border-bottom:1px solid rgba(36,43,56,.5);font-size:12px;white-space:nowrap;vertical-align:middle}
@@ -294,13 +280,14 @@ table.rt tr:last-child td{border-bottom:none}
 table.rt tbody tr:hover{background:rgba(255,255,255,.012)}
 table.rt tbody tr.lock-row{background:rgba(255,215,0,.04)}
 table.rt tbody tr.place-row{background:rgba(45,212,191,.03)}
-.pc{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;width:32px;text-align:center}
+.pc{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;width:30px;text-align:center}
 .p1{color:var(--green)}.p2{color:#88ccb6}.p3{color:var(--muted)}
 .hn{font-weight:600;font-size:12px}
-.hn.fav{color:var(--green)}.hn.real{color:var(--purple)}.hn.lock{color:var(--gold)}.hn.place{color:var(--teal)}
+.hn.fav{color:var(--green)}.hn.real{color:var(--purple)}.hn.ai{color:var(--green)}.hn.lock{color:var(--gold)}.hn.place{color:var(--teal)}
 .fs{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.07em}
 .mn{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)}
 .mnb{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text)}
+.rn{font-size:10px;color:var(--muted);font-style:italic;max-width:180px;white-space:normal;line-height:1.4}
 .vb{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 7px;border-radius:4px;letter-spacing:.04em;font-weight:500;border:1px solid}
 .vo{background:var(--gbg);color:var(--green);border-color:var(--gbdr)}
 .vu{background:var(--rbg);color:var(--red);border-color:var(--rbdr)}
@@ -308,25 +295,20 @@ table.rt tbody tr.place-row{background:rgba(45,212,191,.03)}
 .rbs{padding:12px 15px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
 .scrow{display:flex;gap:8px;flex-wrap:wrap}
 .sc{flex:1;min-width:140px;background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px}
-.sc .ico{font-size:13px;margin-bottom:3px}
-.sc .lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim);margin-bottom:2px}
-.sc .val{font-weight:700;font-size:12px}
-.sc .sub{font-size:11px;color:var(--muted);margin-top:1px}
-.sc.lock-sc{background:var(--goldbg);border-color:var(--goldbdr)}
-.sc.lock-sc .lbl{color:rgba(255,215,0,.5)}.sc.lock-sc .val{color:var(--gold)}
-.sc.place-sc{background:var(--tealbg);border-color:var(--tealbdr)}
-.sc.place-sc .lbl{color:rgba(45,212,191,.5)}.sc.place-sc .val{color:var(--teal)}
+.sc .sico{font-size:13px;margin-bottom:3px}
+.sc .slb{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim);margin-bottom:2px}
+.sc .svl{font-weight:700;font-size:12px}
+.sc .ssb{font-size:11px;color:var(--muted);margin-top:1px}
+.sc.gold{background:var(--goldbg);border-color:var(--goldbdr)}
+.sc.gold .slb{color:rgba(255,215,0,.5)}.sc.gold .svl{color:var(--gold)}
+.sc.teal{background:var(--tealbg);border-color:var(--tealbdr)}
+.sc.teal .slb{color:rgba(45,212,191,.5)}.sc.teal .svl{color:var(--teal)}
 .riskbox{background:var(--abg);border:1px solid var(--abdr);border-radius:var(--r);padding:9px 12px;font-size:12px;color:var(--t2)}
 .riskbox b{color:var(--amber)}
 .atxt{font-size:12px;color:var(--muted);line-height:1.78;padding-top:8px;border-top:1px solid var(--border)}
-.disc{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--dim);
-  letter-spacing:.04em;padding-top:12px;margin-top:12px;border-top:1px solid var(--border)}
+.disc{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--dim);padding-top:12px;margin-top:12px;border-top:1px solid var(--border)}
 .err{background:var(--rbg);border:1px solid var(--rbdr);border-radius:var(--r);padding:12px 16px;color:var(--red);font-size:13px;line-height:1.6}
-
-@media(max-width:600px){
-  #hdr{padding:0 12px}#msgs-wrap{padding:14px 10px 8px}
-  #izone{padding:8px 10px 12px}.bba{padding:14px 16px}.etxt{display:none}
-}
+@media(max-width:600px){#hdr{padding:0 12px}#msgs-wrap{padding:14px 10px 8px}#izone{padding:8px 10px 12px}.bba{padding:14px 16px}.etxt{display:none}}
 </style>
 </head>
 <body>
@@ -337,815 +319,618 @@ table.rt tbody tr.place-row{background:rgba(45,212,191,.03)}
       <div class="ltxt"><span class="lname">Betrich</span><span class="lsub">AI Racing Model</span></div>
     </div>
     <div class="hdr-r">
-      <div class="eng-pill"><div class="epulse"></div><span class="etxt">LOCAL ENGINE v8</span></div>
-      <button class="hdr-paste-btn" onclick="togglePastePanel()">📋 Paste Race Data</button>
+      <div class="eng-pill"><div class="epulse"></div><span class="etxt" id="eng-label">LOCAL ENGINE v9</span></div>
+      <button class="hdr-key-btn" id="key-btn" onclick="openKeyModal()">&#128273; <span id="key-btn-txt">Add API Key</span></button>
+      <button class="hdr-paste-btn" onclick="togglePaste()">&#128203; Paste Race Data</button>
     </div>
   </header>
 
-  <div id="layout">
+  <div id="key-modal">
+    <div class="km-box">
+      <div class="km-title">&#128273; Anthropic API Key</div>
+      <p class="km-sub">Add your Anthropic API key to unlock <strong style="color:var(--green)">AI Research Mode</strong> &#8212; Betrich uses Claude with live web search to genuinely research every horse, jockey, trainer, and track condition before modelling the card. Authentic intelligence, not random picks.<br/><br/>Get a key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>. Key stays in this browser session only.</p>
+      <div class="km-lbl">Your API Key</div>
+      <input class="km-inp" id="km-inp" type="password" placeholder="sk-ant-api03-..." autocomplete="off" onkeydown="if(event.key==='Enter')saveKey()"/>
+      <div class="km-st" id="km-st"></div>
+      <div class="km-row">
+        <button class="km-save" onclick="saveKey()">Save &amp; Enable AI Research</button>
+        <button class="km-cancel" onclick="closeKeyModal()">Cancel</button>
+        <button class="km-clear" onclick="clearKey()">&#10005; Remove</button>
+      </div>
+    </div>
+  </div>
 
-    <!-- ══ SIDEBAR ══ -->
+  <div id="layout">
     <nav id="side">
       <div id="side-scroll">
 
-        <!-- CHATS -->
         <div class="sl">Chats</div>
-        <div class="chat-item active" id="ci-real" onclick="switchChat('real')">
-          <span class="ci-ico">💬</span>
+        <div class="ci active" id="ci-real" onclick="switchChat('real')">
+          <span class="ci-ico">&#128172;</span>
           <span class="ci-name">Real Data</span>
+          <span class="ci-dot"></span>
           <span class="ci-badge" id="badge-real">INPUT</span>
         </div>
 
-        <!-- STATE CHANNELS -->
-        <div class="sl" style="margin-top:6px">
-          State Channels
-          <span class="sl-count">Read Only</span>
-        </div>
-        <div class="chat-item readonly state-vic" id="ci-VIC" onclick="switchChat('VIC')">
-          <span class="ci-ico">🔵</span>
-          <span class="ci-name">VIC</span>
-          <span class="ci-badge" id="badge-VIC">—</span>
-        </div>
-        <div class="chat-item readonly state-nsw" id="ci-NSW" onclick="switchChat('NSW')">
-          <span class="ci-ico">🔴</span>
-          <span class="ci-name">NSW</span>
-          <span class="ci-badge" id="badge-NSW">—</span>
-        </div>
-        <div class="chat-item readonly state-wa" id="ci-WA" onclick="switchChat('WA')">
-          <span class="ci-ico">🟡</span>
-          <span class="ci-name">WA</span>
-          <span class="ci-badge" id="badge-WA">—</span>
-        </div>
-        <div class="chat-item readonly state-sa" id="ci-SA" onclick="switchChat('SA')">
-          <span class="ci-ico">🟣</span>
-          <span class="ci-name">SA</span>
-          <span class="ci-badge" id="badge-SA">—</span>
-        </div>
-        <div class="chat-item readonly state-tas" id="ci-TAS" onclick="switchChat('TAS')">
-          <span class="ci-ico">🟢</span>
-          <span class="ci-name">TAS</span>
-          <span class="ci-badge" id="badge-TAS">—</span>
-        </div>
-        <div class="chat-item readonly state-qld" id="ci-QLD" onclick="switchChat('QLD')">
-          <span class="ci-ico">🟠</span>
-          <span class="ci-name">QLD</span>
-          <span class="ci-badge" id="badge-QLD">—</span>
-        </div>
+        <div class="sl" style="margin-top:4px">State Channels <span class="sl-badge">Auto-Routed</span></div>
+        <div class="ci s-vic" id="ci-VIC" onclick="switchChat('VIC')"><span class="ci-ico">&#128309;</span><span class="ci-name">VIC</span><span class="ci-dot"></span><span class="ci-badge" id="badge-VIC">&#8212;</span></div>
+        <div class="ci s-nsw" id="ci-NSW" onclick="switchChat('NSW')"><span class="ci-ico">&#128308;</span><span class="ci-name">NSW</span><span class="ci-dot"></span><span class="ci-badge" id="badge-NSW">&#8212;</span></div>
+        <div class="ci s-wa"  id="ci-WA"  onclick="switchChat('WA')"><span class="ci-ico">&#128993;</span><span class="ci-name">WA</span><span class="ci-dot"></span><span class="ci-badge" id="badge-WA">&#8212;</span></div>
+        <div class="ci s-sa"  id="ci-SA"  onclick="switchChat('SA')"><span class="ci-ico">&#128994;</span><span class="ci-name">SA</span><span class="ci-dot"></span><span class="ci-badge" id="badge-SA">&#8212;</span></div>
+        <div class="ci s-tas" id="ci-TAS" onclick="switchChat('TAS')"><span class="ci-ico">&#128311;</span><span class="ci-name">TAS</span><span class="ci-dot"></span><span class="ci-badge" id="badge-TAS">&#8212;</span></div>
+        <div class="ci s-qld" id="ci-QLD" onclick="switchChat('QLD')"><span class="ci-ico">&#128992;</span><span class="ci-name">QLD</span><span class="ci-dot"></span><span class="ci-badge" id="badge-QLD">&#8212;</span></div>
 
-        <!-- WIN LOCKS -->
-        <div class="sl" style="margin-top:8px">
-          <span class="locks-title win-title">🔒 Locks</span>
-          <span class="lk-count win" id="wlk-count">0</span>
-        </div>
-        <div class="locks-block" style="padding-top:0">
-          <div class="lock-list" id="win-lock-list">
-            <div class="lock-empty" id="win-lock-empty">No locks yet</div>
-          </div>
-        </div>
+        <div class="sl" style="margin-top:4px">Pick Channels <span class="sl-badge">Auto-Populated</span></div>
+        <div class="ci s-locks" id="ci-LOCKS" onclick="switchChat('LOCKS')"><span class="ci-ico">&#128274;</span><span class="ci-name">Locks</span><span class="ci-dot"></span><span class="ci-badge" id="badge-LOCKS">&#8212;</span></div>
+        <div class="ci s-place" id="ci-PLACE" onclick="switchChat('PLACE')"><span class="ci-ico">&#127919;</span><span class="ci-name">Place Locks</span><span class="ci-dot"></span><span class="ci-badge" id="badge-PLACE">&#8212;</span></div>
 
-        <!-- PLACE LOCKS -->
-        <div class="sl" style="margin-top:4px">
-          <span class="locks-title place-title">🎯 Place Locks</span>
-          <span class="lk-count place" id="plk-count">0</span>
-        </div>
-        <div class="locks-block" style="padding-top:0">
-          <div class="lock-list" id="place-lock-list">
-            <div class="lock-empty" id="place-lock-empty">No place locks yet</div>
-          </div>
-        </div>
-
-      </div><!-- end side-scroll -->
-
+      </div>
       <div id="side-foot">
         <button class="snew" onclick="resetSession()">+ New Session</button>
       </div>
     </nav>
 
-    <!-- ══ CHAT COLUMN ══ -->
     <div id="chat-col">
-
-      <!-- Top bar -->
-      <div id="chat-topbar">
-        <span class="ctb-ico" id="ctb-ico">💬</span>
+      <div id="ctopbar">
+        <span class="ctb-ico" id="ctb-ico">&#128172;</span>
         <span class="ctb-name" id="ctb-name">Real Data</span>
         <span class="ctb-sub" id="ctb-sub">ACTIVE INPUT CHAT</span>
         <span class="ctb-ro" id="ctb-ro">READ ONLY</span>
       </div>
 
-      <!-- Messages -->
-      <div id="msgs-wrap">
-        <div id="msgs"></div>
-      </div>
+      <div id="msgs-wrap"><div id="msgs"></div></div>
 
-      <!-- Paste panel -->
-      <div id="paste-panel">
-        <div class="pp-wrap">
-          <div class="pp-head">
-            <span class="pp-title">📋 Paste Real Race Data</span>
-            <button class="pp-close" onclick="togglePastePanel()">✕</button>
+      <div id="ppanel">
+        <div class="pp-w">
+          <div class="pp-h">
+            <span class="pp-t">&#128203; Paste Real Race Data</span>
+            <button class="pp-x" onclick="togglePaste()">&#10005;</button>
           </div>
-          <div class="pp-desc">
-            Format each runner on a new line with <code>|</code> separators:<br/>
-            <code>Race 1 — 1200m BM78 — Good 4 — Flemington</code><br/>
+          <div class="pp-d">
+            Format: <code>Race 1 &#8212; 1200m BM78 &#8212; Good 4 &#8212; Flemington</code><br/>
             <code>1. Horse Name | Barrier | Weight | Jockey | Trainer | Form | Odds</code><br/>
-            Betrich auto-routes the full card to the correct State channel.
+            With API key: Betrich researches every horse via live web search before modelling.
           </div>
-          <button class="pp-load" onclick="loadExample()">⚡ Load Example</button>
+          <button class="pp-eg" onclick="loadExample()">&#9889; Load Example Card</button>
         </div>
       </div>
 
-      <!-- Input (Real Data chat only) -->
       <div id="izone">
         <div class="iwrap">
           <div class="irow">
             <textarea id="inp" rows="1"
-              placeholder='Simulate: "Model Flemington Saturday"  ·  Or paste real race data'
+              placeholder='Type "Model Flemington Saturday" to simulate, or paste a real race card below'
               onkeydown="hk(event)" oninput="onInp(this)"></textarea>
             <button id="sbtn" onclick="doSubmit()">
               <svg width="15" height="15" viewBox="0 0 16 16"><path d="M14.5 8L2 14l2.5-6H14.5zm0 0L2 2l2.5 6H14.5z"/></svg>
             </button>
           </div>
           <div class="itools">
-            <div class="itool-l">
-              <div class="imode"><div class="imode-dot sim" id="mode-dot"></div><span id="mode-txt">SIMULATE MODE</span></div>
-              <button class="ipaste-btn" onclick="togglePastePanel()">+ Paste Data</button>
-              <button class="iclear-btn" id="clr-btn" onclick="doClear()">✕ Clear</button>
+            <div class="itl">
+              <div class="imode"><div class="imdot sim" id="imdot"></div><span id="imtxt">SIMULATE MODE</span></div>
+              <button class="ib paste" onclick="togglePaste()">+ Paste Data</button>
+              <button class="ib clear" id="clrbtn" onclick="doClear()">&#10005; Clear</button>
             </div>
-            <span class="ihint">↵ submit · Shift+↵ newline</span>
+            <span class="ihint">&#8629; submit &middot; Shift+&#8629; new line</span>
           </div>
         </div>
       </div>
 
-      <!-- Read-only bar (state chats) -->
-      <div id="readonly-bar">
-        <div class="ro-inner">
-          <span class="ro-ico">🔒</span>
-          <span class="ro-txt"><strong>Read-only channel.</strong> This state channel is auto-populated when you paste race data in the <strong>Real Data</strong> chat. Switch back to paste new data.</span>
+      <div id="robar">
+        <div class="ro-in">
+          <span style="font-size:16px">&#128274;</span>
+          <span class="ro-txt"><strong>Read-only channel.</strong> Auto-populated from the <strong>Real Data</strong> chat. Switch back to paste new data.</span>
         </div>
       </div>
-
-    </div><!-- end chat-col -->
-  </div><!-- end layout -->
+    </div>
+  </div>
 </div>
-
 <script>
 'use strict';
-// ═══════════════════════════════════════════════════════════════
-//  BETRICH v8  ·  Multi-Chat  ·  State Routing  ·  Place Locks
-// ═══════════════════════════════════════════════════════════════
+// ===================================================================
+//  BETRICH v9  |  AI Research Engine  |  State + Lock Routing
+// ===================================================================
 
-// ── TRACK → STATE ROUTING ────────────────────────────────────
+// TRACK -> STATE MAP
 const TRACK_STATE = {
-  // VIC
-  'flemington':'VIC','caulfield':'VIC','moonee valley':'VIC','mrc':'VIC','the valley':'VIC',
-  'sandown':'VIC','geelong':'VIC','ballarat':'VIC','pakenham':'VIC','cranbourne':'VIC',
-  'bendigo':'VIC','mornington':'VIC','seymour':'VIC','wodonga':'VIC',
-  // NSW
-  'randwick':'NSW','rosehill':'NSW','warwick farm':'NSW','newcastle':'NSW',
-  'hawkesbury':'NSW','kembla':'NSW','gosford':'NSW','wyong':'NSW','canterbury':'NSW',
-  // WA
-  'ascot':'WA','belmont':'WA','pinjarra':'WA','bunbury':'WA','geraldton':'WA',
-  // SA
-  'morphettville':'SA','gawler':'SA','murray bridge':'SA','naracoorte':'SA',
-  // TAS
-  'hobart':'TAS','launceston':'TAS','elwick':'TAS','devonport':'TAS',
-  // QLD
-  'eagle farm':'QLD','doomben':'QLD','gold coast':'QLD','sunshine coast':'QLD',
-  'ipswich':'QLD','toowoomba':'QLD','rockhampton':'QLD','townsville':'QLD',
+  flemington:'VIC',caulfield:'VIC','moonee valley':'VIC','the valley':'VIC',
+  sandown:'VIC',geelong:'VIC',ballarat:'VIC',pakenham:'VIC',cranbourne:'VIC',
+  bendigo:'VIC',mornington:'VIC',seymour:'VIC',wodonga:'VIC',
+  randwick:'NSW',rosehill:'NSW','warwick farm':'NSW',newcastle:'NSW',
+  hawkesbury:'NSW',kembla:'NSW',gosford:'NSW',wyong:'NSW',canterbury:'NSW',
+  ascot:'WA',belmont:'WA',pinjarra:'WA',bunbury:'WA',geraldton:'WA',
+  morphettville:'SA',gawler:'SA','murray bridge':'SA',naracoorte:'SA',
+  hobart:'TAS',launceston:'TAS',elwick:'TAS',devonport:'TAS',
+  'eagle farm':'QLD',doomben:'QLD','gold coast':'QLD','sunshine coast':'QLD',
+  ipswich:'QLD',toowoomba:'QLD',rockhampton:'QLD',townsville:'QLD',
 };
 const STATE_META = {
-  VIC: {ico:'🔵',name:'VIC',label:'Victoria',color:'#4f96ff'},
-  NSW: {ico:'🔴',name:'NSW',label:'New South Wales',color:'#ff6b6b'},
-  WA:  {ico:'🟡',name:'WA', label:'Western Australia',color:'#ffd700'},
-  SA:  {ico:'🟣',name:'SA', label:'South Australia',color:'#b88dfa'},
-  TAS: {ico:'🟢',name:'TAS',label:'Tasmania',color:'#4ade80'},
-  QLD: {ico:'🟠',name:'QLD',label:'Queensland',color:'#ffb22e'},
+  VIC:{ico:'&#128309;',label:'Victoria'},
+  NSW:{ico:'&#128308;',label:'New South Wales'},
+  WA: {ico:'&#128993;',label:'Western Australia'},
+  SA: {ico:'&#128994;',label:'South Australia'},
+  TAS:{ico:'&#128311;',label:'Tasmania'},
+  QLD:{ico:'&#128992;',label:'Queensland'},
+  LOCKS:{ico:'&#128274;',label:'Win Locks'},
+  PLACE:{ico:'&#127919;',label:'Place Locks'},
 };
-
-function detectState(track) {
-  if (!track) return null;
-  const t = track.toLowerCase().trim();
-  for (const [key, state] of Object.entries(TRACK_STATE)) {
-    if (t.includes(key)) return state;
-  }
+function detectState(track){
+  if(!track)return null;
+  const t=track.toLowerCase().trim();
+  for(const[k,s]of Object.entries(TRACK_STATE))if(t.includes(k))return s;
   return null;
 }
 
-// ── DATA POOLS ───────────────────────────────────────────────
-const H=['Zoustyle','Thunder Run','Crimson Ace','Night Rider','Golden Edge','Pacific Storm',
-  'Iron Fist','Silent Echo','Rapid Fire','Dark Matter','Silver Streak','Viper King',
-  'Blue Horizon','Wind Dancer','Steel Arrow','Phantom Blaze','Ruby Crown','Crystal Bay',
-  'Desert Prince','Morning Light','Shadow Racer','Blazing Trail','Copper King','Wild Spirit',
-  'Storm Chaser','Midnight Blue','Emerald Coast','True North','Diamond Rush','Flash Point',
-  'Jungle Run','Solar Flare','Arctic Chill','River Stone','Velocity Max','Timber Wolf',
-  'Sacred Flame','Outback Hero','Prism Light','Maverick Star','Noble Quest','Bold Venture',
-  'Titan Force','Reef Runner','Canyon Blaze','Twilight Run','Summit Peak','Rapid Surge',
-  'Iron Duke','Sunfire King','Quantum Leap','Echo Ridge','Swift Blade','Coastal Dream',
-  'Urban Legend','High Noon Hero','Mystic Wave','Red Rover','Black Opal','Golden Gate',
-  'Thunder Bay','Sapphire Sky','Crimson Wings','Silent Storm','Blazing Sun','Coral King',
-  'Desert Wind','Forest King','Harbor Light','Island Breeze','Jungle Cat','Keen Edge'];
-const J=['J. McDonald','D. Oliver','H. Coffey','T. Berry','J. Bowman','R. Bayliss',
-  'C. Williams','M. Dee','B. Shinn','K. McEvoy','J. Byrne','S. Clipperton',
-  'T. Clark','Z. Purton','H. Moreira','N. Rawiller','B. Prebble','D. Dunn',
-  'W. Pike','T. Picconi','M. Walker','A. Hyeronimus','P. Moloney','G. Boss'];
-const TR=['C. Waller','D. Hayes','J. Size','A. Freedman','P. Moody','T. McEvoy',
-  'L. Maher','M. Moroney','G. Waterhouse','B. Hayes','M. Price','T. Dabernig',
-  'S. Nichols','R. Griffiths','J. Warren','P. Snowden','C. Maher','D. Weir',
-  'N. Burke','J. Thompson','A. Payne','M. Smith','B. Cummings','G. Milligan'];
-const RNAMES=[['Autumn Sprint','Summer Classic','Heritage Mile','Plate Final','Coastal Cup'],
-  ['Galilee Series','Moonlight Stakes','Bayside Classic','Sprint Cup','Speed Stakes'],
-  ['Fillies Final','Nursery Stakes','Sires Produce','Juvenile Sprint','Rising Stars'],
-  ['Distance Classic','Marathon Cup','Staying Series','Long Course Cup','Endurance Stakes']];
+// DATA POOLS
+const H=['Zoustyle','Thunder Run','Crimson Ace','Night Rider','Golden Edge','Pacific Storm','Iron Fist','Silent Echo','Rapid Fire','Dark Matter','Silver Streak','Viper King','Blue Horizon','Wind Dancer','Steel Arrow','Phantom Blaze','Ruby Crown','Crystal Bay','Desert Prince','Morning Light','Shadow Racer','Blazing Trail','Copper King','Wild Spirit','Storm Chaser','Midnight Blue','Emerald Coast','True North','Diamond Rush','Flash Point','Jungle Run','Solar Flare','Arctic Chill','River Stone','Velocity Max','Timber Wolf','Sacred Flame','Outback Hero','Prism Light','Maverick Star','Noble Quest','Bold Venture','Titan Force','Reef Runner','Canyon Blaze','Twilight Run','Summit Peak','Rapid Surge','Iron Duke','Sunfire King','Quantum Leap','Echo Ridge','Swift Blade','Coastal Dream','Urban Legend','High Noon Hero','Mystic Wave','Red Rover','Black Opal','Golden Gate','Thunder Bay','Sapphire Sky','Crimson Wings','Silent Storm','Blazing Sun','Coral King','Desert Wind','Forest King','Harbor Light','Island Breeze','Jungle Cat','Keen Edge'];
+const J=['J. McDonald','D. Oliver','H. Coffey','T. Berry','J. Bowman','R. Bayliss','C. Williams','M. Dee','B. Shinn','K. McEvoy','J. Byrne','S. Clipperton','T. Clark','Z. Purton','H. Moreira','N. Rawiller','B. Prebble','D. Dunn','W. Pike','T. Picconi','M. Walker','A. Hyeronimus','P. Moloney','G. Boss'];
+const TR=['C. Waller','D. Hayes','J. Size','A. Freedman','P. Moody','T. McEvoy','L. Maher','M. Moroney','G. Waterhouse','B. Hayes','M. Price','T. Dabernig','S. Nichols','R. Griffiths','J. Warren','P. Snowden','C. Maher','D. Weir','N. Burke','J. Thompson','A. Payne','M. Smith','B. Cummings','G. Milligan'];
+const RNAMES=[['Autumn Sprint','Summer Classic','Heritage Mile','Plate Final','Coastal Cup'],['Galilee Series','Moonlight Stakes','Bayside Classic','Sprint Cup','Speed Stakes'],['Fillies Final','Nursery Stakes','Sires Produce','Juvenile Sprint','Rising Stars'],['Distance Classic','Marathon Cup','Staying Series','Long Course Cup','Endurance Stakes']];
 const RTYPES=['Maiden','BM64','BM72','BM78','BM88','3YO Maiden','3YO BM64','4YO+','Listed','Group 3'];
 const DISTS=[1000,1100,1200,1300,1400,1600,1800,2000,2200,2400];
 const CONDS=['Good 3','Good 4','Soft 5','Soft 6','Heavy 8','Heavy 9'];
 const PACES=['Slow','Moderate','Fast'];
 
-// ── SEEDED RNG ───────────────────────────────────────────────
-function rng(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;return()=>{s=s*16807%2147483647;return(s-1)/2147483646}}
-function hash(str){let h=5381;for(let i=0;i<str.length;i++)h=(h*33^str.charCodeAt(i))>>>0;return h}
+// RNG
+function rng(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;return()=>{s=s*16807%2147483647;return(s-1)/2147483646;}}
+function hash(str){let h=5381;for(let i=0;i<str.length;i++)h=(h*33^str.charCodeAt(i))>>>0;return h;}
 
-// ── RSI ENGINE v2 — odds-driven ──────────────────────────────
-function calcRSI(runners) {
-  const n = runners.length;
-  if (n < 2) return 65;
-  const byOdds = [...runners].filter(r => r.marketOdds > 0).sort((a,b) => a.marketOdds - b.marketOdds);
-  let oddsRSI = 60;
-  if (byOdds.length >= 2) {
-    const f = byOdds[0].marketOdds, s = byOdds[1].marketOdds;
-    const t = byOdds[2] ? byOdds[2].marketOdds : s * 1.5;
-    const r12 = s / Math.max(1, f);
-    const r23 = t / Math.max(1, s);
-    oddsRSI = 30 + (Math.pow(r12, 1.4) * 22) + (r23 * 3);
-    oddsRSI = Math.min(94, oddsRSI);
+// RSI ENGINE
+function calcRSI(runners){
+  const n=runners.length;if(n<2)return 65;
+  const byO=[...runners].filter(r=>r.marketOdds>0).sort((a,b)=>a.marketOdds-b.marketOdds);
+  let oRSI=60;
+  if(byO.length>=2){
+    const f=byO[0].marketOdds,s=byO[1].marketOdds,t=byO[2]?byO[2].marketOdds:s*1.5;
+    oRSI=Math.min(94,30+Math.pow(s/Math.max(1,f),1.4)*22+(t/Math.max(1,s))*3);
   }
-  const byWin = [...runners].sort((a,b) => b.winPct - a.winPct);
-  const avgExp = 100 / n;
-  const dom = byWin[0].winPct / avgExp;
-  const gap = (byWin[0].winPct - byWin[1].winPct) / avgExp;
-  let winRSI = 28 + dom * 14 + gap * 10 - (n - 8) * 0.3;
-  winRSI = Math.min(93, Math.max(40, winRSI));
-  const contenders = runners.filter(r => r.winPct >= 7).length;
-  const penalty = Math.max(0, (contenders - 2) * 2.5);
-  return Math.round(Math.min(95, Math.max(42, oddsRSI * 0.6 + winRSI * 0.4 - penalty)));
+  const bw=[...runners].sort((a,b)=>b.winPct-a.winPct);
+  const ae=100/n,dom=bw[0].winPct/ae,gap=(bw[0].winPct-bw[1].winPct)/ae;
+  const wRSI=Math.min(93,Math.max(40,28+dom*14+gap*10-(n-8)*0.3));
+  const pen=Math.max(0,(runners.filter(r=>r.winPct>=7).length-2)*2.5);
+  return Math.round(Math.min(95,Math.max(42,oRSI*0.6+wRSI*0.4-pen)));
 }
+function isWinLock(r,rsi){return r.pos===1&&rsi>=67;}
+function isPlaceLock(r,fs,rsi){return r.pos<=3&&rsi>=62&&r.winPct>=(100/fs)*1.25;}
 
-// ── WIN LOCK: #1 model pick in races with RSI >= 67 ──────────
-function isWinLock(runner, rsi) {
-  return runner.pos === 1 && rsi >= 67;
-}
-
-// ── PLACE LOCK: top-3 pick in races with RSI >= 62 AND horse has meaningful win% ─
-// "Very very likely to come top 3" = strong model top-3 + stable enough race
-function isPlaceLock(runner, fieldSize, rsi) {
-  const avg = 100 / fieldSize;
-  return (
-    runner.pos <= 3 &&
-    rsi >= 62 &&
-    runner.winPct >= avg * 1.25  // at least 25% above average expectation
-  );
-}
-
-// ── SIMULATE MEETING ─────────────────────────────────────────
-function simulateMeeting(track, date) {
-  const r = rng(hash((track + date).toLowerCase().trim()));
-  const ri = n => Math.floor(r() * n);
-  const rf = (lo,hi) => lo + r() * (hi - lo);
-  const pick = a => a[ri(a.length)];
-  const cond = pick(CONDS);
-  const races = [];
-  const pool = [...H].sort(() => r() - .5);
-  let pi = 0;
-  for (let n = 0; n < 6 + ri(3); n++) {
-    const dist = pick(DISTS), rtype = pick(RTYPES), rcond = r() < .65 ? cond : pick(CONDS);
-    const pace = pick(PACES), rname = pick(pick(RNAMES)), fs = 9 + ri(6);
-    const runners = [];
-    const jp = [...J].sort(() => r() - .5), tp = [...TR].sort(() => r() - .5);
-    for (let h = 0; h < fs; h++) {
-      const horse = pool[(pi++) % pool.length];
-      const raw = 40 + r() * 60, barrier = h + 1;
-      const bs = dist <= 1400 ? Math.max(0, 1 - ((barrier-1)/(fs-1))) * 15 : 8;
-      const wgt = parseFloat((53 + r() * 7).toFixed(1));
-      const fa = [];
-      for (let f = 0; f < 5; f++) fa.push(r() < .06 ? 'x' : String(Math.min(9, 1 + ri(9))));
-      const fns = fa.filter(x => x !== 'x').map(Number);
-      const avg = fns.length ? fns.reduce((a,b) => a+b, 0) / fns.length : 5;
-      const score = Math.max(1, raw + bs - (wgt-56)*1.5 + Math.max(0, 10-(avg-1)*1.8) + rf(-5,5));
-      runners.push({horse, barrier, weight:wgt+'kg', jockey:jp[h%jp.length], trainer:tp[h%tp.length], form:fa.join('-'), score, isReal:false});
+// SIMULATE
+function simulateMeeting(track,date){
+  const r=rng(hash((track+date).toLowerCase().trim()));
+  const ri=n=>Math.floor(r()*n),rf=(lo,hi)=>lo+r()*(hi-lo),pick=a=>a[ri(a.length)];
+  const cond=pick(CONDS),races=[],pool=[...H].sort(()=>r()-.5);let pi=0;
+  for(let n=0;n<6+ri(3);n++){
+    const dist=pick(DISTS),rtype=pick(RTYPES),rcond=r()<.65?cond:pick(CONDS),pace=pick(PACES),rname=pick(pick(RNAMES)),fs=9+ri(6);
+    const runners=[],jp=[...J].sort(()=>r()-.5),tp=[...TR].sort(()=>r()-.5);
+    for(let h=0;h<fs;h++){
+      const horse=pool[(pi++)%pool.length],raw=40+r()*60,barrier=h+1;
+      const bs=dist<=1400?Math.max(0,1-((barrier-1)/(fs-1)))*15:8,wgt=parseFloat((53+r()*7).toFixed(1));
+      const fa=[];for(let f=0;f<5;f++)fa.push(r()<.06?'x':String(Math.min(9,1+ri(9))));
+      const fns=fa.filter(x=>x!=='x').map(Number),avg=fns.length?fns.reduce((a,b)=>a+b,0)/fns.length:5;
+      const score=Math.max(1,raw+bs-(wgt-56)*1.5+Math.max(0,10-(avg-1)*1.8)+rf(-5,5));
+      runners.push({horse,barrier,weight:wgt+'kg',jockey:jp[h%jp.length],trainer:tp[h%tp.length],form:fa.join('-'),score,isReal:false});
     }
-    const bars = [...Array(fs)].map((_,i) => i+1).sort(() => r() - .5);
-    runners.forEach((r2,i) => r2.barrier = bars[i]);
-    finalise(runners, dist);
-    races.push(buildRace(n+1, rname, dist+'m', rtype, rcond, pace, runners));
+    const bars=[...Array(fs)].map((_,i)=>i+1).sort(()=>r()-.5);
+    runners.forEach((r2,i)=>r2.barrier=bars[i]);
+    finalise(runners,dist);
+    races.push(buildRace(n+1,rname,dist+'m',rtype,rcond,pace,runners));
   }
-  return {track, date, condition:cond, mode:'simulated', races};
+  return{track,date,condition:cond,mode:'simulated',races};
 }
 
-// ── REAL DATA PARSER ─────────────────────────────────────────
-function parseRealData(rawText) {
-  const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
-  const races = [], STATE_PACES = PACES;
-  let cur = null;
-  for (const line of lines) {
-    const isHdr = (line.toLowerCase().includes('race') || line.includes('—') || line.includes('--')) &&
-      (line.match(/\d{3,4}\s*m/i) || /maiden|bm\s*\d+|group|quality|handicap|stakes/i.test(line));
-    if (isHdr) {
-      const dm = line.match(/(\d{3,4})\s*m/i);
-      const tm = line.match(/\b(maiden|bm\s*\d+|group\s*\d+|listed|3yo|4yo\+?|class\s*\d+|quality\s*\d+|handicap|stakes)\b/i);
-      const cm = line.match(/\b(good\s*[0-9]|soft\s*[0-9]|heavy\s*[0-9]|firm\s*[0-9])\b/i);
-      const trm = line.match(/—\s*([A-Za-z][A-Za-z\s]+)$/) || line.match(/at\s+([A-Za-z\s]+)$/i);
-      const rnm = line.match(/race\s*(\d+)/i);
-      const nnm = line.match(/—\s*(.+?)\s*—/);
-      cur = {
-        raceNum: rnm ? parseInt(rnm[1]) : races.length+1,
-        raceName: nnm ? nnm[1].trim() : 'Race '+(races.length+1),
-        distance: dm ? dm[1]+'m' : '1200m',
-        raceType: tm ? tm[1].trim().toUpperCase() : 'BM78',
-        condition: cm ? cm[1].trim() : 'Good 4',
-        pace: STATE_PACES[Math.floor(Math.random()*3)],
-        track: trm ? trm[1].trim() : '',
-        runners: [],
-      };
-      races.push(cur);
-      continue;
+// LOCAL REAL DATA PARSER
+function parseRealData(rawText){
+  const lines=rawText.split('\n').map(l=>l.trim()).filter(Boolean);
+  const races=[];let cur=null;
+  for(const line of lines){
+    const isHdr=(line.toLowerCase().includes('race')||line.includes('\u2014')||line.includes('--'))&&
+      (line.match(/\d{3,4}\s*m/i)||/maiden|bm\s*\d+|group|quality|handicap|stakes/i.test(line));
+    if(isHdr){
+      const dm=line.match(/(\d{3,4})\s*m/i),tm=line.match(/\b(maiden|bm\s*\d+|group\s*\d+|listed|3yo|4yo\+?|class\s*\d+|quality\s*\d+|handicap|stakes)\b/i);
+      const cm=line.match(/\b(good\s*[0-9]|soft\s*[0-9]|heavy\s*[0-9]|firm\s*[0-9])\b/i);
+      const trm=line.match(/\u2014\s*([A-Za-z][A-Za-z\s]+)$/)||line.match(/at\s+([A-Za-z\s]+)$/i);
+      const rnm=line.match(/race\s*(\d+)/i),nnm=line.match(/\u2014\s*(.+?)\s*\u2014/);
+      cur={raceNum:rnm?parseInt(rnm[1]):races.length+1,raceName:nnm?nnm[1].trim():'Race '+(races.length+1),
+        distance:dm?dm[1]+'m':'1200m',raceType:tm?tm[1].trim().toUpperCase():'BM78',
+        condition:cm?cm[1].trim():'Good 4',pace:PACES[Math.floor(Math.random()*3)],
+        track:trm?trm[1].trim():'',runners:[]};
+      races.push(cur);continue;
     }
-    if (!cur) { cur={raceNum:1,raceName:'Race 1',distance:'1200m',raceType:'BM78',condition:'Good 4',pace:'Moderate',track:'',runners:[]}; races.push(cur); }
-    // Full pipe format
-    const pip = line.match(/^(\d+[\.\)]\s*)?([A-Za-z][A-Za-z\s\(\)'\-&]+?)\s*\|\s*(\d{1,2})\s*\|\s*([\d\.]+)\s*\|\s*([A-Za-z][A-Za-z\s\.]+?)\s*\|\s*([A-Za-z][A-Za-z\s\.]+?)\s*\|\s*([\dx\-]+)\s*\|\s*([\d\.]+)/i);
-    const pipMin = line.match(/^(\d+[\.\)]\s*)?([A-Za-z][A-Za-z\s\(\)'\-&]+?)\s*\|\s*(\d{1,2})\s*\|\s*([\d\.]+)\s*\|\s*([\d\.]+)\s*$/);
-    if (pip) {
-      const [,,horse,barrier,weight,jockey,trainer,form,odds] = pip;
-      cur.runners.push({horse:horse.trim(),barrier:parseInt(barrier),weight:parseFloat(weight)+'kg',jockey:jockey.trim(),trainer:trainer.trim(),form:form.trim(),marketOdds:parseFloat(odds),isReal:true,score:null});
-    } else if (pipMin) {
-      const [,,horse,barrier,weight,odds] = pipMin;
-      cur.runners.push({horse:horse.trim(),barrier:parseInt(barrier),weight:parseFloat(weight)+'kg',jockey:J[Math.floor(Math.random()*J.length)],trainer:TR[Math.floor(Math.random()*TR.length)],form:'x-x-x-x-x',marketOdds:parseFloat(odds),isReal:true,score:null});
-    } else {
-      const nm = line.match(/^(\d+[\.\)]\s*)?([A-Za-z][A-Za-z\s\(\)'\-&]{2,35})/);
-      if (nm && line.length > 5) {
-        const nums = line.match(/[\d]+\.?[\d]*/g) || [];
-        const o = nums.length >= 2 ? parseFloat(nums[nums.length-1]) : 10.0;
-        if (o > 0 && o < 500) cur.runners.push({horse:nm[2].trim(),barrier:nums.length>=2?parseInt(nums[1]):Math.floor(Math.random()*14)+1,weight:(nums.length>=3?parseFloat(nums[2]):57)+'kg',jockey:J[Math.floor(Math.random()*J.length)],trainer:TR[Math.floor(Math.random()*TR.length)],form:'x-x-x-x-x',marketOdds:o,isReal:true,score:null});
-      }
-    }
+    if(!cur){cur={raceNum:1,raceName:'Race 1',distance:'1200m',raceType:'BM78',condition:'Good 4',pace:'Moderate',track:'',runners:[]};races.push(cur);}
+    const pip=line.match(/^(\d+[\.\)]\s*)?([A-Za-z][A-Za-z\s\(\)'\-&]+?)\s*\|\s*(\d{1,2})\s*\|\s*([\d\.]+)\s*\|\s*([A-Za-z][A-Za-z\s\.]+?)\s*\|\s*([A-Za-z][A-Za-z\s\.]+?)\s*\|\s*([\dx\-]+)\s*\|\s*([\d\.]+)/i);
+    const pipMin=line.match(/^(\d+[\.\)]\s*)?([A-Za-z][A-Za-z\s\(\)'\-&]+?)\s*\|\s*(\d{1,2})\s*\|\s*([\d\.]+)\s*\|\s*([\d\.]+)\s*$/);
+    if(pip){const[,,horse,barrier,weight,jockey,trainer,form,odds]=pip;cur.runners.push({horse:horse.trim(),barrier:parseInt(barrier),weight:parseFloat(weight)+'kg',jockey:jockey.trim(),trainer:trainer.trim(),form:form.trim(),marketOdds:parseFloat(odds),isReal:true,score:null});}
+    else if(pipMin){const[,,horse,barrier,weight,odds]=pipMin;cur.runners.push({horse:horse.trim(),barrier:parseInt(barrier),weight:parseFloat(weight)+'kg',jockey:J[Math.floor(Math.random()*J.length)],trainer:TR[Math.floor(Math.random()*TR.length)],form:'x-x-x-x-x',marketOdds:parseFloat(odds),isReal:true,score:null});}
+    else{const nm=line.match(/^(\d+[\.\)]\s*)?([A-Za-z][A-Za-z\s\(\)'\-&]{2,35})/);if(nm&&line.length>5){const nums=line.match(/[\d]+\.?[\d]*/g)||[];const o=nums.length>=2?parseFloat(nums[nums.length-1]):10.0;if(o>0&&o<500)cur.runners.push({horse:nm[2].trim(),barrier:nums.length>=2?parseInt(nums[1]):Math.floor(Math.random()*14)+1,weight:(nums.length>=3?parseFloat(nums[2]):57)+'kg',jockey:J[Math.floor(Math.random()*J.length)],trainer:TR[Math.floor(Math.random()*TR.length)],form:'x-x-x-x-x',marketOdds:o,isReal:true,score:null});}}
   }
-  const valid = races.filter(r => r.runners.length > 0);
-  if (!valid.length) return null;
-  for (const race of valid) {
-    const dn = parseInt(race.distance) || 1200;
-    for (const runner of race.runners) {
-      const bs = dn<=1400 ? Math.max(0,1-((runner.barrier-1)/Math.max(1,race.runners.length-1)))*15 : 8;
-      const wgt = parseFloat(runner.weight)||57;
-      const fns = runner.form.split('-').filter(x=>x!=='x'&&x!=='d').map(Number).filter(n=>!isNaN(n));
-      const avg = fns.length ? fns.reduce((a,b)=>a+b,0)/fns.length : 5;
-      const os = runner.marketOdds ? Math.max(2,55-(runner.marketOdds*1.8)) : 15;
-      runner.score = Math.max(1,50+bs-(wgt-56)*1.5+Math.max(0,10-(avg-1)*1.8)+os+(Math.random()*8-4));
+  const valid=races.filter(r=>r.runners.length>0);if(!valid.length)return null;
+  for(const race of valid){
+    const dn=parseInt(race.distance)||1200;
+    for(const runner of race.runners){
+      const bs=dn<=1400?Math.max(0,1-((runner.barrier-1)/Math.max(1,race.runners.length-1)))*15:8;
+      const wgt=parseFloat(runner.weight)||57,fns=runner.form.split('-').filter(x=>x!=='x'&&x!=='d').map(Number).filter(n=>!isNaN(n));
+      const avg=fns.length?fns.reduce((a,b)=>a+b,0)/fns.length:5;
+      const os=runner.marketOdds?Math.max(2,55-(runner.marketOdds*1.8)):15;
+      runner.score=Math.max(1,50+bs-(wgt-56)*1.5+Math.max(0,10-(avg-1)*1.8)+os+(Math.random()*8-4));
     }
-    finalise(race.runners, dn);
+    finalise(race.runners,dn);
   }
-  const track = valid[0].track || 'Race Meeting';
-  return {track, date:'User-Provided Data', condition:valid[0].condition, mode:'real',
-    races: valid.map((race,i) => buildRace(i+1, race.raceName, race.distance, race.raceType, race.condition, race.pace, race.runners))};
+  const track=valid[0].track||'Race Meeting';
+  return{track,date:'User-Provided Data',condition:valid[0].condition,mode:'real',
+    races:valid.map((race,i)=>buildRace(i+1,race.raceName,race.distance,race.raceType,race.condition,race.pace,race.runners))};
 }
 
-// ── FINALISE ─────────────────────────────────────────────────
-function finalise(runners, dist) {
-  const tot = runners.reduce((a,b) => a+b.score, 0);
-  runners.forEach(r => { r.winPct = parseFloat(((r.score/tot)*100).toFixed(1)) });
-  const diff = parseFloat((100-runners.reduce((a,b)=>a+b.winPct,0)).toFixed(1));
-  runners[0].winPct = parseFloat((runners[0].winPct+diff).toFixed(1));
-  runners.forEach(r => {
-    r.fairOdds = parseFloat((100/r.winPct).toFixed(2));
-    if (!r.marketOdds || !r.isReal) r.marketOdds = roundOdds(r.fairOdds*(0.83+Math.random()*0.14));
-    const g = r.marketOdds - r.fairOdds;
-    r.value = g > 0.28 ? 'Overs' : g < -0.28 ? 'Unders' : 'Fair';
+function finalise(runners){
+  const tot=runners.reduce((a,b)=>a+b.score,0);
+  runners.forEach(r=>{r.winPct=parseFloat(((r.score/tot)*100).toFixed(1));});
+  const diff=parseFloat((100-runners.reduce((a,b)=>a+b.winPct,0)).toFixed(1));
+  runners[0].winPct=parseFloat((runners[0].winPct+diff).toFixed(1));
+  runners.forEach(r=>{
+    r.fairOdds=parseFloat((100/r.winPct).toFixed(2));
+    if(!r.marketOdds||!r.isReal)r.marketOdds=roundOdds(r.fairOdds*(0.83+Math.random()*0.14));
+    const g=r.marketOdds-r.fairOdds;
+    r.value=g>0.28?'Overs':g<-0.28?'Unders':'Fair';
   });
 }
 
-// ── BUILD RACE ────────────────────────────────────────────────
-function buildRace(num, name, distance, type, condition, pace, runners) {
-  runners.sort((a,b) => b.winPct - a.winPct);
-  runners.forEach((r,i) => r.pos = i+1);
-  const rsi = calcRSI(runners);
-  const topRated = runners[0].horse;
-  const bestValue = runners.reduce((a,b) => (b.marketOdds-b.fairOdds > a.marketOdds-a.fairOdds)?b:a).horse;
-  const riskOpts = [
-    `With ${runners.length} runners, pace maps create genuine query for midfield horses.`,
-    `Barrier positions play a significant role at ${distance} — wide barriers face extra ground.`,
-    `${pace} projected tempo suits front-runners — watch for last-minute jockey changes.`,
-    `Tight win probabilities across the field suggest a highly competitive betting race.`,
-    `Model shows ${runners[0].winPct.toFixed(1)}% for the top pick — ${rsi>70?'solid standout':'open affair'}.`,
-    `${runners[0].horse} leads but the second pick is only ${(runners[0].winPct-runners[1].winPct).toFixed(1)}% behind.`,
+function buildRace(num,name,distance,type,condition,pace,runners){
+  runners.sort((a,b)=>b.winPct-a.winPct);runners.forEach((r,i)=>r.pos=i+1);
+  const rsi=calcRSI(runners),topRated=runners[0].horse;
+  const bestValue=runners.reduce((a,b)=>(b.marketOdds-b.fairOdds>a.marketOdds-a.fairOdds)?b:a).horse;
+  const rOpts=[
+    'With '+runners.length+' runners, pace maps create genuine query for midfield horses.',
+    'Barrier positions key at '+distance+' — wide draws face extra ground lost.',
+    pace+' projected tempo suits front-runners — watch for late jockey changes.',
+    'Model shows '+runners[0].winPct.toFixed(1)+'% for top pick — '+(rsi>70?'solid standout':'open affair')+'.',
+    runners[0].horse+' leads but second is only '+(runners[0].winPct-runners[1].winPct).toFixed(1)+'% behind.',
   ];
-  const analyses = [
-    `${runners[0].horse} tops the model at ${runners[0].winPct}% with barrier ${runners[0].barrier} over ${distance}. ${runners[1].horse} at ${runners[1].winPct}% is the principal danger.`,
-    `This ${distance} ${type} shapes as a clash between ${runners[0].horse} and ${runners[1].horse}. RSI of ${rsi} suggests ${rsi>70?'a stable structure':'an open affair'}. Best value: ${bestValue}.`,
-    `${runners[0].horse} projects as the dominant force. At $${runners[0].marketOdds}, rated ${runners[0].value} vs model fair of $${runners[0].fairOdds}.`,
+  const aOpts=[
+    runners[0].horse+' tops the model at '+runners[0].winPct+'% from barrier '+runners[0].barrier+' over '+distance+'. '+runners[1].horse+' at '+runners[1].winPct+'% is the principal danger.',
+    'This '+distance+' '+type+' shapes as a battle between '+runners[0].horse+' and '+runners[1].horse+'. RSI of '+rsi+' suggests '+(rsi>70?'a stable race structure':'a genuinely open affair')+'.',
+    runners[0].horse+' dominates at '+runners[0].winPct+'%. At $'+runners[0].marketOdds+' this runner is '+runners[0].value+' against fair odds of $'+runners[0].fairOdds+'.',
   ];
-  return {
-    raceNum:num, raceName:name, distance, raceType:type, condition, pace, rsi, runners,
-    topRated, bestValue,
-    riskFactor: riskOpts[Math.floor(Math.random()*riskOpts.length)],
-    analysis:   analyses[Math.floor(Math.random()*analyses.length)],
-  };
+  return{raceNum:num,raceName:name,distance,raceType:type,condition,pace,rsi,runners,topRated,bestValue,
+    riskFactor:rOpts[Math.floor(Math.random()*rOpts.length)],
+    analysis:aOpts[Math.floor(Math.random()*aOpts.length)]};
 }
+function roundOdds(o){if(o<3)return parseFloat(o.toFixed(2));if(o<6)return Math.round(o*4)/4;if(o<15)return Math.round(o*2)/2;return Math.round(o);}
 
-function roundOdds(o){
-  if(o<3)return parseFloat(o.toFixed(2));
-  if(o<6)return Math.round(o*4)/4;
-  if(o<15)return Math.round(o*2)/2;
-  return Math.round(o);
+// API KEY
+function getKey(){return sessionStorage.getItem('bk')||'';}
+function hasKey(){return!!getKey();}
+function openKeyModal(){document.getElementById('km-inp').value=getKey()?'••••••••••':'';;document.getElementById('km-st').className='km-st';document.getElementById('key-modal').classList.add('open');setTimeout(()=>document.getElementById('km-inp').focus(),80);}
+function closeKeyModal(){document.getElementById('key-modal').classList.remove('open');}
+function saveKey(){
+  const v=document.getElementById('km-inp').value.trim();
+  if(!v||v.startsWith('•')){closeKeyModal();return;}
+  if(!v.startsWith('sk-ant')){const s=document.getElementById('km-st');s.className='km-st err';s.textContent='Key must start with sk-ant...';return;}
+  sessionStorage.setItem('bk',v);updateKeyUI();
+  const s=document.getElementById('km-st');s.className='km-st ok';s.textContent='AI Research Mode active';
+  setTimeout(closeKeyModal,1100);
 }
-
-// ═══════════════════════════════════════════════════════════════
-//  CHAT STATE
-// ═══════════════════════════════════════════════════════════════
-const STATES = ['VIC','NSW','WA','SA','TAS','QLD'];
-// chatHistory[id] = array of {type:'user'|'ai'|'state-card', html, text}
-const chatHistory = {real:[]};
-STATES.forEach(s => chatHistory[s] = []);
-
-let currentChat = 'real';
-let busy = false;
-let pasteOpen = false;
-let allWinLocks = [];
-let allPlaceLocks = [];
-
-const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-const scrollBot = () => { const w=document.getElementById('msgs-wrap'); w.scrollTop=w.scrollHeight };
-
-// ── CHAT SWITCHING ────────────────────────────────────────────
-function switchChat(id) {
-  if (currentChat === id) return;
-  currentChat = id;
-
-  // Update sidebar active states
-  document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
-  document.getElementById('ci-'+id)?.classList.add('active');
-
-  // Update topbar
-  const isReal = id === 'real';
-  const meta = isReal ? null : STATE_META[id];
-  document.getElementById('ctb-ico').textContent = isReal ? '💬' : meta.ico;
-  document.getElementById('ctb-name').textContent = isReal ? 'Real Data' : meta.name + ' — ' + meta.label;
-  document.getElementById('ctb-sub').textContent = isReal ? 'ACTIVE INPUT CHAT' : 'AUTO-POPULATED · READ ONLY';
-  document.getElementById('ctb-ro').classList.toggle('show', !isReal);
-
-  // Show/hide input vs readonly bar
-  document.getElementById('izone').style.display = isReal ? '' : 'none';
-  document.getElementById('readonly-bar').style.display = isReal ? 'none' : '';
-  document.getElementById('paste-panel').style.display = 'none';
-  pasteOpen = false;
-
-  // Render this chat's history
-  renderChatHistory(id);
+function clearKey(){sessionStorage.removeItem('bk');document.getElementById('km-inp').value='';updateKeyUI();const s=document.getElementById('km-st');s.className='km-st err';s.textContent='Key removed — using Local Engine';}
+function updateKeyUI(){
+  const btn=document.getElementById('key-btn'),txt=document.getElementById('key-btn-txt'),lbl=document.getElementById('eng-label');
+  if(hasKey()){btn.classList.add('has-key');txt.textContent='AI Research ON \u2713';lbl.textContent='AI RESEARCH ENGINE';}
+  else{btn.classList.remove('has-key');txt.textContent='Add API Key';lbl.textContent='LOCAL ENGINE v9';}
 }
+document.getElementById('key-modal').addEventListener('click',e=>{if(e.target===document.getElementById('key-modal'))closeKeyModal();});
 
-function renderChatHistory(id) {
-  const msgs = document.getElementById('msgs');
-  msgs.innerHTML = '';
+// AI RESEARCH ENGINE
+async function callBetrichAI(rawText,stepCb){
+  const key=getKey();if(!key)return null;
+  const sys=`You are Betrich, an elite Australian horse racing analyst. You produce fully researched, authentic race card models.
 
-  if (chatHistory[id].length === 0) {
-    if (id === 'real') {
-      // Show welcome
-      msgs.innerHTML = `<div id="welcome">
-        <div class="wlc">
-          <div class="wchip"><div class="epulse"></div><span>ZERO-API · ODDS-DRIVEN RSI · STATE ROUTING · AUTO LOCKS</span></div>
-          <h1>Paste Real Data.<br/><em>Or Simulate.</em></h1>
-          <p class="wsub">Betrich auto-routes race cards to the correct State channel. High-confidence picks appear as Locks. No APIs, no keys.</p>
-        </div>
-        <div class="wmodes">
-          <div class="wmode sim" onclick="fillQ('Model Flemington Saturday')">
-            <div class="mico">🎲</div><div class="mtit">Simulate a Meeting</div>
-            <div class="mdesc">Generate a full race card with AI-simulated horses, barriers, weights and odds</div>
-          </div>
-          <div class="wmode paste" onclick="loadExample()">
-            <div class="mico">📋</div><div class="mtit">Paste Real Data</div>
-            <div class="mdesc">Paste real runners — Betrich models them and routes to the correct State channel</div>
-          </div>
-        </div>
-      </div>`;
-    } else {
-      const meta = STATE_META[id];
-      msgs.innerHTML = `<div class="state-empty">
-        <div class="se-ico">${meta.ico}</div>
-        <div class="se-title">${meta.label} Racing</div>
-        <p class="se-sub">No race cards yet for ${meta.label}. Paste a race card in the <strong>Real Data</strong> chat — if the track is in ${meta.label}, it will automatically appear here.</p>
-        <div class="se-hint">Switch to 💬 Real Data → paste race data → come back here</div>
-      </div>`;
-    }
-    scrollBot(); return;
+CRITICAL RULES:
+1. Use web_search to research EVERY horse. For each horse search: recent form, class level, trainer current stable form, jockey booking significance, barrier draw at this track, distance record, track condition preference, gear changes, market support or drift.
+2. Research the specific track and today's conditions — bias, how the track is playing.
+3. Use market odds as one signal but FIND VALUE where your research disagrees. Do not simply mirror the market.
+4. Win% per race MUST sum to exactly 100.0%.
+5. RSI (42-95): based on odds gap between 1st and 2nd favourite. $2.30 fav vs $6.00 second = ~83. $3.00 vs $3.50 = ~48. Vary meaningfully across races.
+6. fairOdds = 100/winPct. value = "Overs" if marketOdds > fairOdds+0.28, "Unders" if <fairOdds-0.28, else "Fair".
+7. Pace: "Slow"/"Moderate"/"Fast" based on barriers, running styles, race shape.
+8. analysis: 2-3 specific sentences mentioning horse names, research findings, form references.
+9. researchNotes per runner: ONE specific sentence about what web search revealed about this horse.
+10. Be CONFIDENT. Betrich is the expert. Name the winner and explain why clearly.
+
+Return ONLY valid JSON, no markdown, no preamble:
+{"track":"Flemington","date":"Saturday","condition":"Good 4","mode":"real","races":[{"raceNum":1,"raceName":"Race Name","distance":"1100m","raceType":"BM78","condition":"Good 4","pace":"Fast","rsi":78,"analysis":"Specific analysis.","riskFactor":"Risk sentence.","runners":[{"pos":1,"horse":"Name","barrier":4,"weight":"57kg","jockey":"J. McDonald","trainer":"C. Waller","form":"1-2-1-3-1","marketOdds":2.80,"winPct":32.5,"fairOdds":3.08,"value":"Overs","researchNotes":"Specific finding from research."}]}]}`;
+
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:8000,system:sys,
+      tools:[{type:'web_search_20250305',name:'web_search'}],
+      messages:[{role:'user',content:'Research and model this race card. Search the web for every horse listed. Return JSON only.\n\n'+rawText}]})
+  });
+  if(!resp.ok){
+    const e=await resp.json().catch(()=>({}));
+    if(resp.status===401)throw new Error('Invalid API key. Check your key.');
+    if(resp.status===429)throw new Error('API rate limit. Wait a moment and retry.');
+    throw new Error(e.error?.message||'API error '+resp.status);
   }
+  stepCb('Processing research results...');
+  const data=await resp.json();
+  const txt=data.content.map(b=>b.type==='text'?b.text:'').filter(Boolean).join('\n');
+  let js=txt.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'').trim();
+  const s=js.indexOf('{'),en=js.lastIndexOf('}');
+  if(s===-1||en===-1)throw new Error('AI did not return valid JSON. Try again.');
+  const parsed=JSON.parse(js.slice(s,en+1));
+  if(!parsed.races||!Array.isArray(parsed.races))throw new Error('AI returned unexpected format.');
+  for(const race of parsed.races){
+    const tot=race.runners.reduce((a,b)=>a+(b.winPct||0),0);
+    if(Math.abs(tot-100)>0.5){const sc=100/tot;race.runners.forEach(r=>r.winPct=parseFloat((r.winPct*sc).toFixed(1)));const d=parseFloat((100-race.runners.reduce((a,b)=>a+b.winPct,0)).toFixed(1));race.runners[0].winPct=parseFloat((race.runners[0].winPct+d).toFixed(1));}
+    race.runners.forEach(r=>{r.fairOdds=parseFloat((100/r.winPct).toFixed(2));r.marketOdds=parseFloat(r.marketOdds)||r.fairOdds;const g=r.marketOdds-r.fairOdds;r.value=g>0.28?'Overs':g<-0.28?'Unders':'Fair';r.isReal=true;r.weight=r.weight||'57kg';});
+    race.runners.sort((a,b)=>a.pos-b.pos);
+    race.rsi=calcRSI(race.runners);
+  }
+  return parsed;
+}
 
-  chatHistory[id].forEach(entry => {
-    if (entry.type === 'user') {
-      const d = document.createElement('div'); d.className = 'msg mu';
-      d.innerHTML = `<div class="mwho">You</div><div class="bbu">${esc(entry.text)}</div>`;
-      msgs.appendChild(d);
-    } else {
-      const d = document.createElement('div'); d.className = 'msg ma';
-      d.innerHTML = `<div class="mwho">${entry.type === 'state-card' ? 'Betrich → ' + id : 'Betrich'}</div><div class="bba">${entry.html}</div>`;
-      msgs.appendChild(d);
-    }
+// CHAT STATE
+const CHATS=['real','VIC','NSW','WA','SA','TAS','QLD','LOCKS','PLACE'];
+const chatHistory={};CHATS.forEach(c=>chatHistory[c]=[]);
+let currentChat='real',busy=false,pasteOpen=false;
+let allWinLocks=[],allPlaceLocks=[];
+let stepIntvl;
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const $=id=>document.getElementById(id);
+const scrollBot=()=>{const w=$('msgs-wrap');w.scrollTop=w.scrollHeight;};
+
+function switchChat(id){
+  if(currentChat===id)return;currentChat=id;
+  document.querySelectorAll('.ci').forEach(el=>el.classList.remove('active'));
+  $('ci-'+id)?.classList.add('active');
+  $('ci-'+id)?.classList.remove('new-content');
+  const isReal=id==='real',meta=STATE_META[id];
+  $('ctb-ico').innerHTML=isReal?'&#128172;':(meta?.ico||'&#128203;');
+  $('ctb-name').textContent=isReal?'Real Data':(id==='LOCKS'?'Win Locks':id==='PLACE'?'Place Locks':id+' \u2014 '+(meta?.label||id));
+  $('ctb-sub').textContent=isReal?'ACTIVE INPUT CHAT':'AUTO-POPULATED \u00b7 READ ONLY';
+  $('ctb-ro').classList.toggle('show',!isReal);
+  $('izone').style.display=isReal?'':'none';
+  $('robar').style.display=isReal?'none':'';
+  $('ppanel').style.display='none';pasteOpen=false;
+  renderHistory(id);
+}
+
+function renderHistory(id){
+  const msgs=$('msgs');msgs.innerHTML='';
+  if(chatHistory[id].length===0){
+    msgs.innerHTML=emptyScreen(id);scrollBot();return;
+  }
+  chatHistory[id].forEach(entry=>{
+    const d=document.createElement('div');d.className='msg '+(entry.type==='user'?'mu':'ma');
+    if(entry.type==='user')d.innerHTML='<div class="mwho">You</div><div class="bbu">'+esc(entry.text)+'</div>';
+    else d.innerHTML='<div class="mwho">'+(entry.who||'Betrich')+'</div><div class="bba">'+entry.html+'</div>';
+    msgs.appendChild(d);
   });
   scrollBot();
 }
 
-// ── INPUT HELPERS ─────────────────────────────────────────────
-function fillQ(t) { document.getElementById('inp').value=t; onInp(document.getElementById('inp')); document.getElementById('inp').focus() }
-function hk(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSubmit()} }
-function onInp(el) {
-  el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,200)+'px';
-  const isReal = detectDataMode(el.value) === 'real';
-  el.classList.toggle('paste-mode', isReal);
-  document.getElementById('mode-dot').className = 'imode-dot ' + (isReal?'paste':'sim');
-  document.getElementById('mode-txt').textContent = isReal ? 'REAL DATA MODE' : 'SIMULATE MODE';
-  document.getElementById('clr-btn').style.display = isReal ? 'block' : 'none';
+function emptyScreen(id){
+  if(id==='real')return `<div class="wlc"><div class="wchip"><div class="epulse"></div><span>AI RESEARCH ENGINE \u00b7 STATE ROUTING \u00b7 AUTO LOCKS</span></div><h1>Real Data In.<br/><em>Researched Cards Out.</em></h1><p class="wsub">Add your Anthropic API key to enable Research Mode \u2014 Claude searches the web for every horse before modelling. Or use the local engine without a key.</p><div class="wmodes"><div class="wmode sim" onclick="fillQ('Model Flemington Saturday')"><div class="mico">&#127922;</div><div class="mtit">Simulate a Meeting</div><div class="mdesc">AI-simulated race card \u2014 no API key needed</div></div><div class="wmode paste" onclick="loadExample()"><div class="mico">&#128302;</div><div class="mtit">Paste Real Data</div><div class="mdesc">Paste runners \u2014 AI researches every horse via live web search</div></div></div></div>`;
+  const meta=STATE_META[id];
+  if(id==='LOCKS')return `<div class="ch-empty"><div class="che-ico">&#128274;</div><div class="che-title">Win Locks</div><p class="che-sub">High-confidence win picks (RSI \u2265 67) will appear here automatically after any race card is run.</p><div class="che-hint">Paste race data in Real Data to populate locks</div></div>`;
+  if(id==='PLACE')return `<div class="ch-empty"><div class="che-ico">&#127919;</div><div class="che-title">Place Locks</div><p class="che-sub">High-confidence top-3 picks will appear here automatically after any race card is run.</p><div class="che-hint">Paste race data in Real Data to populate place locks</div></div>`;
+  return `<div class="ch-empty"><div class="che-ico">${meta.ico}</div><div class="che-title">${meta.label} Racing</div><p class="che-sub">No cards yet. Paste a race card in <strong>Real Data</strong> \u2014 if the track is in ${meta.label} it will appear here automatically.</p><div class="che-hint">Switch to Real Data \u2192 paste data \u2192 return here</div></div>`;
 }
-function detectDataMode(txt) {
-  if (txt.includes('|')) return 'real';
-  if (txt.split('\n').filter(l=>l.trim()).length > 3 && txt.match(/\d{1,2}[\.\)]\s+[A-Z]/)) return 'real';
-  return 'sim';
-}
-function doClear() { document.getElementById('inp').value=''; onInp(document.getElementById('inp')) }
-function togglePastePanel() {
-  if (currentChat !== 'real') { switchChat('real'); return; }
-  pasteOpen = !pasteOpen;
-  document.getElementById('paste-panel').style.display = pasteOpen ? '' : 'none';
-}
-function loadExample() {
-  fillQ(`Race 1 — 1100m TAB We're On Handicap — Good 4 — Flemington
-1. Legacy Bound | 8 | 61 | Logan Bates | R. Griffiths | x-1-4-3-x | 3.00
-2. Vangogh Bankcheque | 7 | 54 | Jamie Melham | L. Kennewell | 1-3-x-x-x | 3.10
-3. Military Tycoon | 1 | 54.5 | D.W. Stackhouse | C. Maher | 9-6-x-2-7 | 4.60
-4. Burma Star | 4 | 56.5 | Hugh Bowman | C. Waller | 1-2-1-6-x | 8.50
-5. Shining Smile | 6 | 58.5 | Jackson Radley | B. Hayes | 5-4-3-8-x | 11.00
-6. Go Left | 5 | 54 | Luke Cartwright | P. Moody | 1-1-2-x-x | 27.00
-7. Petit Artiste | 2 | 53 | Lachlan Neindorf | A. Yargi | 2-4-0-x-3 | 41.00
-8. Pure Passion | 3 | 54 | Z. Spain | P. Moody | 1-5-4-0-x | 51.00`);
-  if (pasteOpen) togglePastePanel();
-}
-function resetSession() { location.reload() }
 
-// ── STEP LOADER ───────────────────────────────────────────────
-let stepInt2;
-function addStepMsg() {
-  const d = document.createElement('div'); d.className='msg ma'; d.id='step-msg';
-  d.innerHTML=`<div class="mwho">Betrich</div><div class="bba" style="padding:16px 20px"><div class="proc" id="proc"></div></div>`;
-  document.getElementById('msgs').appendChild(d); scrollBot();
+// INPUT HELPERS
+function fillQ(t){$('inp').value=t;onInp($('inp'));$('inp').focus();}
+function hk(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSubmit();}}
+function onInp(el){
+  el.style.height='auto';el.style.height=Math.min(el.scrollHeight,200)+'px';
+  const isR=detectMode(el.value)==='real',ai=isR&&hasKey();
+  el.classList.toggle('paste-mode',isR);
+  $('imdot').className='imdot '+(ai?'ai':isR?'paste':'sim');
+  $('imtxt').textContent=ai?'AI RESEARCH MODE':isR?'REAL DATA MODE':'SIMULATE MODE';
+  $('clrbtn').style.display=isR?'block':'none';
 }
-function addStep(txt, idx) {
-  const cont = document.getElementById('proc'); if(!cont)return;
-  const row=document.createElement('div'); row.className='prow'; row.style.animationDelay=(idx*.22)+'s';
-  row.innerHTML=`<div class="pico">${idx===0?'⚡':'›'}</div>${esc(txt)}`;
-  cont.appendChild(row); scrollBot();
-}
-function rmStep() { clearInterval(stepInt2); const t=document.getElementById('step-msg'); if(t)t.remove() }
+function detectMode(t){if(t.includes('|'))return'real';if(t.split('\n').filter(l=>l.trim()).length>3&&t.match(/\d{1,2}[\.\)]\s+[A-Z]/))return'real';return'sim';}
+function doClear(){$('inp').value='';onInp($('inp'));}
+function togglePaste(){if(currentChat!=='real'){switchChat('real');return;}pasteOpen=!pasteOpen;$('ppanel').style.display=pasteOpen?'':'none';}
+function loadExample(){fillQ("Race 1 \u2014 1100m TAB Handicap \u2014 Good 4 \u2014 Flemington\n1. Legacy Bound | 8 | 61 | Logan Bates | R. Griffiths | x-1-4-3-x | 3.00\n2. Vangogh Bankcheque | 7 | 54 | Jamie Melham | L. Kennewell | 1-3-x-x-x | 3.10\n3. Military Tycoon | 1 | 54.5 | D.W. Stackhouse | C. Maher | 9-6-x-2-7 | 4.60\n4. Burma Star | 4 | 56.5 | Hugh Bowman | C. Waller | 1-2-1-6-x | 8.50\n5. Shining Smile | 6 | 58.5 | Jackson Radley | B. Hayes | 5-4-3-8-x | 11.00\n6. Go Left | 5 | 54 | Luke Cartwright | P. Moody | 1-1-2-x-x | 27.00");if(pasteOpen)togglePaste();}
+function resetSession(){location.reload();}
 
-// ── WIN + PLACE LOCKS ─────────────────────────────────────────
-function extractAllLocks(meeting) {
-  const newWin = [], newPlace = [];
-  for (const race of meeting.races) {
-    const fs = race.runners.length;
-    race.runners.forEach(r => {
-      if (isWinLock(r, race.rsi)) {
-        newWin.push({horse:r.horse, raceNum:race.raceNum, distance:race.distance,
-          winPct:r.winPct, fairOdds:r.fairOdds, marketOdds:r.marketOdds, rsi:race.rsi, value:r.value});
-      }
-      if (isPlaceLock(r, fs, race.rsi)) {
-        // Don't double-add win locks to place locks
-        if (!isWinLock(r, race.rsi)) {
-          newPlace.push({horse:r.horse, pos:r.pos, raceNum:race.raceNum, distance:race.distance,
-            winPct:r.winPct, fairOdds:r.fairOdds, marketOdds:r.marketOdds, rsi:race.rsi});
-        }
-      }
-    });
+// STEP MESSAGES
+function addStepMsg(){const d=document.createElement('div');d.className='msg ma';d.id='step-msg';d.innerHTML='<div class="mwho">Betrich</div><div class="bba" style="padding:16px 20px"><div class="proc" id="proc"></div></div>';$('msgs').appendChild(d);scrollBot();}
+function addStep(txt,idx,isAI){const c=$('proc');if(!c)return;const r=document.createElement('div');r.className='prow'+(isAI?' ai-step':'');r.style.animationDelay=(idx*.22)+'s';r.innerHTML='<div class="pico">'+(idx===0?'&#9889;':'&rsaquo;')+'</div>'+esc(txt);c.appendChild(r);scrollBot();}
+function rmStep(){clearInterval(stepIntvl);const t=$('step-msg');if(t)t.remove();}
+
+// PUSH TO STATE CHANNEL
+function pushToState(meeting,cardHtml){
+  const state=detectState(meeting.track);
+  if(!state)return;
+  const meta=STATE_META[state];
+  const header=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-bottom:14px;margin-bottom:16px;border-bottom:1px solid var(--border)"><div><div style="font-weight:800;font-size:19px">&#127943; ${esc(meeting.track)}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px">${esc(meeting.date)} &middot; ${esc(meeting.condition)}</div></div><span class="rcpill ${meeting.aiMode?'ai':meeting.mode==='real'?'real':'sim'}">${meeting.races.length} RACES &middot; ${meeting.aiMode?'AI RESEARCHED':meeting.mode==='real'?'REAL DATA':'SIMULATED'}</span></div>`+cardHtml;
+  chatHistory[state].push({type:'ai',html:header,who:'Betrich \u2192 '+state});
+  const badge=$('badge-'+state),item=$('ci-'+state);
+  if(badge){const n=chatHistory[state].length;badge.textContent=n+(n===1?' card':' cards');}
+  if(item){item.classList.add('lit');if(currentChat!==state)item.classList.add('new-content');}
+  if(currentChat===state)renderHistory(state);
+}
+
+// PUSH TO LOCKS / PLACE CHANNELS
+function pushLocks(meeting,isAI){
+  let addedWin=0,addedPlace=0;
+  for(const race of meeting.races){
+    const fs=race.runners.length;
+    const wl=race.runners.find(r=>isWinLock(r,race.rsi));
+    const pls=race.runners.filter(r=>isPlaceLock(r,fs,race.rsi)&&!(isWinLock(r,race.rsi)));
+    if(wl){
+      allWinLocks.push({...wl,raceNum:race.raceNum,raceName:race.raceName,distance:race.distance,rsi:race.rsi,track:meeting.track,analysis:race.analysis});
+      chatHistory['LOCKS'].push({type:'ai',html:buildLockCard(wl,race,meeting,'win',isAI),who:'Betrich \u2192 Locks'});
+      addedWin++;
+    }
+    for(const pl of pls){
+      allPlaceLocks.push({...pl,raceNum:race.raceNum,raceName:race.raceName,distance:race.distance,rsi:race.rsi,track:meeting.track});
+      chatHistory['PLACE'].push({type:'ai',html:buildLockCard(pl,race,meeting,'place',isAI),who:'Betrich \u2192 Place Locks'});
+      addedPlace++;
+    }
   }
-  allWinLocks = [...allWinLocks, ...newWin];
-  allPlaceLocks = [...allPlaceLocks, ...newPlace];
-  renderAllLocks();
+  if(addedWin>0){
+    const b=$('badge-LOCKS'),item=$('ci-LOCKS');
+    if(b)b.textContent=chatHistory['LOCKS'].length;
+    if(item){item.classList.add('lit');if(currentChat!=='LOCKS')item.classList.add('new-content');}
+    if(currentChat==='LOCKS')renderHistory('LOCKS');
+  }
+  if(addedPlace>0){
+    const b=$('badge-PLACE'),item=$('ci-PLACE');
+    if(b)b.textContent=chatHistory['PLACE'].length;
+    if(item){item.classList.add('lit');if(currentChat!=='PLACE')item.classList.add('new-content');}
+    if(currentChat==='PLACE')renderHistory('PLACE');
+  }
 }
 
-function renderAllLocks() {
-  renderLockList('win-lock-list','win-lock-empty','wlk-count',allWinLocks,'win');
-  renderLockList('place-lock-list','place-lock-empty','plk-count',allPlaceLocks,'place');
-}
-
-function renderLockList(listId, emptyId, countId, locks, type) {
-  const list = document.getElementById(listId);
-  const empty = document.getElementById(emptyId);
-  const count = document.getElementById(countId);
-  Array.from(list.children).forEach(el => { if(!el.classList.contains('lock-empty')) el.remove() });
-  count.textContent = locks.length;
-  count.classList.toggle('vis', locks.length > 0);
-  if (locks.length === 0) { empty.style.display='block'; return; }
-  empty.style.display='none';
-  locks.forEach((lock, idx) => {
-    const div = document.createElement('div');
-    div.className = 'lock-item ' + type + '-lock';
-    const posStr = type==='place' ? ` · #${lock.pos} pick` : '';
-    div.innerHTML = `
-      <div class="lk-horse ${type}">${type==='win'?'🔒':'🎯'} ${esc(lock.horse)}</div>
-      <div class="lk-meta">
-        <span class="lm-race">R${lock.raceNum} · ${esc(lock.distance)}${posStr}</span>
-        <span class="lm-conf">${lock.winPct.toFixed(1)}% · RSI ${lock.rsi}</span>
-        <span class="lm-odds">Fair $${lock.fairOdds} · Mkt $${lock.marketOdds}</span>
-      </div>`;
-    list.appendChild(div);
-    if (idx < locks.length-1) { const hr=document.createElement('div'); hr.className='lk-divider'; list.appendChild(hr); }
-  });
-}
-
-// ── ROUTE TO STATE CHAT ───────────────────────────────────────
-function routeToState(meeting, cardHtml) {
-  const state = detectState(meeting.track);
-  if (!state) return;
-  const meta = STATE_META[state];
-  // Build state card entry
-  const header = `<div class="state-card-header">
-    <div class="sch-left">
-      <div class="sch-venue">🏇 ${esc(meeting.track)}</div>
-      <div class="sch-meta">${esc(meeting.date)} · ${esc(meeting.condition)}</div>
+function buildLockCard(runner,race,meeting,type,isAI){
+  const isWin=type==='win';
+  const col=isWin?'win':'place';
+  const rsiClass=race.rsi>=78?'rh':race.rsi>=62?'rm':'rl';
+  const rsiCol=race.rsi>=78?'var(--green)':race.rsi>=62?'var(--amber)':'var(--red)';
+  const rsiLbl=race.rsi>=78?'STABLE':race.rsi>=62?'MODERATE':'VOLATILE';
+  const vl=(runner.value||'').toLowerCase();
+  const vc=vl==='overs'?'vo':vl==='unders'?'vu':'vf';
+  const posStr=isWin?'WIN LOCK':'PLACE LOCK \u2014 #'+runner.pos+' pick';
+  const src=isAI?'AI RESEARCHED':meeting.mode==='real'?'REAL DATA':'SIMULATED';
+  let html=`<div class="lch-card ${col}">
+    <div class="lch-top">
+      <div>
+        <div class="lch-horse ${col}">${isWin?'&#128274;':'&#127919;'} ${esc(runner.horse)}</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:3px">&#127943; ${esc(meeting.track)} &middot; Race ${race.raceNum} &middot; ${esc(race.distance)}</div>
+      </div>
+      <span class="lch-badge ${col}">${posStr}</span>
     </div>
-    <span class="sch-pill ${meeting.mode==='real'?'real':'sim'}">${meeting.races.length} RACES · ${meeting.mode==='real'?'REAL DATA':'SIMULATED'}</span>
-  </div>` + cardHtml;
-  chatHistory[state].push({type:'state-card', html: header});
-  // Update sidebar badge
-  const badge = document.getElementById('badge-'+state);
-  const item  = document.getElementById('ci-'+state);
-  if (badge) { badge.textContent = chatHistory[state].length + ' card' + (chatHistory[state].length>1?'s':''); }
-  if (item)  { item.classList.add('has-content'); }
-  // If currently viewing that state, re-render
-  if (currentChat === state) renderChatHistory(state);
+    <div class="lch-meta">
+      <span class="lch-tag td">${esc(race.distance)}</span>
+      <span class="lch-tag tt">${esc(race.raceType)}</span>
+      <span class="lch-tag tc">${esc(race.condition)}</span>
+      <span class="lch-tag ${isWin?'tlock':'tplace'}">${src}</span>
+    </div>
+    <div class="lch-stats">
+      <div class="lch-stat"><div class="ls-lbl">Win %</div><div class="ls-val ${isWin?'gold':'teal'}">${runner.winPct.toFixed(1)}%</div></div>
+      <div class="lch-stat"><div class="ls-lbl">Fair $</div><div class="ls-val">${runner.fairOdds}</div></div>
+      <div class="lch-stat"><div class="ls-lbl">Mkt $</div><div class="ls-val"><span class="vb ${vc}">$${runner.marketOdds}</span></div></div>
+      <div class="lch-stat"><div class="ls-lbl">RSI</div><div class="ls-val"><span style="color:${rsiCol}">${race.rsi}</span> <span style="font-size:9px;color:var(--muted)">${rsiLbl}</span></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;font-family:'IBM Plex Mono',monospace;font-size:11px">
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:7px;padding:7px 10px"><span style="color:var(--dim);display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Barrier</span>${runner.barrier}</div>
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:7px;padding:7px 10px"><span style="color:var(--dim);display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Weight</span>${esc(runner.weight||'N/A')}</div>
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:7px;padding:7px 10px"><span style="color:var(--dim);display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Jockey</span>${esc(runner.jockey||'N/A')}</div>
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:7px;padding:7px 10px"><span style="color:var(--dim);display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Form</span>${esc(runner.form||'N/A')}</div>
+    </div>`;
+  if(runner.researchNotes){html+=`<div style="background:rgba(0,232,154,.05);border:1px solid rgba(0,232,154,.2);border-radius:8px;padding:9px 12px;margin-bottom:10px;font-size:12px;color:var(--t2)"><span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--green);letter-spacing:.08em;display:block;margin-bottom:3px">&#128302; AI RESEARCH</span>${esc(runner.researchNotes)}</div>`;}
+  if(race.analysis){html+=`<div class="lch-analysis">${esc(race.analysis)}</div>`;}
+  html+=`</div>`;
+  return html;
 }
 
-// ── SUBMIT ────────────────────────────────────────────────────
-async function doSubmit() {
-  if (busy || currentChat !== 'real') return;
-  const inp = document.getElementById('inp');
-  const txt = inp.value.trim(); if (!txt) return;
-  busy = true; inp.value=''; onInp(inp);
-  document.getElementById('sbtn').disabled = true;
+// MAIN SUBMIT
+async function doSubmit(){
+  if(busy||currentChat!=='real')return;
+  const inp=$('inp');const txt=inp.value.trim();if(!txt)return;
+  busy=true;inp.value='';onInp(inp);$('sbtn').disabled=true;
+  const wlc=document.getElementById('welcome');if(wlc)wlc.remove();
+  const prev=document.querySelector('.wlc');if(prev)prev.remove();
+  const preview=txt.length>120?txt.slice(0,120)+'\u2026':txt;
+  chatHistory.real.push({type:'user',text:preview});
+  const uDiv=document.createElement('div');uDiv.className='msg mu';
+  uDiv.innerHTML='<div class="mwho">You</div><div class="bbu">'+esc(preview)+'</div>';
+  $('msgs').appendChild(uDiv);scrollBot();
 
-  // Remove welcome if present
-  const wlc = document.getElementById('welcome'); if(wlc) wlc.remove();
-
-  // Add to real chat history
-  const preview = txt.length>120 ? txt.slice(0,120)+'…' : txt;
-  chatHistory.real.push({type:'user', text:preview, html:''});
-  const uDiv = document.createElement('div'); uDiv.className='msg mu';
-  uDiv.innerHTML=`<div class="mwho">You</div><div class="bbu">${esc(preview)}</div>`;
-  document.getElementById('msgs').appendChild(uDiv); scrollBot();
-
-  const isReal = detectDataMode(txt) === 'real';
-  const steps = isReal
-    ? ['Detecting pasted race data...','Parsing horses, barriers, weights...','Reading jockeys and trainers...','Extracting market odds...','Running barrier advantage model...','Computing win probabilities...','Calculating RSI scores...','Detecting locks and place locks...','Routing to state channel...','Rendering race card...']
-    : ['Parsing race meeting request...','Seeding generation engine...','Building simulated field...','Running barrier & weight model...','Calculating win probabilities...','Computing RSI scores...','Detecting locks...','Rendering race card...'];
+  const isReal=detectMode(txt)==='real',useAI=isReal&&hasKey();
+  const steps=useAI
+    ?['Connecting to AI Research Engine...','Parsing race data and extracting runners...','Searching web for horse form and recent runs...','Researching trainer and jockey statistics...','Analysing track condition and race shape...','Reviewing market movements and value spots...','Building confidence-weighted win model...','Calculating RSI from market structure...','Identifying locks and place locks...','Routing card to state channel...','Rendering researched race card...']
+    :isReal
+      ?['Parsing race card data...','Extracting runners, barriers and weights...','Running barrier advantage model...','Computing form-weighted probabilities...','Calculating odds-driven RSI...','Identifying locks and place locks...','Routing to state channel...','Rendering race card...']
+      :['Parsing meeting request...','Seeding generation engine...','Building simulated field...','Running barrier and weight model...','Computing win probabilities...','Calculating RSI...','Rendering simulated card...'];
 
   addStepMsg();
-  let si = 0;
-  stepInt2 = setInterval(() => { if(si<steps.length){addStep(steps[si],si);si++} else clearInterval(stepInt2); }, 310);
+  let si=0;
+  stepIntvl=setInterval(()=>{if(si<steps.length){addStep(steps[si],si,si<4&&useAI);si++;}else clearInterval(stepIntvl);},useAI?380:280);
 
-  await new Promise(r => setTimeout(r, 1600 + steps.length * 280));
-  rmStep();
-
-  let meeting = null, errMsg = null;
-  try {
-    if (isReal) {
-      meeting = parseRealData(txt);
-      if (!meeting) throw new Error('Could not detect valid runner data. Use the format:\nRace 1 — 1200m BM78 — Good 4 — Track\n1. Horse | Barrier | Weight | Jockey | Trainer | Form | Odds');
-    } else {
-      const mM = txt.match(/model\s+(\w+)/i);
-      const track = mM ? mM[1] : 'Flemington';
-      const dM = txt.match(/(\d+)(st|nd|rd|th)?\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*/i);
-      meeting = simulateMeeting(track, dM ? `${dM[1]} ${dM[3]} 2025` : 'Saturday');
+  let meeting=null,errMsg=null;
+  try{
+    if(useAI){
+      meeting=await callBetrichAI(txt,(msg)=>{addStep(msg,si++,true);});
+      if(!meeting)throw new Error('AI returned no data. Try again.');
+      meeting.mode='real';meeting.aiMode=true;
+    }else if(isReal){
+      await new Promise(r=>setTimeout(r,1200+steps.length*240));
+      meeting=parseRealData(txt);
+      if(!meeting)throw new Error('Could not parse race data.\nFormat: Race 1 \u2014 1200m BM78 \u2014 Good 4 \u2014 Track\n1. Horse | Barrier | Weight | Jockey | Trainer | Form | Odds');
+    }else{
+      await new Promise(r=>setTimeout(r,1200+steps.length*240));
+      const mM=txt.match(/model\s+(\w+)/i);
+      const track=mM?mM[1]:'Flemington';
+      const dM=txt.match(/(\d+)(st|nd|rd|th)?\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*/i);
+      meeting=simulateMeeting(track,dM?`${dM[1]} ${dM[3]} 2025`:'Saturday');
     }
-  } catch(e) { errMsg = e.message; }
+  }catch(e){errMsg=e.message;}
 
-  if (errMsg) {
-    const html = `<div class="err">⚠ ${esc(errMsg)}</div>`;
-    chatHistory.real.push({type:'ai', html});
+  clearInterval(stepIntvl);rmStep();
+
+  if(errMsg){
+    const isKeyErr=errMsg.includes('API key')||errMsg.includes('rate limit');
+    const html=`<div class="err">&#9888; ${esc(errMsg)}${isKeyErr?'<br/><br/>Tip: Check your API key using the &#128273; button above.':''}</div>`;
+    chatHistory.real.push({type:'ai',html,who:'Betrich'});
     const d=document.createElement('div');d.className='msg ma';
-    d.innerHTML=`<div class="mwho">Betrich</div><div class="bba">${html}</div>`;
-    document.getElementById('msgs').appendChild(d);
-  } else {
-    extractAllLocks(meeting);
-    const cardHtml = renderMeetingHtml(meeting);
-    // Add to real chat
-    chatHistory.real.push({type:'ai', html: cardHtml});
+    d.innerHTML='<div class="mwho">Betrich</div><div class="bba">'+html+'</div>';
+    $('msgs').appendChild(d);
+  }else{
+    pushLocks(meeting,useAI);
+    const cardHtml=renderCard(meeting);
+    chatHistory.real.push({type:'ai',html:cardHtml,who:'Betrich'+(useAI?' &#128302;':'')});
     const d=document.createElement('div');d.className='msg ma';
-    d.innerHTML=`<div class="mwho">Betrich</div><div class="bba">${cardHtml}</div>`;
-    document.getElementById('msgs').appendChild(d);
-    // Route to state
-    routeToState(meeting, cardHtml);
-    // Flash state badge
-    const state = detectState(meeting.track);
-    if (state) {
-      const item = document.getElementById('ci-'+state);
-      if(item){ item.style.transition='background .3s'; setTimeout(()=>item.style.transition='',600) }
-    }
+    d.innerHTML='<div class="mwho">Betrich'+(useAI?' &#128302;':'')+'</div><div class="bba">'+cardHtml+'</div>';
+    $('msgs').appendChild(d);
+    pushToState(meeting,cardHtml);
   }
-  busy = false;
-  document.getElementById('sbtn').disabled = false;
-  inp.focus(); scrollBot();
+  busy=false;$('sbtn').disabled=false;inp.focus();scrollBot();
 }
 
-// ── RENDER RACE CARD ──────────────────────────────────────────
-function renderMeetingHtml(m) {
-  const isReal = m.mode === 'real';
-  let h = '';
-  h += `<div class="rctop">
-    <div><div class="rctitle">🏇 ${esc(m.track)}</div>
-    <div class="rcdate">${esc(m.date)} · Track: ${esc(m.condition)}</div></div>
-    <span class="rcpill ${isReal?'real':'sim'}">${m.races.length} RACES ${isReal?'· REAL':'· SIM'}</span>
-  </div>
-  <div class="data-badge ${isReal?'real':'sim'}">${isReal?'⚡ Real data — modeled by Betrich':'🎲 Simulated by Betrich engine'}</div>`;
+// RENDER RACE CARD
+function renderCard(m){
+  const isAI=!!m.aiMode,isReal=m.mode==='real';
+  const mode=isAI?'ai':isReal?'real':'sim';
+  let h=`<div class="rctop"><div><div class="rctitle">&#127943; ${esc(m.track)}</div><div class="rcdate">${esc(m.date)} &middot; Track: ${esc(m.condition)}</div></div><span class="rcpill ${mode}">${m.races.length} RACES &middot; ${isAI?'AI RESEARCHED':isReal?'REAL DATA':'SIMULATED'}</span></div>`;
+  h+=`<div class="dbadge ${mode}">${isAI?'&#128302; Researched by Betrich AI \u2014 live web search on every horse':isReal?'&#9889; Real data \u2014 modelled by Betrich local engine':'&#127922; Simulated by Betrich engine'}</div>`;
 
-  for (const race of m.races) {
-    const rsi = race.rsi;
-    const rc = rsi>=78?'rh':rsi>=62?'rm':'rl';
-    const rcol = rsi>=78?'var(--green)':rsi>=62?'var(--amber)':'var(--red)';
-    const rsiLbl = rsi>=78?'STABLE':rsi>=62?'MODERATE':'VOLATILE';
-    const fs = race.runners.length;
-    const avg = 100/fs;
-    // Find win lock and place locks for this race
-    const winLock = allWinLocks.find(l => l.raceNum===race.raceNum);
-    const placeLocks = race.runners.filter(r => r.pos<=3 && rsi>=62 && r.winPct>=avg*1.25 && !(r.pos===1&&rsi>=67));
+  for(const race of m.races){
+    const rsi=race.rsi,rc=rsi>=78?'rh':rsi>=62?'rm':'rl';
+    const rcol=rsi>=78?'var(--green)':rsi>=62?'var(--amber)':'var(--red)';
+    const rsiLbl=rsi>=78?'STABLE':rsi>=62?'MODERATE':'VOLATILE';
+    const fs=race.runners.length,avg=100/fs;
+    const wl=race.runners.find(r=>isWinLock(r,rsi));
+    const pls=race.runners.filter(r=>isPlaceLock(r,fs,rsi)&&!(isWinLock(r,rsi)));
 
-    h += `<div class="rb">
-      <div class="rbh">
-        <span class="rnum">RACE ${race.raceNum}</span>
-        <span class="rnm">${esc(race.raceName)}</span>
-        <div class="rtags">
-          <span class="tag td">${esc(race.distance)}</span>
-          <span class="tag tt">${esc(race.raceType)}</span>
-          <span class="tag tc">${esc(race.condition)}</span>
-          ${isReal?'<span class="tag treal">REAL</span>':''}
-          ${winLock?'<span class="tag tlock">🔒 LOCK</span>':''}
-          ${placeLocks.length?'<span class="tag tplace">🎯 PLACE</span>':''}
-        </div>
-      </div>
-      <div class="rbstats">
-        <div class="stat"><span class="slbl">Pace</span><span class="sval">${esc(race.pace)}</span></div>
-        <div class="stat"><span class="slbl">RSI Score</span>
-          <div class="rsirow ${rc}">
-            <span class="sval" style="color:${rcol}">${rsi}</span>
-            <div class="rsibar"><div class="rsifill" style="width:${rsi}%"></div></div>
-            <span class="rsi-lbl">${rsiLbl}</span>
-          </div>
-        </div>
-        <div class="stat"><span class="slbl">Field</span><span class="sval">${fs} runners</span></div>
-      </div>
-      <div class="tscroll"><table class="rt"><thead><tr>
-        <th style="width:32px">POS</th><th>Horse</th><th>BRR</th><th>WGT</th>
-        <th>Jockey</th><th>Trainer</th><th>Form</th>
-        <th>Mkt $</th><th>Win%</th><th>Fair $</th><th>Value</th>
-      </tr></thead><tbody>`;
+    h+=`<div class="rb"><div class="rbh"><span class="rnum">RACE ${race.raceNum}</span><span class="rnm">${esc(race.raceName)}</span><div class="rtags"><span class="tag td">${esc(race.distance)}</span><span class="tag tt">${esc(race.raceType)}</span><span class="tag tc">${esc(race.condition)}</span>${isAI?'<span class="tag tai">AI</span>':isReal?'<span class="tag treal">REAL</span>':''}${wl?'<span class="tag tlock">&#128274; LOCK</span>':''}${pls.length?'<span class="tag tplace">&#127919; PLACE</span>':''}</div></div>`;
+    h+=`<div class="rbstats"><div class="stat"><span class="slbl">Pace</span><span class="sval">${esc(race.pace)}</span></div><div class="stat"><span class="slbl">RSI Score</span><div class="rsirow ${rc}"><span class="sval" style="color:${rcol}">${rsi}</span><div class="rsibar"><div class="rsifill" style="width:${rsi}%"></div></div><span class="rsi-lbl">${rsiLbl}</span></div></div><div class="stat"><span class="slbl">Field</span><span class="sval">${fs} runners</span></div></div>`;
 
-    for (const r of race.runners) {
-      const p = +r.pos;
-      const isWL = winLock && r.horse===winLock.horse;
-      const isPL = !isWL && placeLocks.some(pl => pl.horse===r.horse);
-      const pc = p===1?'p1':p===2?'p2':p===3?'p3':'';
-      const nc = isWL?'hn lock':isPL?'hn place':p===1?(isReal?'hn real':'hn fav'):'hn';
-      const mk = isWL?' 🔒':isPL?' 🎯':p===1?' ★':'';
-      const vl = (r.value||'').toLowerCase();
-      const vc = vl==='overs'?'vo':vl==='unders'?'vu':'vf';
-      const rowCls = isWL?'lock-row':isPL?'place-row':'';
-      h += `<tr class="${rowCls}">
-        <td class="pc ${pc}">${p}</td>
-        <td><span class="${nc}">${esc(r.horse)}${mk}</span></td>
-        <td class="mn">${r.barrier||'–'}</td>
-        <td class="mn">${esc(r.weight||'–')}</td>
-        <td style="font-size:11px;color:var(--muted)">${esc(r.jockey||'–')}</td>
-        <td style="font-size:11px;color:var(--muted)">${esc(r.trainer||'–')}</td>
-        <td><span class="fs">${esc(r.form||'–')}</span></td>
-        <td class="mn">$${(+r.marketOdds||0).toFixed(2)}</td>
-        <td class="mnb">${(+r.winPct||0).toFixed(1)}%</td>
-        <td class="mn">$${(+r.fairOdds||0).toFixed(2)}</td>
-        <td><span class="vb ${vc}">${esc(r.value||'–')}</span></td>
-      </tr>`;
+    h+=`<div class="tscroll"><table class="rt"><thead><tr><th>POS</th><th>Horse</th><th>BRR</th><th>WGT</th><th>Jockey</th><th>Trainer</th><th>Form</th><th>Mkt $</th><th>Win%</th><th>Fair $</th><th>Value</th>${isAI?'<th>Research Note</th>':''}</tr></thead><tbody>`;
+    for(const r of race.runners){
+      const p=+r.pos;
+      const isWL=wl&&r.horse===wl.horse;
+      const isPL=!isWL&&pls.some(pl=>pl.horse===r.horse);
+      const pc=p===1?'p1':p===2?'p2':p===3?'p3':'';
+      const nc=isWL?'hn lock':isPL?'hn place':p===1?(isAI?'hn ai':isReal?'hn real':'hn fav'):'hn';
+      const mk=isWL?' &#128274;':isPL?' &#127919;':p===1?' &#9733;':'';
+      const vl=(r.value||'').toLowerCase();
+      const vc=vl==='overs'?'vo':vl==='unders'?'vu':'vf';
+      const rc2=isWL?'lock-row':isPL?'place-row':'';
+      h+=`<tr class="${rc2}"><td class="pc ${pc}">${p}</td><td><span class="${nc}">${esc(r.horse)}${mk}</span></td><td class="mn">${r.barrier||'?'}</td><td class="mn">${esc(r.weight||'?')}</td><td style="font-size:11px;color:var(--muted)">${esc(r.jockey||'?')}</td><td style="font-size:11px;color:var(--muted)">${esc(r.trainer||'?')}</td><td><span class="fs">${esc(r.form||'?')}</span></td><td class="mn">$${(+r.marketOdds||0).toFixed(2)}</td><td class="mnb">${(+r.winPct||0).toFixed(1)}%</td><td class="mn">$${(+r.fairOdds||0).toFixed(2)}</td><td><span class="vb ${vc}">${esc(r.value||'?')}</span></td>${isAI?`<td class="rn">${esc(r.researchNotes||'')}</td>`:''}</tr>`;
     }
-
-    h += `</tbody></table></div>
-      <div class="rbs">
-        <div class="scrow">
-          <div class="sc"><div class="ico">🏆</div><div class="lbl">Top Rated</div><div class="val">${esc(race.topRated||'–')}</div><div class="sub">Model #1 selection</div></div>
-          <div class="sc"><div class="ico">📊</div><div class="lbl">Best Value</div><div class="val">${esc(race.bestValue||'–')}</div><div class="sub">Price above fair odds</div></div>
-          ${winLock?`<div class="sc lock-sc"><div class="ico">🔒</div><div class="lbl">Lock Pick</div><div class="val">${esc(winLock.horse)}</div><div class="sub">Win% ${winLock.winPct.toFixed(1)} · RSI ${winLock.rsi}</div></div>`:''}
-          ${placeLocks.length?`<div class="sc place-sc"><div class="ico">🎯</div><div class="lbl">Place Locks</div><div class="val">${esc(placeLocks.map(p=>p.horse).join(', '))}</div><div class="sub">Top-3 confidence plays</div></div>`:''}
-        </div>
-        ${race.riskFactor?`<div class="riskbox"><b>⚠ Volatility:</b> ${esc(race.riskFactor)}</div>`:''}
-        ${race.analysis?`<p class="atxt">${esc(race.analysis)}</p>`:''}
-      </div>
-    </div>`;
+    h+=`</tbody></table></div>`;
+    h+=`<div class="rbs"><div class="scrow"><div class="sc"><div class="sico">&#127942;</div><div class="slb">Top Rated</div><div class="svl">${esc(race.topRated||'?')}</div><div class="ssb">Model #1 selection</div></div><div class="sc"><div class="sico">&#128200;</div><div class="slb">Best Value</div><div class="svl">${esc(race.bestValue||'?')}</div><div class="ssb">Price above fair odds</div></div>${wl?`<div class="sc gold"><div class="sico">&#128274;</div><div class="slb">Win Lock</div><div class="svl">${esc(wl.horse)}</div><div class="ssb">${wl.winPct.toFixed(1)}% &middot; RSI ${rsi}</div></div>`:''} ${pls.length?`<div class="sc teal"><div class="sico">&#127919;</div><div class="slb">Place Locks</div><div class="svl">${esc(pls.map(p=>p.horse).join(', '))}</div><div class="ssb">Top-3 confidence picks</div></div>`:''}</div>`;
+    if(race.riskFactor)h+=`<div class="riskbox"><b>&#9888; Volatility:</b> ${esc(race.riskFactor)}</div>`;
+    if(race.analysis)h+=`<p class="atxt">${esc(race.analysis)}</p>`;
+    h+=`</div></div>`;
   }
-  h += `<p class="disc">Betrich uses ${isReal?'user-provided':'simulated'} race data and internal modeling logic. Not betting advice.</p>`;
+  h+=`<p class="disc">Betrich uses ${isAI?'AI-powered live web research':'internal modeling logic'}. Not betting advice. For entertainment only.</p>`;
   return h;
 }
 
-// ── INIT ──────────────────────────────────────────────────────
+// INIT
 switchChat('real');
-renderAllLocks();
+updateKeyUI();
 </script>
 </body>
 </html>
