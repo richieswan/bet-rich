@@ -168,24 +168,226 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 12px;display:inline-block}
 
 /* LOCK CHANNEL CARDS */
-.lch-card{border-radius:var(--r2);padding:16px 18px;margin-bottom:12px;animation:rise .35s ease}
-.lch-card.win{background:rgba(255,215,0,.06);border:1px solid var(--goldbdr)}
-.lch-card.place{background:rgba(45,212,191,.06);border:1px solid var(--tealbdr)}
-.lch-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
-.lch-horse{font-weight:800;font-size:17px;letter-spacing:-.2px}
-.lch-horse.win{color:var(--gold)}.lch-horse.place{color:var(--teal)}
-.lch-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 9px;border-radius:20px;letter-spacing:.06em;white-space:nowrap}
-.lch-badge.win{background:var(--goldbg);color:var(--gold);border:1px solid var(--goldbdr)}
-.lch-badge.place{background:var(--tealbg);color:var(--teal);border:1px solid var(--tealbdr)}
-.lch-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.lch-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:3px 9px;border-radius:5px;border:1px solid}
-.lch-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
-.lch-stat{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
-.lch-stat .ls-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:2px}
-.lch-stat .ls-val{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500}
-.lch-stat .ls-val.green{color:var(--green)}.lch-stat .ls-val.gold{color:var(--gold)}.lch-stat .ls-val.teal{color:var(--teal)}
-.lch-analysis{font-size:12px;color:var(--t2);line-height:1.75;padding-top:10px;border-top:1px solid var(--border)}
-.lch-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:4px 0 16px}
+/* LOCK CARDS — clean, minimal */
+.lch-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);
+  padding:16px 18px;margin-bottom:10px;animation:rise .3s ease;position:relative}
+.lch-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:var(--r2) 0 0 var(--r2)}
+.lch-card.win::before{background:var(--gold)}
+.lch-card.place::before{background:var(--teal)}
+.lch-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px}
+.lch-name{font-weight:700;font-size:15px;color:var(--text);letter-spacing:-.2px}
+.lch-pill{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.07em;
+  padding:3px 8px;border-radius:4px;background:var(--bg3);border:1px solid var(--border);
+  color:var(--muted);white-space:nowrap;flex-shrink:0}
+.lch-pill.win{color:var(--gold);border-color:rgba(255,215,0,.25);background:rgba(255,215,0,.05)}
+.lch-pill.place{color:var(--teal);border-color:rgba(45,212,191,.22);background:rgba(45,212,191,.05)}
+.lch-ctx{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:12px;line-height:1.5}
+.lch-table{width:100%;border-collapse:collapse;margin-bottom:10px}
+.lch-table td{padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;
+  border-bottom:1px solid var(--border);vertical-align:middle}
+.lch-table tr:last-child td{border-bottom:none}
+.lch-table .lt-lbl{color:var(--dim);font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;width:80px}
+.lch-table .lt-val{color:var(--text)}
+.lch-table .lt-val.hi{color:var(--green);font-weight:600}
+.lch-note{font-size:11.5px;color:var(--muted);line-height:1.7;padding:10px 0 0;
+  border-top:1px solid var(--border);margin-top:4px}
+.lch-note b{color:var(--t2);font-weight:500}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Betrich — AI Racing Model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090c;--bg1:#0b0e13;--bg2:#10141a;--bg3:#161b23;
+  --panel:#1b2029;--border:#242b38;--border2:#2e3748;
+  --text:#e0e8f6;--t2:#a8b4ca;--muted:#5e6d87;--dim:#333d52;
+  --green:#00e89a;--g2:#00c482;
+  --gbg:rgba(0,232,154,.08);--gbdr:rgba(0,232,154,.2);
+  --red:#ff4d68;--rbg:rgba(255,77,104,.08);--rbdr:rgba(255,77,104,.22);
+  --amber:#ffb22e;--abg:rgba(255,178,46,.08);--abdr:rgba(255,178,46,.22);
+  --blue:#4f96ff;--bbg:rgba(79,150,255,.09);--bbdr:rgba(79,150,255,.22);
+  --purple:#a78bfa;--pbg:rgba(167,139,250,.1);--pbdr:rgba(167,139,250,.22);
+  --gold:#ffd700;--goldbg:rgba(255,215,0,.08);--goldbdr:rgba(255,215,0,.28);
+  --teal:#2dd4bf;--tealbg:rgba(45,212,191,.08);--tealbdr:rgba(45,212,191,.22);
+  --r:10px;--r2:14px;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(0,232,154,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(0,232,154,.015) 1px,transparent 1px);
+  background-size:56px 56px;mask-image:radial-gradient(ellipse 100% 45% at 50% 0%,black 0%,transparent 100%)}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 60% 40% at 50% -5%,rgba(0,232,154,.03) 0%,transparent 70%)}
+#app{display:flex;flex-direction:column;height:100vh;position:relative;z-index:1}
+
+/* HEADER */
+#hdr{display:flex;align-items:center;justify-content:space-between;height:55px;padding:0 20px;flex-shrink:0;
+  background:rgba(7,9,12,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:11px}
+.lmark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--green),var(--g2));
+  display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;
+  font-weight:500;font-size:13px;color:#000;box-shadow:0 0 24px rgba(0,232,154,.28);flex-shrink:0}
+.ltxt{display:flex;flex-direction:column}
+.lname{font-weight:800;font-size:15.5px;letter-spacing:-.3px;line-height:1}
+.lsub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--green);letter-spacing:.13em;text-transform:uppercase;margin-top:2px}
+.hdr-r{display:flex;align-items:center;gap:8px}
+.eng-pill{display:flex;align-items:center;gap:6px;background:var(--gbg);border:1px solid var(--gbdr);border-radius:20px;padding:4px 11px}
+.epulse{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);animation:blink 2.2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.etxt{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--green);letter-spacing:.07em}
+.hdr-key-btn{display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:7px;padding:5px 11px;cursor:pointer;font-family:'IBM Plex Mono',monospace;
+  font-size:10px;color:var(--muted);letter-spacing:.05em;transition:all .2s}
+.hdr-key-btn:hover{border-color:var(--green);color:var(--green)}
+.hdr-key-btn.has-key{border-color:var(--gbdr);color:var(--green);background:var(--gbg)}
+.hdr-paste-btn{display:flex;align-items:center;gap:6px;background:var(--pbg);border:1px solid var(--pbdr);
+  border-radius:7px;padding:5px 12px;cursor:pointer;font-family:'IBM Plex Mono',monospace;
+  font-size:10px;color:var(--purple);letter-spacing:.05em;transition:all .2s}
+.hdr-paste-btn:hover{background:rgba(167,139,250,.18)}
+
+/* API KEY MODAL */
+#key-modal{display:none;position:fixed;inset:0;z-index:999;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.72);backdrop-filter:blur(6px)}
+#key-modal.open{display:flex}
+.km-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);
+  padding:28px 28px 24px;width:100%;max-width:460px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.km-title{font-weight:800;font-size:17px;margin-bottom:6px}
+.km-sub{font-size:12.5px;color:var(--muted);line-height:1.7;margin-bottom:18px}
+.km-sub a{color:var(--blue);text-decoration:none}.km-sub a:hover{text-decoration:underline}
+.km-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--t2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.km-inp{width:100%;background:var(--panel);border:1px solid var(--border2);border-radius:9px;color:var(--text);
+  font-family:'IBM Plex Mono',monospace;font-size:13px;padding:11px 14px;outline:none;transition:border-color .2s}
+.km-inp:focus{border-color:rgba(0,232,154,.35)}
+.km-row{display:flex;gap:9px;margin-top:14px}
+.km-save{flex:1;background:var(--green);color:#000;border:none;border-radius:8px;padding:10px;
+  font-weight:700;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .18s}
+.km-save:hover{background:var(--g2)}
+.km-cancel{background:var(--bg3);color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif}
+.km-clear{background:var(--rbg);color:var(--red);border:1px solid var(--rbdr);border-radius:8px;padding:10px 14px;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif}
+.km-st{margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:10px;border-radius:6px;padding:7px 10px;display:none}
+.km-st.ok{display:block;background:var(--gbg);border:1px solid var(--gbdr);color:var(--green)}
+.km-st.err{display:block;background:var(--rbg);border:1px solid var(--rbdr);color:var(--red)}
+
+/* LAYOUT */
+#layout{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+#side{width:232px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;background:rgba(7,9,12,.5)}
+@media(max-width:700px){#side{display:none}}
+#side-scroll{flex:1;overflow-y:auto;padding:10px 8px 6px}
+#side-scroll::-webkit-scrollbar{width:2px}
+#side-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.sl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--dim);padding:2px 8px;margin:10px 0 4px;display:flex;align-items:center;justify-content:space-between}
+.sl-badge{background:var(--border);border-radius:10px;padding:1px 6px;font-size:9px;color:var(--muted)}
+.ci{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:8px;color:var(--muted);
+  font-size:12px;cursor:pointer;transition:all .15s;border:1px solid transparent;position:relative}
+.ci:hover{background:var(--bg3);color:var(--t2);border-color:var(--border)}
+.ci.active{background:var(--gbg);color:var(--green);border-color:var(--gbdr)}
+.ci .ci-ico{font-size:13px;flex-shrink:0;width:18px;text-align:center}
+.ci .ci-name{flex:1;font-weight:500;font-size:12px}
+.ci .ci-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;background:var(--border);
+  border-radius:10px;padding:1px 6px;color:var(--muted);flex-shrink:0;min-width:20px;text-align:center}
+.ci.lit .ci-badge{background:var(--gbg);border:1px solid var(--gbdr);color:var(--green)}
+/* State colors */
+.ci.s-vic.active{background:rgba(0,122,255,.1);color:#4f96ff;border-color:rgba(0,122,255,.25)}
+.ci.s-nsw.active{background:rgba(255,59,48,.08);color:#ff6b6b;border-color:rgba(255,59,48,.2)}
+.ci.s-wa.active{background:rgba(255,204,0,.08);color:#ffd700;border-color:rgba(255,204,0,.22)}
+.ci.s-sa.active{background:rgba(175,82,222,.1);color:#b88dfa;border-color:rgba(175,82,222,.25)}
+.ci.s-tas.active{background:rgba(52,199,89,.1);color:#4ade80;border-color:rgba(52,199,89,.25)}
+.ci.s-qld.active{background:rgba(255,149,0,.1);color:#ffb22e;border-color:rgba(255,149,0,.25)}
+.ci.s-nz.active{background:rgba(0,100,0,.15);color:#4ade80;border-color:rgba(74,222,128,.3)}
+.ci.s-intl.active{background:rgba(59,130,246,.1);color:#60a5fa;border-color:rgba(96,165,250,.3)}
+.ci.s-locks.active{background:var(--goldbg);color:var(--gold);border-color:var(--goldbdr)}
+.ci.s-place.active{background:var(--tealbg);color:var(--teal);border-color:var(--tealbdr)}
+/* Unread dot */
+.ci .ci-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;display:none}
+.ci.new-content .ci-dot{display:block;background:var(--green);box-shadow:0 0 5px var(--green);animation:blink 1.5s ease-in-out infinite}
+.ci.s-locks.new-content .ci-dot{background:var(--gold);box-shadow:0 0 5px var(--gold)}
+.ci.s-place.new-content .ci-dot{background:var(--teal);box-shadow:0 0 5px var(--teal)}
+
+#side-foot{padding:10px;border-top:1px solid var(--border);flex-shrink:0}
+.snew{width:100%;background:var(--green);color:#000;border:none;border-radius:8px;padding:9px;
+  font-weight:700;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .18s}
+.snew:hover{background:var(--g2)}
+
+/* CHAT COLUMN */
+#chat-col{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#ctopbar{display:flex;align-items:center;gap:10px;padding:9px 20px;
+  border-bottom:1px solid var(--border);background:rgba(7,9,12,.6);backdrop-filter:blur(10px);flex-shrink:0}
+#ctopbar .ctb-ico{font-size:16px}
+#ctopbar .ctb-name{font-weight:700;font-size:14px}
+#ctopbar .ctb-sub{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--muted);letter-spacing:.04em;margin-left:auto}
+#ctopbar .ctb-ro{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--amber);
+  background:var(--abg);border:1px solid var(--abdr);border-radius:4px;padding:2px 7px;display:none}
+#ctopbar .ctb-ro.show{display:block}
+.ctb-clear{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--red);
+  background:var(--rbg);border:1px solid var(--rbdr);border-radius:5px;padding:3px 9px;
+  cursor:pointer;transition:all .2s;white-space:nowrap;display:none}
+.ctb-clear:hover{background:rgba(255,77,104,.18)}
+.ctb-clear.show{display:block}
+#msgs-wrap{flex:1;overflow-y:auto;padding:22px 20px 14px;scroll-behavior:smooth}
+#msgs-wrap::-webkit-scrollbar{width:3px}
+#msgs-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+#msgs{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+
+/* WELCOME */
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.wlc{text-align:center;padding:32px 0 20px;animation:rise .5s ease}
+.wchip{display:inline-flex;align-items:center;gap:7px;background:var(--gbg);border:1px solid var(--gbdr);
+  border-radius:20px;padding:5px 13px;margin-bottom:14px}
+.wchip span{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--green);letter-spacing:.08em}
+.wlc h1{font-weight:800;font-size:25px;letter-spacing:-.5px;line-height:1.2;margin-bottom:9px}
+.wlc h1 em{font-style:normal;color:var(--green)}
+.wsub{color:var(--muted);font-size:13px;max-width:440px;margin:0 auto 22px;line-height:1.65}
+.wmodes{display:grid;grid-template-columns:1fr 1fr;gap:9px;max-width:540px;margin:0 auto 12px}
+.wmode{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:14px 16px;text-align:left;cursor:pointer;transition:all .2s}
+.wmode:hover{transform:translateY(-2px)}
+.wmode.sim:hover{border-color:var(--green);background:var(--gbg)}
+.wmode.paste:hover{border-color:var(--purple);background:var(--pbg)}
+.wmode .mico{font-size:18px;margin-bottom:7px}
+.wmode .mtit{font-weight:700;font-size:13px;margin-bottom:3px}
+.wmode .mdesc{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* STATE / LOCKS EMPTY PLACEHOLDER */
+.ch-empty{text-align:center;padding:56px 20px;animation:rise .4s ease}
+.che-ico{font-size:40px;margin-bottom:14px}
+.che-title{font-weight:700;font-size:16px;margin-bottom:6px}
+.che-sub{color:var(--muted);font-size:12.5px;max-width:300px;margin:0 auto;line-height:1.65}
+.che-hint{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);margin-top:14px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 12px;display:inline-block}
+
+/* LOCK CHANNEL CARDS */
+/* LOCK CARDS — clean minimal design */
+.lch-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);
+  padding:18px 20px;margin-bottom:10px;animation:rise .3s ease}
+.lch-card + .lch-card{border-top:none;border-radius:0 0 var(--r2) var(--r2);margin-top:-10px}
+.lch-card:first-child:not(:last-child){border-radius:var(--r2) var(--r2) 0 0}
+.lch-card.win{border-left:3px solid var(--gold)}
+.lch-card.place{border-left:3px solid var(--teal)}
+.lch-horse-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.lch-horse{font-weight:800;font-size:16px;letter-spacing:-.2px;color:var(--text)}
+.lch-type{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;
+  padding:3px 8px;border-radius:4px;border:1px solid var(--border);color:var(--muted);background:var(--bg3)}
+.lch-context{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:12px}
+.lch-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);
+  border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:12px}
+.lch-cell{background:var(--bg3);padding:9px 11px}
+.lch-cell .lc-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--dim);margin-bottom:3px}
+.lch-cell .lc-val{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:var(--text)}
+.lch-cell .lc-val.accent{color:var(--green)}
+.lch-row2{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);
+  border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;overflow:hidden;margin-top:-1px;margin-bottom:12px}
+.lch-analysis{font-size:12px;color:var(--muted);line-height:1.75;padding-top:11px;border-top:1px solid var(--border)}
+.lch-research{background:var(--bg3);border:1px solid var(--border);border-radius:7px;
+  padding:9px 12px;margin-bottom:10px;font-size:12px;color:var(--t2);line-height:1.6}
+.lch-research .lr-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--green);
+  letter-spacing:.08em;display:block;margin-bottom:3px}
 
 /* MESSAGES */
 .msg{display:flex;flex-direction:column;animation:rise .2s ease}
@@ -450,21 +652,39 @@ const TRACK_STATE = {
   flemington:'VIC',caulfield:'VIC','moonee valley':'VIC','the valley':'VIC',
   sandown:'VIC',geelong:'VIC',ballarat:'VIC',pakenham:'VIC',cranbourne:'VIC',
   bendigo:'VIC',mornington:'VIC',seymour:'VIC',wodonga:'VIC',
+  'sale':'VIC',echuca:'VIC',wangaratta:'VIC',warrnambool:'VIC',
+  hamilton:'VIC',horsham:'VIC',ararat:'VIC',stawell:'VIC',
+  'swan hill':'VIC',mildura:'VIC',portland:'VIC',colac:'VIC',
+  traralgon:'VIC','bairnsdale':'VIC',benalla:'VIC',avoca:'VIC',
   // NSW
   randwick:'NSW',rosehill:'NSW','warwick farm':'NSW',newcastle:'NSW',
   hawkesbury:'NSW',kembla:'NSW',gosford:'NSW',wyong:'NSW',canterbury:'NSW',
+  grafton:'NSW',taree:'NSW',coffs:'NSW',armidale:'NSW',tamworth:'NSW',
+  goulburn:'NSW',wagga:'NSW',albury:'NSW',orange:'NSW',bathurst:'NSW',
+  mudgee:'NSW',dubbo:'NSW','port macquarie':'NSW',lismore:'NSW',
+  scone:'NSW',muswellbrook:'NSW',cessnock:'NSW',maitland:'NSW',
+  nowra:'NSW',moruya:'NSW',queanbeyan:'NSW',coonamble:'NSW',
+  narromine:'NSW',gilgandra:'NSW','broken hill':'NSW',parkes:'NSW',
   // WA
   ascot:'WA',belmont:'WA',pinjarra:'WA',bunbury:'WA',geraldton:'WA',
+  kalgoorlie:'WA',albany:'WA',esperance:'WA',broome:'WA',
+  'york':'WA','northam':'WA',narrogin:'WA',
   // SA
   morphettville:'SA',gawler:'SA','murray bridge':'SA',naracoorte:'SA',
+  'mt gambier':'SA','mount gambier':'SA',strathalbyn:'SA',
+  balaklava:'SA',oakbank:'SA',bordertown:'SA',port:'SA',
   // TAS
   hobart:'TAS',launceston:'TAS',elwick:'TAS',devonport:'TAS',
+  longford:'TAS',spreyton:'TAS',
   // QLD
   'eagle farm':'QLD',doomben:'QLD','gold coast':'QLD','sunshine coast':'QLD',
   ipswich:'QLD',toowoomba:'QLD',rockhampton:'QLD',townsville:'QLD',
+  cairns:'QLD',mackay:'QLD',bundaberg:'QLD','dalby':'QLD',
+  warwick:'QLD',stanthorpe:'QLD',emerald:'QLD',longreach:'QLD',
+  beaudesert:'QLD',kilcoy:'QLD',nanango:'QLD',roma:'QLD',
   // NZ
   trentham:'NZ',ellerslie:'NZ','te rapa':'NZ',rotorua:'NZ',
-  riccarton:'NZ','hastings':'NZ',otaki:'NZ',awapuni:'NZ',
+  riccarton:'NZ',hastings:'NZ',otaki:'NZ',awapuni:'NZ',
   matamata:'NZ','new plymouth':'NZ',whangarei:'NZ',gore:'NZ',
   wingatui:'NZ',ashburton:'NZ',"hawke's bay":'NZ','hawkes bay':'NZ',
   waverley:'NZ',woodville:'NZ',feilding:'NZ',
@@ -491,21 +711,25 @@ const STATE_META = {
   LOCKS:{ico:'&#128274;',label:'Win Locks'},
   PLACE:{ico:'&#127919;',label:'Place Locks'},
 };
-function detectState(track){
-  if(!track)return null;
-  const t=track.toLowerCase().trim();
-  // Check explicit track map first
-  for(const[k,s]of Object.entries(TRACK_STATE))if(t.includes(k))return s;
-  // Check NZ keywords
-  for(const k of NZ_KEYWORDS)if(t.includes(k))return'NZ';
-  // Check known international venues
-  for(const k of INTL_KEYWORDS)if(t.includes(k))return'INTL';
-  // Detect by country name in track string
-  const intlCountries=['england','ireland','france','usa','united states','japan',
-    'hong kong','dubai','singapore','germany','italy','canada','south africa',
-    'argentina','brazil','chile','norway','sweden','denmark','spain'];
-  for(const k of intlCountries)if(t.includes(k))return'INTL';
-  // Unknown track — return null (stays in Real Data only, no state routing)
+function detectState(track, richText){
+  // Normalise: strip HTML entities, lowercase
+  function norm(s){
+    return (s||'').toLowerCase()
+      .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>')
+      .replace(/&middot;/g,' ').replace(/&#[0-9]+;/g,' ').replace(/&[a-z]+;/g,' ');
+  }
+  // Search track name first (most reliable), then full rich text
+  const sources = [norm(track), norm(richText)];
+  for(const t of sources){
+    if(!t) continue;
+    for(const[k,s] of Object.entries(TRACK_STATE)) if(t.includes(k)) return s;
+    for(const k of NZ_KEYWORDS) if(t.includes(k)) return 'NZ';
+    for(const k of INTL_KEYWORDS) if(t.includes(k)) return 'INTL';
+    const intlCountries=['england','ireland','france','usa','united states','japan',
+      'hong kong','dubai','singapore','germany','italy','canada','south africa',
+      'argentina','brazil','chile'];
+    for(const k of intlCountries) if(t.includes(k)) return 'INTL';
+  }
   return null;
 }
 
@@ -616,6 +840,14 @@ function parseRealData(rawText){
     else{const nm=line.match(/^(\d+[\.\)]\s*)?([A-Za-z][A-Za-z\s\(\)'\-&]{2,35})/);if(nm&&line.length>5){const nums=line.match(/[\d]+\.?[\d]*/g)||[];const o=nums.length>=2?parseFloat(nums[nums.length-1]):10.0;if(o>0&&o<500)cur.runners.push({horse:nm[2].trim(),barrier:nums.length>=2?parseInt(nums[1]):Math.floor(Math.random()*14)+1,weight:(nums.length>=3?parseFloat(nums[2]):57)+'kg',jockey:J[Math.floor(Math.random()*J.length)],trainer:TR[Math.floor(Math.random()*TR.length)],form:'x-x-x-x-x',marketOdds:o,isReal:true,score:null});}}
   }
   const valid=races.filter(r=>r.runners.length>0);if(!valid.length)return null;
+  // If no track extracted from headers, scan all lines for any known track name
+  if(!valid[0].track){
+    const fullText=rawText.toLowerCase();
+    for(const[k,s]of Object.entries(TRACK_STATE)){
+      if(fullText.includes(k)){valid.forEach(r=>r.track=k.split(' ').map(w=>w[0].toUpperCase()+w.slice(1)).join(' '));break;}
+    }
+    for(const k of NZ_KEYWORDS){if(fullText.includes(k)){const nm=k.split(' ').map(w=>w[0].toUpperCase()+w.slice(1)).join(' ');valid.forEach(r=>r.track=nm);break;}}
+  }
   for(const race of valid){
     const dn=parseInt(race.distance)||1200;
     for(const runner of race.runners){
@@ -963,8 +1195,9 @@ function loadChats(){
   }catch(e){console.warn('Betrich load error:',e);}
 }
 function clearCurrentChat(){
-  if(!currentChat||currentChat==='real')return;
-  if(!confirm('Clear all cards in this chat? This cannot be undone.'))return;
+  if(!currentChat) return;
+  const label=currentChat==='real'?'Real Data':currentChat;
+  if(!confirm('Clear '+label+' chat? This cannot be undone.')) return;
   chatHistory[currentChat]=[];
   // Also clear locks arrays if clearing lock channels
   if(currentChat==='LOCKS')allWinLocks=[];
@@ -980,10 +1213,9 @@ function clearCurrentChat(){
 }
 function updateClearBtn(id){
   const btn=document.getElementById('ctb-clear');
-  if(!btn)return;
-  // Show clear button on all chats except Real Data input
-  const show=id!=='real'&&chatHistory[id]&&chatHistory[id].length>0;
-  btn.classList.toggle('show',show);
+  if(!btn) return;
+  const has=chatHistory[id]&&chatHistory[id].length>0;
+  btn.classList.toggle('show', has);
 }
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const $=id=>document.getElementById(id);
@@ -1071,7 +1303,11 @@ function rmStep(){clearInterval(stepIntvl);const t=$('step-msg');if(t)t.remove()
 
 // PUSH TO STATE CHANNEL
 function pushToState(meeting,cardHtml){
-  const state=detectState(meeting.track);
+  // Build rich text blob: track name + all race names + plain card text
+  const raceNames=(meeting.races||[]).map(r=>r.raceName||'').join(' ');
+  const plainHtml=cardHtml.replace(/<[^>]+>/g,' ');  // strip HTML tags
+  const richText=[meeting.track||'', raceNames, plainHtml].join(' ');
+  const state=detectState(meeting.track, richText);
   if(!state)return;
   const meta=STATE_META[state];
   const srchNote = meeting._searchCount ? ` (${meeting._searchCount} searches)` : '';
@@ -1122,44 +1358,39 @@ function pushLocks(meeting,isAI){
 function buildLockCard(runner,race,meeting,type,isAI){
   const isWin=type==='win';
   const col=isWin?'win':'place';
-  const rsiClass=race.rsi>=78?'rh':race.rsi>=62?'rm':'rl';
-  const rsiCol=race.rsi>=78?'var(--green)':race.rsi>=62?'var(--amber)':'var(--red)';
-  const rsiLbl=race.rsi>=78?'STABLE':race.rsi>=62?'MODERATE':'VOLATILE';
+  const typeLabel=isWin?'WIN LOCK':'PLACE #'+runner.pos;
   const vl=(runner.value||'').toLowerCase();
   const vc=vl==='overs'?'vo':vl==='unders'?'vu':'vf';
-  const posStr=isWin?'WIN LOCK':'PLACE LOCK \u2014 #'+runner.pos+' pick';
-  const src=isAI?'AI RESEARCHED':meeting.mode==='real'?'REAL DATA':'SIMULATED';
+  const rsiLbl=race.rsi>=78?'Stable':race.rsi>=62?'Moderate':'Volatile';
+  const src=isAI?'AI':'Local';
+  const gap=runner.marketOdds&&runner.fairOdds
+    ?(runner.marketOdds-runner.fairOdds>0?'+':'')+(runner.marketOdds-runner.fairOdds).toFixed(2)
+    :'—';
+
   let html=`<div class="lch-card ${col}">
-    <div class="lch-top">
-      <div>
-        <div class="lch-horse ${col}">${isWin?'&#128274;':'&#127919;'} ${esc(runner.horse)}</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:3px">&#127943; ${esc(meeting.track)} &middot; Race ${race.raceNum} &middot; ${esc(race.distance)}</div>
-      </div>
-      <span class="lch-badge ${col}">${posStr}</span>
+    <div class="lch-head">
+      <div class="lch-name">${esc(runner.horse)}</div>
+      <span class="lch-pill ${col}">${typeLabel}</span>
     </div>
-    <div class="lch-meta">
-      <span class="lch-tag td">${esc(race.distance)}</span>
-      <span class="lch-tag tt">${esc(race.raceType)}</span>
-      <span class="lch-tag tc">${esc(race.condition)}</span>
-      <span class="lch-tag ${isWin?'tlock':'tplace'}">${src}</span>
-    </div>
-    <div class="lch-stats">
-      <div class="lch-stat"><div class="ls-lbl">Win %</div><div class="ls-val ${isWin?'gold':'teal'}">${runner.winPct.toFixed(1)}%</div></div>
-      <div class="lch-stat"><div class="ls-lbl">Fair $</div><div class="ls-val">${runner.fairOdds}</div></div>
-      <div class="lch-stat"><div class="ls-lbl">Mkt $</div><div class="ls-val"><span class="vb ${vc}">$${runner.marketOdds}</span></div></div>
-      <div class="lch-stat"><div class="ls-lbl">RSI</div><div class="ls-val"><span style="color:${rsiCol}">${race.rsi}</span> <span style="font-size:9px;color:var(--muted)">${rsiLbl}</span></div></div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;font-family:'IBM Plex Mono',monospace;font-size:11px">
-      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:7px;padding:7px 10px"><span style="color:var(--dim);display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Barrier</span>${runner.barrier}</div>
-      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:7px;padding:7px 10px"><span style="color:var(--dim);display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Weight</span>${esc(runner.weight||'N/A')}</div>
-      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:7px;padding:7px 10px"><span style="color:var(--dim);display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Jockey</span>${esc(runner.jockey||'N/A')}</div>
-      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:7px;padding:7px 10px"><span style="color:var(--dim);display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Form</span>${esc(runner.form||'N/A')}</div>
-    </div>`;
-  if(runner.researchNotes){html+=`<div style="background:rgba(0,232,154,.05);border:1px solid rgba(0,232,154,.2);border-radius:8px;padding:9px 12px;margin-bottom:10px;font-size:12px;color:var(--t2)"><span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--green);letter-spacing:.08em;display:block;margin-bottom:3px">&#128302; AI RESEARCH</span>${esc(runner.researchNotes)}</div>`;}
-  if(race.analysis){html+=`<div class="lch-analysis">${esc(race.analysis)}</div>`;}
+    <div class="lch-ctx">${esc(meeting.track)} &middot; R${race.raceNum} &middot; ${esc(race.distance)} &middot; ${esc(race.raceType)} &middot; ${src}</div>
+    <table class="lch-table">
+      <tr><td class="lt-lbl">Win %</td><td class="lt-val hi">${runner.winPct.toFixed(1)}%</td>
+          <td class="lt-lbl">RSI</td><td class="lt-val">${race.rsi} <span style="color:var(--dim);font-size:9px">${rsiLbl}</span></td></tr>
+      <tr><td class="lt-lbl">Mkt $</td><td class="lt-val"><span class="vb ${vc}">$${runner.marketOdds}</span></td>
+          <td class="lt-lbl">Fair $</td><td class="lt-val">$${runner.fairOdds} <span style="color:var(--dim);font-size:9px">(${gap})</span></td></tr>
+      <tr><td class="lt-lbl">Barrier</td><td class="lt-val">${runner.barrier||'?'}</td>
+          <td class="lt-lbl">Weight</td><td class="lt-val">${esc(runner.weight||'?')}</td></tr>
+      <tr><td class="lt-lbl">Jockey</td><td class="lt-val">${esc(runner.jockey||'?')}</td>
+          <td class="lt-lbl">Form</td><td class="lt-val">${esc(runner.form||'?')}</td></tr>
+    </table>`;
+  if(runner.researchNotes||race.analysis){
+    const note=runner.researchNotes||race.analysis||'';
+    html+=`<div class="lch-note">${esc(note)}</div>`;
+  }
   html+=`</div>`;
   return html;
 }
+
 
 // MAIN SUBMIT
 async function doSubmit(){
@@ -1227,6 +1458,7 @@ async function doSubmit(){
     d.innerHTML='<div class="mwho">Betrich'+(useAI?' &#128302;':'')+'</div><div class="bba">'+cardHtml+'</div>';
     $('msgs').appendChild(d);
     saveChats();
+    updateClearBtn('real');
     pushToState(meeting,cardHtml);
   }
   busy=false;$('sbtn').disabled=false;inp.focus();scrollBot();
@@ -1236,6 +1468,8 @@ async function doSubmit(){
 function renderCard(m){
   const isAI=!!m.aiMode,isReal=m.mode==='real';
   const mode=isAI?'ai':isReal?'real':'sim';
+  // Embed track in data attr so detectState HTML scan always finds it
+  // Also embed all race names so partial track names like 'Grafton' in 'Grafton Cup' are found
   let h=`<div class="rctop"><div><div class="rctitle">&#127943; ${esc(m.track)}</div><div class="rcdate">${esc(m.date)} &middot; Track: ${esc(m.condition)}</div></div><span class="rcpill ${mode}">${m.races.length} RACES &middot; ${m.fetchMode?'AI FETCHED':isAI?'AI RESEARCHED':isReal?'REAL DATA':'SIMULATED'}</span></div>`;
   const srchBadge = m.fetchMode
     ? `&#128269; AI Fetched real field \u2014 ${m._searchCount||0} searches`
