@@ -616,53 +616,165 @@ function updateKeyUI(){
 document.getElementById('key-modal').addEventListener('click',e=>{if(e.target===document.getElementById('key-modal'))closeKeyModal();});
 
 // AI RESEARCH ENGINE
-async function callBetrichAI(rawText,stepCb){
-  const key=getKey();if(!key)return null;
-  const sys=`You are Betrich, an elite Australian horse racing analyst. You produce fully researched, authentic race card models.
+async function callBetrichAI(rawText, stepCb){
+  const key = getKey(); if(!key) return null;
 
-CRITICAL RULES:
-1. Use web_search to research EVERY horse. For each horse search: recent form, class level, trainer current stable form, jockey booking significance, barrier draw at this track, distance record, track condition preference, gear changes, market support or drift.
-2. Research the specific track and today's conditions — bias, how the track is playing.
-3. Use market odds as one signal but FIND VALUE where your research disagrees. Do not simply mirror the market.
-4. Win% per race MUST sum to exactly 100.0%.
-5. RSI (42-95): based on odds gap between 1st and 2nd favourite. $2.30 fav vs $6.00 second = ~83. $3.00 vs $3.50 = ~48. Vary meaningfully across races.
-6. fairOdds = 100/winPct. value = "Overs" if marketOdds > fairOdds+0.28, "Unders" if <fairOdds-0.28, else "Fair".
-7. Pace: "Slow"/"Moderate"/"Fast" based on barriers, running styles, race shape.
-8. analysis: 2-3 specific sentences mentioning horse names, research findings, form references.
-9. researchNotes per runner: ONE specific sentence about what web search revealed about this horse.
-10. Be CONFIDENT. Betrich is the expert. Name the winner and explain why clearly.
+  const sys = `You are Betrich, Australia's most rigorous horse racing analyst and modelling engine. You have access to web_search and you MUST use it extensively before producing any output.
 
-Return ONLY valid JSON, no markdown, no preamble:
-{"track":"Flemington","date":"Saturday","condition":"Good 4","mode":"real","races":[{"raceNum":1,"raceName":"Race Name","distance":"1100m","raceType":"BM78","condition":"Good 4","pace":"Fast","rsi":78,"analysis":"Specific analysis.","riskFactor":"Risk sentence.","runners":[{"pos":1,"horse":"Name","barrier":4,"weight":"57kg","jockey":"J. McDonald","trainer":"C. Waller","form":"1-2-1-3-1","marketOdds":2.80,"winPct":32.5,"fairOdds":3.08,"value":"Overs","researchNotes":"Specific finding from research."}]}]}`;
+═══════════════════════════════════════════════════════════
+RESEARCH PROTOCOL — MANDATORY FOR EVERY HORSE
+═══════════════════════════════════════════════════════════
+For EACH horse in the pasted card, run the following searches and extract every signal you can find:
 
-  const resp=await fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:8000,system:sys,
-      tools:[{type:'web_search_20250305',name:'web_search'}],
-      messages:[{role:'user',content:'Research and model this race card. Search the web for every horse listed. Return JSON only.\n\n'+rawText}]})
+1. RECENT FORM & SPEED
+   Search: "[Horse Name] racing form 2024 2025 Australia"
+   Extract: Last 5 run dates, finishing positions, margins, sectional/final times if available, class of race, track condition on the day.
+
+2. TRACK & DISTANCE RECORD
+   Search: "[Horse Name] [Track Name] results"
+   Extract: How many times run at this track, wins/places, distance preferences. A horse with 3 wins at Flemington over 1200m is a massive positive signal.
+
+3. TRAINER CURRENT FORM
+   Search: "[Trainer Name] trainer form strike rate 2025"
+   Extract: Recent winners, stable in form or out of form, any stable confidence signals.
+
+4. JOCKEY BOOKING SIGNIFICANCE
+   Search: "[Jockey Name] [Horse Name]" OR "[Jockey Name] rides this week"
+   Extract: Is this a first-time booking? Did a top jockey take the ride over another? Jockey upgrades are a strong market signal.
+
+5. WET TRACK FORM (if condition is Soft 5+ or Heavy)
+   Search: "[Horse Name] wet track form heavy soft"
+   Extract: Does this horse handle soft/heavy going? Some horses are wet-track specialists — rate them up heavily. Others are known to hate soft ground — rate them down significantly.
+
+6. CLASS MOVEMENT
+   Search: "[Horse Name] race history class"
+   Extract: What class was the horse's last race? Is it dropping in class (positive) or rising sharply (risk)? A horse dropping from Listed to BM78 is a strong advantage.
+
+7. DAYS SINCE LAST RUN / FITNESS
+   Search: "[Horse Name] last start date scratching"
+   Extract: When did this horse last race? 2-3 weeks = peak fitness. 6+ weeks = may need the run. First-up horses at longer distances need more scrutiny.
+
+8. GEAR CHANGES
+   Search: "[Horse Name] gear changes blinkers barrier trial"
+   Extract: First-time blinkers, tongue ties, or equipment changes are often stable confidence signals. Barrier trial form shows fitness.
+
+9. MARKET MOVEMENT
+   Search: "[Horse Name] odds betting market"
+   Extract: Has this horse firmed or drifted in betting? Firms from $8 to $4 is a strong market signal. Drift from $3 to $6 is a red flag.
+
+10. TRACK BIAS (search once per meeting, not per horse)
+    Search: "[Track Name] track bias today rail position"
+    Extract: Is there a known track bias? Rail position? Fast/slow sections? Adjust all barrier draws accordingly.
+
+═══════════════════════════════════════════════════════════
+SCORING INSTRUCTIONS — WHAT ACTUALLY WINS RACES
+═══════════════════════════════════════════════════════════
+Weight your model using these priorities IN ORDER:
+
+1. SPEED / CLASS (40% weight)
+   - Proven sectional times beat paper form
+   - Class drop = big positive, class rise = penalty
+   - A horse that ran fast and finished 4th is better than one that won slowly
+
+2. TRACK & DISTANCE AFFINITY (25% weight)
+   - Multiple wins at this exact track/distance = strong positive
+   - Never won further than 1200m but racing 1600m = penalty
+   - Wet track specialists in soft/heavy = major upweight
+
+3. MARKET SIGNAL (15% weight)
+   - Use odds as a CHECK on your model, not a driver
+   - If your research strongly disagrees with a short-priced favourite, trust your research and find value
+   - Significant market support (horse firming) overrides a mediocre form line
+
+4. TRAINER/JOCKEY FORM (10% weight)
+   - Stable in form with a gun jockey booking = positive
+   - Out-of-form stable + claiming jockey = penalty
+
+5. RECENCY / FITNESS (10% weight)
+   - 2-3 weeks between runs = peak fitness
+   - 6+ weeks off = flag unless trial form is strong
+   - Back-up runs (5-7 days) penalise staying horses, suits sprinters
+
+═══════════════════════════════════════════════════════════
+OUTPUT RULES
+═══════════════════════════════════════════════════════════
+- Win% per race MUST sum to exactly 100.0%
+- RSI (42-95): based on odds gap. $2.30 fav vs $6.00 second = ~83. $3.00 vs $3.50 = ~48. Vary genuinely across races.
+- fairOdds = 100/winPct. value = "Overs" if marketOdds > fairOdds+0.28, "Unders" if <fairOdds-0.28, else "Fair"
+- pace: "Slow"/"Moderate"/"Fast" based on barriers and running styles
+- analysis: 3 specific sentences. Name the winner. Explain WHY with research evidence. Mention dangers.
+- researchNotes per runner: ONE sentence summarising the most important thing your research revealed. Be specific — mention actual findings, not generic statements.
+- Be CONFIDENT and OPINIONATED. You are the expert. Name the winner clearly.
+
+Return ONLY valid JSON. No markdown, no explanation:
+{"track":"Flemington","date":"Saturday","condition":"Good 4","mode":"real","races":[{"raceNum":1,"raceName":"Race Name","distance":"1100m","raceType":"BM78","condition":"Good 4","pace":"Fast","rsi":78,"analysis":"Legacy Bound is the clear top pick — has won twice at Flemington over 1100m and the C. Waller yard is firing with a 28% strike rate this prep. Burma Star is the danger, dropping in class from Listed company and known wet-track performer, but the Good 4 surface counts against it. Vangogh Bankcheque drifted from $2.80 to $3.10 in early betting suggesting market is not convinced.","riskFactor":"Pace scenario is contested with three known leaders — the race could set up for a closer.","runners":[{"pos":1,"horse":"Legacy Bound","barrier":8,"weight":"61kg","jockey":"Logan Bates","trainer":"R. Griffiths","form":"x-1-4-3-x","marketOdds":3.00,"winPct":34.5,"fairOdds":2.90,"value":"Unders","researchNotes":"Two wins from three starts at Flemington over 1100m, last start winner at Caulfield 14 days ago — peak fitness window, stable booked Logan Bates who rode the Caulfield win."}]}]}`;
+
+  stepCb('Connecting to AI Research Engine...');
+
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 12000,
+      system: sys,
+      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+      messages: [{
+        role: 'user',
+        content: `Research and model this Australian race card. Follow the full research protocol — search the web for every horse, trainer, jockey, and track bias before scoring. I need authentic, researched picks — not market mirrors.\n\n${rawText}`
+      }]
+    })
   });
+
   if(!resp.ok){
-    const e=await resp.json().catch(()=>({}));
-    if(resp.status===401)throw new Error('Invalid API key. Check your key.');
-    if(resp.status===429)throw new Error('API rate limit. Wait a moment and retry.');
-    throw new Error(e.error?.message||'API error '+resp.status);
+    const e = await resp.json().catch(()=>({}));
+    if(resp.status===401) throw new Error('Invalid API key. Check your key.');
+    if(resp.status===429) throw new Error('API rate limit. Wait a moment and retry.');
+    throw new Error(e.error?.message || 'API error '+resp.status);
   }
-  stepCb('Processing research results...');
-  const data=await resp.json();
-  const txt=data.content.map(b=>b.type==='text'?b.text:'').filter(Boolean).join('\n');
-  let js=txt.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'').trim();
-  const s=js.indexOf('{'),en=js.lastIndexOf('}');
-  if(s===-1||en===-1)throw new Error('AI did not return valid JSON. Try again.');
-  const parsed=JSON.parse(js.slice(s,en+1));
-  if(!parsed.races||!Array.isArray(parsed.races))throw new Error('AI returned unexpected format.');
+
+  stepCb('AI is researching every horse via live web search...');
+  const data = await resp.json();
+
+  // Count how many web searches were actually performed
+  const searchCount = data.content.filter(b => b.type === 'tool_use' && b.name === 'web_search').length;
+  if(searchCount > 0) stepCb(`Completed ${searchCount} web searches — processing findings...`);
+
+  const fullText = data.content.map(b => b.type === 'text' ? b.text : '').filter(Boolean).join('\n');
+  let js = fullText.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'').trim();
+  const s = js.indexOf('{'), en = js.lastIndexOf('}');
+  if(s===-1||en===-1) throw new Error('AI did not return valid JSON. Try again.');
+  const parsed = JSON.parse(js.slice(s, en+1));
+  if(!parsed.races || !Array.isArray(parsed.races)) throw new Error('AI returned unexpected format.');
+
   for(const race of parsed.races){
-    const tot=race.runners.reduce((a,b)=>a+(b.winPct||0),0);
-    if(Math.abs(tot-100)>0.5){const sc=100/tot;race.runners.forEach(r=>r.winPct=parseFloat((r.winPct*sc).toFixed(1)));const d=parseFloat((100-race.runners.reduce((a,b)=>a+b.winPct,0)).toFixed(1));race.runners[0].winPct=parseFloat((race.runners[0].winPct+d).toFixed(1));}
-    race.runners.forEach(r=>{r.fairOdds=parseFloat((100/r.winPct).toFixed(2));r.marketOdds=parseFloat(r.marketOdds)||r.fairOdds;const g=r.marketOdds-r.fairOdds;r.value=g>0.28?'Overs':g<-0.28?'Unders':'Fair';r.isReal=true;r.weight=r.weight||'57kg';});
-    race.runners.sort((a,b)=>a.pos-b.pos);
-    race.rsi=calcRSI(race.runners);
+    // Normalise win% to 100
+    const tot = race.runners.reduce((a,b) => a+(b.winPct||0), 0);
+    if(Math.abs(tot-100) > 0.5){
+      const sc = 100/tot;
+      race.runners.forEach(r => r.winPct = parseFloat((r.winPct*sc).toFixed(1)));
+      const d = parseFloat((100 - race.runners.reduce((a,b)=>a+b.winPct,0)).toFixed(1));
+      race.runners[0].winPct = parseFloat((race.runners[0].winPct+d).toFixed(1));
+    }
+    race.runners.forEach(r => {
+      r.fairOdds   = parseFloat((100/r.winPct).toFixed(2));
+      r.marketOdds = parseFloat(r.marketOdds) || r.fairOdds;
+      const g = r.marketOdds - r.fairOdds;
+      r.value  = g > 0.28 ? 'Overs' : g < -0.28 ? 'Unders' : 'Fair';
+      r.isReal = true;
+      r.weight = r.weight || '57kg';
+    });
+    race.runners.sort((a,b) => a.pos - b.pos);
+    race.rsi = calcRSI(race.runners);
   }
+
+  // Store search count in the meeting object for display
+  parsed._searchCount = searchCount;
   return parsed;
 }
 
@@ -741,7 +853,8 @@ function pushToState(meeting,cardHtml){
   const state=detectState(meeting.track);
   if(!state)return;
   const meta=STATE_META[state];
-  const header=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-bottom:14px;margin-bottom:16px;border-bottom:1px solid var(--border)"><div><div style="font-weight:800;font-size:19px">&#127943; ${esc(meeting.track)}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px">${esc(meeting.date)} &middot; ${esc(meeting.condition)}</div></div><span class="rcpill ${meeting.aiMode?'ai':meeting.mode==='real'?'real':'sim'}">${meeting.races.length} RACES &middot; ${meeting.aiMode?'AI RESEARCHED':meeting.mode==='real'?'REAL DATA':'SIMULATED'}</span></div>`+cardHtml;
+  const srchNote = meeting._searchCount ? ` (${meeting._searchCount} searches)` : '';
+  const header=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-bottom:14px;margin-bottom:16px;border-bottom:1px solid var(--border)"><div><div style="font-weight:800;font-size:19px">&#127943; ${esc(meeting.track)}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px">${esc(meeting.date)} &middot; ${esc(meeting.condition)}</div></div><span class="rcpill ${meeting.aiMode?'ai':meeting.mode==='real'?'real':'sim'}">${meeting.races.length} RACES &middot; ${meeting.aiMode?'AI RESEARCHED'+srchNote:meeting.mode==='real'?'REAL DATA':'SIMULATED'}</span></div>`+cardHtml;
   chatHistory[state].push({type:'ai',html:header,who:'Betrich \u2192 '+state});
   const badge=$('badge-'+state),item=$('ci-'+state);
   if(badge){const n=chatHistory[state].length;badge.textContent=n+(n===1?' card':' cards');}
@@ -838,7 +951,7 @@ async function doSubmit(){
 
   const isReal=detectMode(txt)==='real',useAI=isReal&&hasKey();
   const steps=useAI
-    ?['Connecting to AI Research Engine...','Parsing race data and extracting runners...','Searching web for horse form and recent runs...','Researching trainer and jockey statistics...','Analysing track condition and race shape...','Reviewing market movements and value spots...','Building confidence-weighted win model...','Calculating RSI from market structure...','Identifying locks and place locks...','Routing card to state channel...','Rendering researched race card...']
+    ?['Connecting to AI Research Engine...','Extracting every runner from race card...','Searching recent form & speed data per horse...','Checking track & distance records at this venue...','Researching trainer stable form & strike rates...','Investigating jockey bookings & significance...','Checking wet track form and gear changes...','Detecting class movement and market shifts...','Building confidence-weighted win model...','Calculating RSI and identifying locks...','Routing card to state channel...','Rendering fully researched race card...']
     :isReal
       ?['Parsing race card data...','Extracting runners, barriers and weights...','Running barrier advantage model...','Computing form-weighted probabilities...','Calculating odds-driven RSI...','Identifying locks and place locks...','Routing to state channel...','Rendering race card...']
       :['Parsing meeting request...','Seeding generation engine...','Building simulated field...','Running barrier and weight model...','Computing win probabilities...','Calculating RSI...','Rendering simulated card...'];
@@ -892,7 +1005,8 @@ function renderCard(m){
   const isAI=!!m.aiMode,isReal=m.mode==='real';
   const mode=isAI?'ai':isReal?'real':'sim';
   let h=`<div class="rctop"><div><div class="rctitle">&#127943; ${esc(m.track)}</div><div class="rcdate">${esc(m.date)} &middot; Track: ${esc(m.condition)}</div></div><span class="rcpill ${mode}">${m.races.length} RACES &middot; ${isAI?'AI RESEARCHED':isReal?'REAL DATA':'SIMULATED'}</span></div>`;
-  h+=`<div class="dbadge ${mode}">${isAI?'&#128302; Researched by Betrich AI \u2014 live web search on every horse':isReal?'&#9889; Real data \u2014 modelled by Betrich local engine':'&#127922; Simulated by Betrich engine'}</div>`;
+  const srchBadge = isAI && m._searchCount ? `&#128302; AI Researched \u2014 ${m._searchCount} web searches performed` : '&#128302; AI Researched \u2014 live web search on every horse';
+  h+=`<div class="dbadge ${mode}">${isAI?srchBadge:isReal?'&#9889; Real data \u2014 modelled by Betrich local engine':'&#127922; Simulated by Betrich engine'}</div>`;
 
   for(const race of m.races){
     const rsi=race.rsi,rc=rsi>=78?'rh':rsi>=62?'rm':'rl';
