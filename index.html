@@ -106,6 +106,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .ci.s-sa.active{background:rgba(175,82,222,.1);color:#b88dfa;border-color:rgba(175,82,222,.25)}
 .ci.s-tas.active{background:rgba(52,199,89,.1);color:#4ade80;border-color:rgba(52,199,89,.25)}
 .ci.s-qld.active{background:rgba(255,149,0,.1);color:#ffb22e;border-color:rgba(255,149,0,.25)}
+.ci.s-nz.active{background:rgba(0,100,0,.15);color:#4ade80;border-color:rgba(74,222,128,.3)}
+.ci.s-intl.active{background:rgba(59,130,246,.1);color:#60a5fa;border-color:rgba(96,165,250,.3)}
 .ci.s-locks.active{background:var(--goldbg);color:var(--gold);border-color:var(--goldbdr)}
 .ci.s-place.active{background:var(--tealbg);color:var(--teal);border-color:var(--tealbdr)}
 /* Unread dot */
@@ -129,6 +131,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 #ctopbar .ctb-ro{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--amber);
   background:var(--abg);border:1px solid var(--abdr);border-radius:4px;padding:2px 7px;display:none}
 #ctopbar .ctb-ro.show{display:block}
+.ctb-clear{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--red);
+  background:var(--rbg);border:1px solid var(--rbdr);border-radius:5px;padding:3px 9px;
+  cursor:pointer;transition:all .2s;white-space:nowrap;display:none}
+.ctb-clear:hover{background:rgba(255,77,104,.18)}
+.ctb-clear.show{display:block}
 #msgs-wrap{flex:1;overflow-y:auto;padding:22px 20px 14px;scroll-behavior:smooth}
 #msgs-wrap::-webkit-scrollbar{width:3px}
 #msgs-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
@@ -361,6 +368,10 @@ table.rt tbody tr.place-row{background:rgba(45,212,191,.03)}
         <div class="ci s-tas" id="ci-TAS" onclick="switchChat('TAS')"><span class="ci-ico">&#128311;</span><span class="ci-name">TAS</span><span class="ci-dot"></span><span class="ci-badge" id="badge-TAS">&#8212;</span></div>
         <div class="ci s-qld" id="ci-QLD" onclick="switchChat('QLD')"><span class="ci-ico">&#128992;</span><span class="ci-name">QLD</span><span class="ci-dot"></span><span class="ci-badge" id="badge-QLD">&#8212;</span></div>
 
+        <div class="sl" style="margin-top:4px">Global Channels <span class="sl-badge">Auto-Routed</span></div>
+        <div class="ci s-nz"   id="ci-NZ"   onclick="switchChat('NZ')"><span class="ci-ico">&#127722;</span><span class="ci-name">NZ</span><span class="ci-dot"></span><span class="ci-badge" id="badge-NZ">&#8212;</span></div>
+        <div class="ci s-intl" id="ci-INTL" onclick="switchChat('INTL')"><span class="ci-ico">&#127758;</span><span class="ci-name">International</span><span class="ci-dot"></span><span class="ci-badge" id="badge-INTL">&#8212;</span></div>
+
         <div class="sl" style="margin-top:4px">Pick Channels <span class="sl-badge">Auto-Populated</span></div>
         <div class="ci s-locks" id="ci-LOCKS" onclick="switchChat('LOCKS')"><span class="ci-ico">&#128274;</span><span class="ci-name">Locks</span><span class="ci-dot"></span><span class="ci-badge" id="badge-LOCKS">&#8212;</span></div>
         <div class="ci s-place" id="ci-PLACE" onclick="switchChat('PLACE')"><span class="ci-ico">&#127919;</span><span class="ci-name">Place Locks</span><span class="ci-dot"></span><span class="ci-badge" id="badge-PLACE">&#8212;</span></div>
@@ -377,6 +388,7 @@ table.rt tbody tr.place-row{background:rgba(45,212,191,.03)}
         <span class="ctb-name" id="ctb-name">Real Data</span>
         <span class="ctb-sub" id="ctb-sub">ACTIVE INPUT CHAT</span>
         <span class="ctb-ro" id="ctb-ro">READ ONLY</span>
+        <button class="ctb-clear" id="ctb-clear" onclick="clearCurrentChat()">&#128465; Clear Chat</button>
       </div>
 
       <div id="msgs-wrap"><div id="msgs"></div></div>
@@ -434,17 +446,39 @@ table.rt tbody tr.place-row{background:rgba(45,212,191,.03)}
 
 // TRACK -> STATE MAP
 const TRACK_STATE = {
+  // VIC
   flemington:'VIC',caulfield:'VIC','moonee valley':'VIC','the valley':'VIC',
   sandown:'VIC',geelong:'VIC',ballarat:'VIC',pakenham:'VIC',cranbourne:'VIC',
   bendigo:'VIC',mornington:'VIC',seymour:'VIC',wodonga:'VIC',
+  // NSW
   randwick:'NSW',rosehill:'NSW','warwick farm':'NSW',newcastle:'NSW',
   hawkesbury:'NSW',kembla:'NSW',gosford:'NSW',wyong:'NSW',canterbury:'NSW',
+  // WA
   ascot:'WA',belmont:'WA',pinjarra:'WA',bunbury:'WA',geraldton:'WA',
+  // SA
   morphettville:'SA',gawler:'SA','murray bridge':'SA',naracoorte:'SA',
+  // TAS
   hobart:'TAS',launceston:'TAS',elwick:'TAS',devonport:'TAS',
+  // QLD
   'eagle farm':'QLD',doomben:'QLD','gold coast':'QLD','sunshine coast':'QLD',
   ipswich:'QLD',toowoomba:'QLD',rockhampton:'QLD',townsville:'QLD',
+  // NZ
+  trentham:'NZ',ellerslie:'NZ','te rapa':'NZ',rotorua:'NZ',
+  riccarton:'NZ','hastings':'NZ',otaki:'NZ',awapuni:'NZ',
+  matamata:'NZ','new plymouth':'NZ',whangarei:'NZ',gore:'NZ',
+  wingatui:'NZ',ashburton:'NZ','hawke's bay':'NZ','hawkes bay':'NZ',
+  waverley:'NZ',woodville:'NZ',feilding:'NZ',
 };
+// International tracks — any track not in TRACK_STATE and not NZ routes here
+const NZ_KEYWORDS = ['trentham','ellerslie','te rapa','rotorua','riccarton','hastings',
+  'otaki','awapuni','matamata','new plymouth','whangarei','gore','wingatui',
+  'ashburton','hawkes bay','waverley','woodville','feilding','nz','new zealand'];
+// Major international venues for smarter detection
+const INTL_KEYWORDS = ['ascot uk','cheltenham','newmarket uk','goodwood','epsom uk',
+  'longchamp','chantilly','saint-cloud','deauville','leopardstown','curragh',
+  'belmont park','churchill downs','santa anita','aqueduct','keeneland',
+  'sha tin','happy valley','tokyo','nakayama','hanshin','kyoto',
+  'meydan','king abdulaziz','nad al sheba','singapore','kranji'];
 const STATE_META = {
   VIC:{ico:'&#128309;',label:'Victoria'},
   NSW:{ico:'&#128308;',label:'New South Wales'},
@@ -452,13 +486,26 @@ const STATE_META = {
   SA: {ico:'&#128994;',label:'South Australia'},
   TAS:{ico:'&#128311;',label:'Tasmania'},
   QLD:{ico:'&#128992;',label:'Queensland'},
+  NZ: {ico:'&#127722;',label:'New Zealand'},
+  INTL:{ico:'&#127758;',label:'International'},
   LOCKS:{ico:'&#128274;',label:'Win Locks'},
   PLACE:{ico:'&#127919;',label:'Place Locks'},
 };
 function detectState(track){
   if(!track)return null;
   const t=track.toLowerCase().trim();
+  // Check explicit track map first
   for(const[k,s]of Object.entries(TRACK_STATE))if(t.includes(k))return s;
+  // Check NZ keywords
+  for(const k of NZ_KEYWORDS)if(t.includes(k))return'NZ';
+  // Check known international venues
+  for(const k of INTL_KEYWORDS)if(t.includes(k))return'INTL';
+  // Detect by country name in track string
+  const intlCountries=['england','ireland','france','usa','united states','japan',
+    'hong kong','dubai','singapore','germany','italy','canada','south africa',
+    'argentina','brazil','chile','norway','sweden','denmark','spain'];
+  for(const k of intlCountries)if(t.includes(k))return'INTL';
+  // Unknown track — return null (stays in Real Data only, no state routing)
   return null;
 }
 
@@ -872,11 +919,72 @@ Return ONLY valid JSON in exactly this format:
 }
 
 // CHAT STATE
-const CHATS=['real','VIC','NSW','WA','SA','TAS','QLD','LOCKS','PLACE'];
-const chatHistory={};CHATS.forEach(c=>chatHistory[c]=[]);
+const CHATS=['real','VIC','NSW','WA','SA','TAS','QLD','NZ','INTL','LOCKS','PLACE'];
+const chatHistory={};CHATS.forEach(ch=>chatHistory[ch]=[]);
 let currentChat='real',busy=false,pasteOpen=false;
 let allWinLocks=[],allPlaceLocks=[];
 let stepIntvl;
+
+// PERSISTENCE — save/load all chat history to localStorage
+const STORAGE_KEY='betrich_v9_chats';
+function saveChats(){
+  try{
+    const payload={chats:{},winLocks:allWinLocks,placeLocks:allPlaceLocks};
+    CHATS.forEach(ch=>payload.chats[ch]=chatHistory[ch]);
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));
+  }catch(e){console.warn('Betrich save error:',e);}
+}
+function loadChats(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return;
+    const payload=JSON.parse(raw);
+    if(payload.chats){
+      CHATS.forEach(ch=>{
+        if(payload.chats[ch]&&Array.isArray(payload.chats[ch])){
+          chatHistory[ch]=payload.chats[ch];
+        }
+      });
+    }
+    if(payload.winLocks)allWinLocks=payload.winLocks;
+    if(payload.placeLocks)allPlaceLocks=payload.placeLocks;
+    // Update all sidebar badges from loaded data
+    CHATS.forEach(ch=>{
+      if(ch==='real')return;
+      const n=chatHistory[ch].length;
+      const badge=document.getElementById('badge-'+ch);
+      const item=document.getElementById('ci-'+ch);
+      if(badge&&n>0){
+        if(ch==='LOCKS'||ch==='PLACE')badge.textContent=n;
+        else badge.textContent=n+(n===1?' card':' cards');
+        if(item)item.classList.add('lit');
+      }
+    });
+  }catch(e){console.warn('Betrich load error:',e);}
+}
+function clearCurrentChat(){
+  if(!currentChat||currentChat==='real')return;
+  if(!confirm('Clear all cards in this chat? This cannot be undone.'))return;
+  chatHistory[currentChat]=[];
+  // Also clear locks arrays if clearing lock channels
+  if(currentChat==='LOCKS')allWinLocks=[];
+  if(currentChat==='PLACE')allPlaceLocks=[];
+  // Reset badge
+  const badge=document.getElementById('badge-'+currentChat);
+  const item=document.getElementById('ci-'+currentChat);
+  if(badge)badge.textContent='—';
+  if(item){item.classList.remove('lit','new-content');}
+  saveChats();
+  renderHistory(currentChat);
+  updateClearBtn(currentChat);
+}
+function updateClearBtn(id){
+  const btn=document.getElementById('ctb-clear');
+  if(!btn)return;
+  // Show clear button on all chats except Real Data input
+  const show=id!=='real'&&chatHistory[id]&&chatHistory[id].length>0;
+  btn.classList.toggle('show',show);
+}
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const $=id=>document.getElementById(id);
 const scrollBot=()=>{const w=$('msgs-wrap');w.scrollTop=w.scrollHeight;};
@@ -895,6 +1003,7 @@ function switchChat(id){
   $('robar').style.display=isReal?'none':'';
   $('ppanel').style.display='none';pasteOpen=false;
   renderHistory(id);
+  updateClearBtn(id);
 }
 
 function renderHistory(id){
@@ -914,9 +1023,11 @@ function renderHistory(id){
 function emptyScreen(id){
   if(id==='real')return `<div class="wlc"><div class="wchip"><div class="epulse"></div><span>AI FETCH · RESEARCH ENGINE · STATE ROUTING · AUTO LOCKS</span></div><h1>Just Type the Track.<br/><em>AI Finds the Field.</em></h1><p class="wsub">With an API key — just type a track and date like <strong style="color:var(--green)">"Flemington Saturday"</strong> and Betrich searches TAB and Racing Australia for the real fields, then researches every horse. No copying, no pasting required.</p><div class="wmodes"><div class="wmode sim" onclick="fillQ('Flemington Saturday')"><div class="mico">&#128269;</div><div class="mtit">Fetch Real Meeting</div><div class="mdesc">Type track + date — AI finds real runners automatically (API key required)</div></div><div class="wmode paste" onclick="loadExample()"><div class="mico">&#128203;</div><div class="mtit">Paste Race Card</div><div class="mdesc">Paste runners manually if you have them — AI researches every horse</div></div></div></div>`;
   const meta=STATE_META[id];
-  if(id==='LOCKS')return `<div class="ch-empty"><div class="che-ico">&#128274;</div><div class="che-title">Win Locks</div><p class="che-sub">High-confidence win picks (RSI \u2265 67) will appear here automatically after any race card is run.</p><div class="che-hint">Paste race data in Real Data to populate locks</div></div>`;
-  if(id==='PLACE')return `<div class="ch-empty"><div class="che-ico">&#127919;</div><div class="che-title">Place Locks</div><p class="che-sub">High-confidence top-3 picks will appear here automatically after any race card is run.</p><div class="che-hint">Paste race data in Real Data to populate place locks</div></div>`;
-  return `<div class="ch-empty"><div class="che-ico">${meta.ico}</div><div class="che-title">${meta.label} Racing</div><p class="che-sub">No cards yet. Paste a race card in <strong>Real Data</strong> \u2014 if the track is in ${meta.label} it will appear here automatically.</p><div class="che-hint">Switch to Real Data \u2192 paste data \u2192 return here</div></div>`;
+  if(id==='LOCKS')return `<div class="ch-empty"><div class="che-ico">&#128274;</div><div class="che-title">Win Locks</div><p class="che-sub">High-confidence win picks (RSI ≥ 67) appear here automatically. Cards persist across sessions.</p><div class="che-hint">Paste race data in Real Data to populate locks</div></div>`;
+  if(id==='PLACE')return `<div class="ch-empty"><div class="che-ico">&#127919;</div><div class="che-title">Place Locks</div><p class="che-sub">High-confidence top-3 picks appear here automatically. Cards persist across sessions.</p><div class="che-hint">Paste race data in Real Data to populate place locks</div></div>`;
+  if(id==='NZ')return `<div class="ch-empty"><div class="che-ico">&#127722;</div><div class="che-title">New Zealand Racing</div><p class="che-sub">Race cards from NZ tracks (Ellerslie, Trentham, Te Rapa, Riccarton etc.) route here automatically. Cards persist across sessions.</p><div class="che-hint">Switch to Real Data → paste NZ race data → return here</div></div>`;
+  if(id==='INTL')return `<div class="ch-empty"><div class="che-ico">&#127758;</div><div class="che-title">International Racing</div><p class="che-sub">Any race card from outside Australia and New Zealand routes here automatically — UK, Ireland, France, USA, Japan, Hong Kong, Dubai and more. Cards persist across sessions.</p><div class="che-hint">Switch to Real Data → paste international race data → return here</div></div>`;
+  return `<div class="ch-empty"><div class="che-ico">${meta.ico}</div><div class="che-title">${meta.label} Racing</div><p class="che-sub">No cards yet. Paste a race card in <strong>Real Data</strong> — if the track is in ${meta.label} it will appear here automatically. Cards persist across sessions.</p><div class="che-hint">Switch to Real Data → paste data → return here</div></div>`;
 }
 
 // INPUT HELPERS
@@ -949,7 +1060,9 @@ function detectMode(t){
 function doClear(){$('inp').value='';onInp($('inp'));}
 function togglePaste(){if(currentChat!=='real'){switchChat('real');return;}pasteOpen=!pasteOpen;$('ppanel').style.display=pasteOpen?'':'none';}
 function loadExample(){fillQ("Race 1 \u2014 1100m TAB Handicap \u2014 Good 4 \u2014 Flemington\n1. Legacy Bound | 8 | 61 | Logan Bates | R. Griffiths | x-1-4-3-x | 3.00\n2. Vangogh Bankcheque | 7 | 54 | Jamie Melham | L. Kennewell | 1-3-x-x-x | 3.10\n3. Military Tycoon | 1 | 54.5 | D.W. Stackhouse | C. Maher | 9-6-x-2-7 | 4.60\n4. Burma Star | 4 | 56.5 | Hugh Bowman | C. Waller | 1-2-1-6-x | 8.50\n5. Shining Smile | 6 | 58.5 | Jackson Radley | B. Hayes | 5-4-3-8-x | 11.00\n6. Go Left | 5 | 54 | Luke Cartwright | P. Moody | 1-1-2-x-x | 27.00");if(pasteOpen)togglePaste();}
-function resetSession(){location.reload();}
+function resetSession(){
+  if(confirm('Start a new session? All saved cards will be cleared.')){localStorage.removeItem(STORAGE_KEY);location.reload();}
+}
 
 // STEP MESSAGES
 function addStepMsg(){const d=document.createElement('div');d.className='msg ma';d.id='step-msg';d.innerHTML='<div class="mwho">Betrich</div><div class="bba" style="padding:16px 20px"><div class="proc" id="proc"></div></div>';$('msgs').appendChild(d);scrollBot();}
@@ -968,6 +1081,7 @@ function pushToState(meeting,cardHtml){
   if(badge){const n=chatHistory[state].length;badge.textContent=n+(n===1?' card':' cards');}
   if(item){item.classList.add('lit');if(currentChat!==state)item.classList.add('new-content');}
   if(currentChat===state)renderHistory(state);
+  saveChats();
 }
 
 // PUSH TO LOCKS / PLACE CHANNELS
@@ -1002,6 +1116,7 @@ function pushLocks(meeting,isAI){
     if(item){item.classList.add('lit');if(currentChat!=='PLACE')item.classList.add('new-content');}
     if(currentChat==='PLACE')renderHistory('PLACE');
   }
+  if(addedWin>0||addedPlace>0)saveChats();
 }
 
 function buildLockCard(runner,race,meeting,type,isAI){
@@ -1111,6 +1226,7 @@ async function doSubmit(){
     const d=document.createElement('div');d.className='msg ma';
     d.innerHTML='<div class="mwho">Betrich'+(useAI?' &#128302;':'')+'</div><div class="bba">'+cardHtml+'</div>';
     $('msgs').appendChild(d);
+    saveChats();
     pushToState(meeting,cardHtml);
   }
   busy=false;$('sbtn').disabled=false;inp.focus();scrollBot();
@@ -1163,6 +1279,7 @@ function renderCard(m){
 }
 
 // INIT
+loadChats();
 switchChat('real');
 updateKeyUI();
 </script>
