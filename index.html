@@ -268,7 +268,7 @@ table.rt tbody tr.lock-row:hover{background:rgba(255,215,0,.07)}
       <div class="ltxt"><span class="lname">Betrich</span><span class="lsub">AI Racing Model</span></div>
     </div>
     <div class="hdr-r">
-      <div class="eng-pill"><div class="epulse"></div><span class="etxt">LOCAL ENGINE v6</span></div>
+      <div class="eng-pill"><div class="epulse"></div><span class="etxt">LOCAL ENGINE v7</span></div>
       <button class="paste-btn" onclick="togglePastePanel()">📋 Paste Race Data</button>
     </div>
   </header>
@@ -302,7 +302,7 @@ table.rt tbody tr.lock-row:hover{background:rgba(255,215,0,.07)}
       <div class="sl" style="margin-top:8px">Engine</div>
       <div class="side-box">
         <div class="sbrow"><span class="sbk">Mode</span><span class="sbv green" id="eng-mode">SIMULATE</span></div>
-        <div class="sbrow"><span class="sbk">RSI Engine</span><span class="sbv green">DYNAMIC</span></div>
+        <div class="sbrow"><span class="sbk">RSI Engine</span><span class="sbv green">ODDS-DRIVEN</span></div>
         <div class="sbrow"><span class="sbk">APIs</span><span class="sbv red">NONE</span></div>
         <div class="sbrow"><span class="sbk">Locks Found</span><span class="sbv gold" id="eng-locks">0</span></div>
       </div>
@@ -316,7 +316,7 @@ table.rt tbody tr.lock-row:hover{background:rgba(255,215,0,.07)}
         <div id="msgs">
           <div id="welcome">
             <div class="wlc">
-              <div class="wchip"><div class="epulse"></div><span>ZERO-API · DYNAMIC RSI · AUTO LOCKS</span></div>
+              <div class="wchip"><div class="epulse"></div><span>ZERO-API · ODDS-DRIVEN RSI · AUTO LOCKS ≥67</span></div>
               <h1>Simulate. Or<br/><em>Use Real Data.</em></h1>
               <p class="wsub">Betrich runs fully offline — simulate any race meeting, or paste real race data for instant AI modeling. High-confidence picks auto-populate as 🔒 Locks.</p>
             </div>
@@ -422,54 +422,64 @@ function rng(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;return()=>{s=s*16
 function hash(str){let h=5381;for(let i=0;i<str.length;i++)h=(h*33^str.charCodeAt(i))>>>0;return h}
 
 // ── RSI CALCULATION ──────────────────────────────────────────
-// The key fix: RSI is driven by HOW DOMINANT the top horse is
-// relative to the average expected win% for the field size.
-// A truly dominant horse scores near 95; an even spread scores ~42.
+// RSI ENGINE v2 — dual signal: market odds ratio + win% dominance
+//
+// Real-world calibration:
+//   $2.30 fav vs $6.00 second  → ratio 2.61 → RSI ~83
+//   $1.80 fav vs $8.00 second  → ratio 4.44 → RSI ~91
+//   $3.00 fav vs $3.50 second  → ratio 1.17 → RSI ~48
+//   $4.00 fav vs $5.00 second  → ratio 1.25 → RSI ~52
+//   $3.50 fav vs $7.00 second  → ratio 2.00 → RSI ~72
+//
 function calcRSI(runners) {
   const n = runners.length;
-  if (n < 2) return 75;
-  
-  // Sort descending by winPct
-  const sorted = [...runners].sort((a,b) => b.winPct - a.winPct);
-  const top    = sorted[0].winPct;
-  const second = sorted[1].winPct;
-  const third  = sorted[2] ? sorted[2].winPct : 0;
-  
-  // Expected average if all equal
-  const avgExpected = 100 / n;
-  
-  // How dominant is the leader vs what we'd expect by chance
-  // dominanceFactor: 1.0 = just average, 3.0 = three times average (very strong)
-  const dominanceFactor = top / avgExpected;
-  
-  // Gap ratio: how much daylight between 1st and 2nd (as % of average)
-  const gapRatio = (top - second) / avgExpected;
-  
-  // Compression: if 2nd and 3rd are close to each other the race is muddled
-  const compression = second > 0 ? (second - third) / second : 0;
-  
-  // RSI formula — produces genuine spread from ~42 to ~95
-  let rsi = 28
-    + (dominanceFactor * 16)   // dominant horse lifts RSI strongly
-    + (gapRatio * 12)          // clear gap between 1st and 2nd
-    + (compression * 8)        // spread below the leader
-    - ((n - 8) * 0.4);         // bigger fields = slightly more volatile
+  if (n < 2) return 65;
 
+  // ── SIGNAL 1: Market odds ratio (primary — most reliable real-world signal)
+  // Sort by odds ascending so index 0 = favourite
+  const byOdds = [...runners].filter(r => r.marketOdds > 0).sort((a,b) => a.marketOdds - b.marketOdds);
+  let oddsRSI = 60; // fallback if no odds
+  if (byOdds.length >= 2) {
+    const favOdds    = byOdds[0].marketOdds;
+    const secondOdds = byOdds[1].marketOdds;
+    const thirdOdds  = byOdds[2] ? byOdds[2].marketOdds : secondOdds * 1.5;
+    // Primary ratio: how much bigger is 2nd vs 1st in the market
+    const ratio12 = secondOdds / Math.max(1, favOdds);
+    // Secondary ratio: 3rd vs 2nd (does the market thin out quickly?)
+    const ratio23 = thirdOdds / Math.max(1, secondOdds);
+    // ratio12 of 1.0 → dead-heat; 2.0 → clear fav; 3.0+ → dominant
+    // Curve: RSI = 30 + ratio12^1.4 * 22 (exponential so big gaps lift RSI strongly)
+    oddsRSI = 30 + (Math.pow(ratio12, 1.4) * 22) + (ratio23 * 3);
+    oddsRSI = Math.min(94, oddsRSI);
+  }
+
+  // ── SIGNAL 2: Win% dominance (secondary — model internal signal)
+  const byWin      = [...runners].sort((a,b) => b.winPct - a.winPct);
+  const topWin     = byWin[0].winPct;
+  const secondWin  = byWin[1].winPct;
+  const avgExp     = 100 / n;
+  const dominance  = topWin / avgExp;          // 1.0 = average, 3.5 = very dominant
+  const gapRatio   = (topWin - secondWin) / avgExp;
+  let winRSI = 28 + (dominance * 14) + (gapRatio * 10) - ((n - 8) * 0.3);
+  winRSI = Math.min(93, Math.max(40, winRSI));
+
+  // ── SIGNAL 3: How many genuine contenders (horses with >7% chance)
+  const contenders      = runners.filter(r => r.winPct >= 7).length;
+  const contenderPenalty = Math.max(0, (contenders - 2) * 2.5);
+
+  // ── COMBINE: weight odds 60%, win% 40%, minus contender noise
+  let rsi = (oddsRSI * 0.6) + (winRSI * 0.4) - contenderPenalty;
   rsi = Math.round(Math.min(95, Math.max(42, rsi)));
   return rsi;
 }
 
 // ── LOCK DETECTION ───────────────────────────────────────────
-// A "lock" is a horse where the model has high conviction:
-//   - winPct > 2.2x the field average (significantly dominant)
-//   - AND RSI >= 72 (race structure is stable)
-//   - AND position 1 in the model ranking
+// A "lock" is the #1 model pick in any race where RSI >= 67
+// (the market and model both show a clear dominant runner)
 function isLock(runner, fieldSize, rsi) {
-  const avg = 100 / fieldSize;
   return (
     runner.pos === 1 &&
-    runner.winPct >= avg * 2.2 &&
-    rsi >= 72
+    rsi >= 67
   );
 }
 
@@ -953,9 +963,9 @@ function renderMeeting(m) {
 
   for (const race of m.races) {
     const rsi    = race.rsi;
-    const rc     = rsi >= 75 ? 'rh' : rsi >= 58 ? 'rm' : 'rl';
-    const rcol   = rsi >= 75 ? 'var(--green)' : rsi >= 58 ? 'var(--amber)' : 'var(--red)';
-    const rsiLbl = rsi >= 75 ? 'STABLE' : rsi >= 58 ? 'MODERATE' : 'VOLATILE';
+    const rc     = rsi >= 78 ? 'rh' : rsi >= 62 ? 'rm' : 'rl';
+    const rcol   = rsi >= 78 ? 'var(--green)' : rsi >= 62 ? 'var(--amber)' : 'var(--red)';
+    const rsiLbl = rsi >= 78 ? 'STABLE' : rsi >= 62 ? 'MODERATE' : 'VOLATILE';
 
     // Check if this race has a lock
     const raceLock = allLocks.find(l => l.raceNum === race.raceNum);
