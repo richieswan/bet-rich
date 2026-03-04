@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Form Guide — AI Race Tips</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold2: #a07820;
+  --gold-light: #f0e0a0;
+  --bg: #07070e;
+  --bg2: #0c0c18;
+  --bg3: #111120;
+  --surface: #14142a;
+  --border: #ffffff12;
+  --border2: #ffffff1e;
+  --text: #e8dfc8;
+  --muted: #7a7a9a;
+  --dim: #444466;
+  --green: #3ddc84;
+  --red: #ff5c5c;
+  --yellow: #ffd740;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{min-height:100vh;background:var(--bg);font-family:'Barlow',sans-serif;color:var(--text);overflow-x:hidden}
+input,button,select{font-family:'Barlow',sans-serif}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.6}
+
+.header{position:sticky;top:0;z-index:100;background:rgba(7,7,14,.96);border-bottom:1px solid var(--border2);backdrop-filter:blur(12px);padding:0 32px}
+.header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;gap:20px}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-icon{font-size:26px;line-height:1}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:700;color:var(--gold-light);letter-spacing:.5px}
+.logo-sub{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:3px;color:var(--muted);margin-top:1px}
+.header-date{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1.5px;color:var(--muted);border:1px solid var(--border);padding:4px 12px;border-radius:4px;flex-shrink:0}
+
+.layout{max-width:1100px;margin:0 auto;padding:28px 32px 60px;position:relative;z-index:1}
+
+/* Search */
+.search-wrap{display:flex;gap:12px;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:16px 20px;align-items:flex-end;flex-wrap:wrap;margin-bottom:24px}
+.s-group{display:flex;flex-direction:column;gap:6px}
+.s-group.flex1{flex:1;min-width:180px}
+.s-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:1.8px;color:var(--dim)}
+.s-input{background:#08081a;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-size:15px;outline:none;transition:border-color .2s;width:100%}
+.s-input:focus{border-color:var(--gold)}
+.s-input::placeholder{color:#333355}
+input[type="date"].s-input{color-scheme:dark}
+.btn-go{padding:10px 28px;background:var(--gold);border:none;border-radius:8px;color:#07070e;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:1.5px;cursor:pointer;transition:all .2s;white-space:nowrap;align-self:flex-end}
+.btn-go:hover{background:var(--gold-light);transform:translateY(-1px)}
+.btn-go:disabled{background:#222240;color:#444;cursor:not-allowed;transform:none}
+
+/* Quick tracks */
+.section-heading{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:2.5px;color:var(--dim);margin-bottom:12px}
+.track-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
+.track-btn{display:flex;flex-direction:column;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 16px;cursor:pointer;transition:all .18s;min-width:96px}
+.track-btn:hover{border-color:var(--gold);background:var(--surface);transform:translateY(-2px)}
+.track-btn.active{border-color:var(--gold);background:linear-gradient(135deg,#c9a84c18,var(--surface))}
+.track-btn-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.5px;color:var(--text)}
+.track-btn-state{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* Loading */
+.loading{text-align:center;padding:60px 20px;color:var(--gold)}
+.loading-spinner{width:44px;height:44px;border:3px solid #1a1a30;border-top-color:var(--gold);border-radius:50%;animation:spin .9s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1px;margin-bottom:20px}
+.loading-step{font-size:12px;color:var(--muted);margin:5px 0;opacity:0;animation:fadeUp .5s forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* Error */
+.error-box{background:#ff5c5c12;border:1px solid #ff5c5c33;border-radius:12px;padding:20px 24px}
+.error-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:1px;color:#ff8a80;margin-bottom:6px}
+.error-msg{font-size:13px;color:#ff5c5c}
+.error-hint{font-size:12px;color:var(--muted);margin-top:8px}
+
+/* Results header */
+.results-bar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:16px;padding:20px 24px;background:var(--bg2);border:1px solid var(--border2);border-radius:12px}
+.results-track{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:var(--gold-light);line-height:1}
+.results-meta{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;font-size:13px;color:var(--muted);align-items:center}
+.pill{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:11px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px}
+.pill.gold{color:var(--gold);border-color:#c9a84c33}
+.analyst-note{font-size:12px;color:var(--muted);font-style:italic;margin-top:8px;line-height:1.5}
+.stats-row{display:flex;gap:12px;flex-wrap:wrap}
+.stat-box{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 16px;min-width:66px}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--gold);line-height:1}
+.stat-lbl{font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:3px;font-family:'Barlow Condensed',sans-serif}
+
+/* Legend */
+.legend{display:flex;gap:16px;flex-wrap:wrap;padding:10px 16px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);margin-bottom:20px;font-size:11px;color:var(--muted);align-items:center}
+.leg-dot{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:4px}
+
+/* Race card */
+.race-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px;transition:border-color .2s}
+.race-card:hover{border-color:var(--border2)}
+.race-header{display:flex;align-items:center;gap:14px;padding:14px 20px;cursor:pointer;transition:background .15s;user-select:none}
+.race-header:hover{background:rgba(255,255,255,.03)}
+.race-header.open{background:linear-gradient(90deg,#c9a84c0d,transparent);border-bottom:1px solid var(--border)}
+.r-num{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07070e;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.r-info{flex:1;min-width:0}
+.r-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;color:var(--text)}
+.r-time{color:var(--muted);font-size:12px;font-family:'Barlow Condensed',sans-serif;margin-right:8px}
+.r-sub{font-size:11px;color:var(--muted);margin-top:2px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.3px}
+.r-rsi{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;min-width:180px}
+.rsi-lbl{font-size:9px;color:var(--dim);letter-spacing:1.5px;font-family:'Barlow Condensed',sans-serif}
+.rsi-row{display:flex;align-items:center;gap:8px;width:100%}
+.rsi-bg{flex:1;height:5px;background:#1a1a30;border-radius:3px;overflow:hidden}
+.rsi-fill{height:100%;border-radius:3px;transition:width .8s ease}
+.rsi-num{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;min-width:28px;text-align:right}
+.rsi-note{font-size:10px;color:var(--muted);max-width:200px;text-align:right;line-height:1.4}
+.chevron{color:var(--gold);font-size:11px;transition:transform .25s;flex-shrink:0;margin-left:8px}
+.chevron.open{transform:rotate(180deg)}
+
+/* Horse table */
+.tbl-head{display:grid;grid-template-columns:34px minmax(0,1fr) 80px 70px 72px 72px 80px;gap:6px;padding:7px 20px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2)}
+.th{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:1.2px;color:var(--dim);font-weight:700}
+.th.c{text-align:center}
+.h-row{display:grid;grid-template-columns:34px minmax(0,1fr) 80px 70px 72px 72px 80px;gap:6px;align-items:center;padding:10px 20px;border-bottom:1px solid rgba(255,255,255,.04);border-left:3px solid transparent;transition:background .12s}
+.h-row:last-child{border-bottom:none}
+.h-row:hover{background:rgba(255,255,255,.04)}
+.pos-badge{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:12px;flex-shrink:0}
+.h-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.h-barrier{color:var(--dim);font-size:10px;margin-left:5px;font-family:'Barlow Condensed',sans-serif}
+.h-meta{font-size:10px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.h-gear{font-size:10px;color:#5588aa;margin-top:2px}
+.h-tip{font-size:10px;color:#9a7830;margin-top:2px;font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cell{text-align:center}
+.cell-lbl{font-size:9px;color:var(--dim);letter-spacing:.8px;margin-bottom:2px;font-family:'Barlow Condensed',sans-serif}
+.form-str{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#8888aa;letter-spacing:1px}
+.pct-val{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;line-height:1}
+.odds-val{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700}
+.val-badge{display:inline-block;padding:3px 7px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;letter-spacing:.8px}
+.conf-lbl{font-size:9px;margin-top:3px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px}
+
+/* Source banner */
+.src-banner{display:flex;flex-wrap:wrap;gap:8px;padding:10px 20px 14px;background:rgba(0,0,0,.15);border-top:1px solid var(--border);font-size:10px;color:var(--dim);align-items:center}
+.src-chip{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:2px 7px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px}
+
+.disclaimer{margin-top:28px;padding:14px 20px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:11px;color:var(--dim);text-align:center;line-height:1.7}
+
+.hidden{display:none!important}
+
+@media(max-width:720px){
+  .layout{padding:20px 16px 40px}
+  .header{padding:0 16px}
+  .tbl-head,.h-row{grid-template-columns:28px 1fr 60px 55px 58px 58px 58px;gap:4px;padding:8px 12px}
+  .r-rsi{display:none}
+  .results-bar{padding:14px}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">🏇</div>
+      <div>
+        <div class="logo-text">The Form Guide</div>
+        <div class="logo-sub">AI RACE INTELLIGENCE</div>
+      </div>
+    </div>
+    <div class="header-date" id="headerDate"></div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- Search -->
+  <div class="search-wrap">
+    <div class="s-group flex1">
+      <div class="s-label">TRACK / RACECOURSE</div>
+      <input id="trackInput" class="s-input" type="text" placeholder="e.g. Flemington, Randwick, Caulfield, Eagle Farm, Moonee Valley…"/>
+    </div>
+    <div class="s-group">
+      <div class="s-label">DATE</div>
+      <input id="dateInput" class="s-input" type="date"/>
+    </div>
+    <button class="btn-go" id="goBtn" onclick="fetchTips()">ANALYSE →</button>
+  </div>
+
+  <!-- Quick tracks -->
+  <div class="section-heading">QUICK SELECT — MAJOR TRACKS</div>
+  <div class="track-grid" id="trackGrid"></div>
+
+  <!-- Loading -->
+  <div id="loadingEl" class="loading hidden">
+    <div class="loading-spinner"></div>
+    <div class="loading-title" id="loadingTitle">SOURCING RACE DATA</div>
+    <div id="loadingSteps"></div>
+  </div>
+
+  <!-- Error -->
+  <div id="errorEl" class="error-box hidden">
+    <div class="error-title">⚠ COULD NOT LOAD RACE DATA</div>
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="error-hint">Fields may not be declared yet — typically released 2–3 days before race day. Try another track or date.</div>
+  </div>
+
+  <!-- Results -->
+  <div id="resultsEl" class="hidden">
+    <div class="results-bar">
+      <div style="flex:1">
+        <div class="results-track" id="resTrack"></div>
+        <div class="results-meta" id="resMeta"></div>
+        <div class="analyst-note hidden" id="analystNote"></div>
+      </div>
+      <div class="stats-row" id="statsRow"></div>
+    </div>
+
+    <div class="legend">
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:2px;color:var(--dim)">LEGEND</span>
+      <span><span class="leg-dot" style="background:var(--green)"></span><b style="color:var(--green)">OVERS</b> — model price shorter than market = value</span>
+      <span><span class="leg-dot" style="background:var(--red)"></span><b style="color:var(--red)">UNDERS</b> — model longer = overbet runner</span>
+      <span><span class="leg-dot" style="background:var(--yellow)"></span><b style="color:var(--yellow)">FAIR</b> — correctly priced</span>
+      <span style="margin-left:auto;font-size:10px">RSI = Race Stability Index / 100</span>
+    </div>
+
+    <div id="racesList"></div>
+    <div class="src-banner" id="srcBanner"></div>
+
+    <div class="disclaimer">
+      ⚠ For informational purposes only. AI-generated analysis based on publicly available data sourced from racenet.com.au · tab.com.au · racing.com · punters.com.au · racingaustralia.horse · skyracingworld.com and more.<br>
+      Always gamble responsibly — set a limit before you play. This tool does not guarantee any outcome.
+    </div>
+  </div>
+
+</div>
+
+<script>
+const TRACKS = [
+  {name:'Flemington',state:'VIC'},{name:'Caulfield',state:'VIC'},{name:'Moonee Valley',state:'VIC'},{name:'Sandown',state:'VIC'},
+  {name:'Randwick',state:'NSW'},{name:'Rosehill',state:'NSW'},{name:'Warwick Farm',state:'NSW'},{name:'Kembla Grange',state:'NSW'},
+  {name:'Eagle Farm',state:'QLD'},{name:'Doomben',state:'QLD'},{name:'Gold Coast',state:'QLD'},
+  {name:'Morphettville',state:'SA'},{name:'Ascot',state:'WA'},{name:'Belmont',state:'WA'},
+  {name:'Ellerslie',state:'NZ'},{name:'Trentham',state:'NZ'},
+];
+
+const SYSTEM = `You are a professional horse racing form analyst. You MUST use web search to find REAL, current race data before responding.
+
+MANDATORY SEARCH SEQUENCE — perform ALL of these searches before constructing your response:
+1. Search "site:racenet.com.au [TRACK] [DATE] fields acceptances" for the full field list
+2. Search "site:tab.com.au [TRACK] [DATE] win odds" for current bookmaker markets
+3. Search "site:racing.com [TRACK] [DATE] form" for Victorian/national data
+4. Search "[TRACK] [DATE] race fields 2025" on Google for any available fields
+5. Search "[TRACK] track condition rail position [DATE]" for going/conditions
+6. Search each runner's name + "recent form 2025" to verify latest results
+7. Search "punters.com.au [TRACK] [DATE] tips" for expert analysis
+8. Search "trainer [NAME] form last 14 days" for leading trainers on the day
+9. Search "[JOCKEY NAME] form stats 2025" for key jockey bookings
+10. Search "[TRACK] speed map [DATE]" for pace scenarios
+
+ANALYSIS CRITERIA — weigh ALL of the following:
+- Last 5 starts (wins, placings, beaten margins, class of race)
+- Track and distance record (wins/starts ratio)
+- Days since last run (optimal is 14–28 days for most horses)
+- Barrier draw (1–3 = inside advantage on tighter tracks; wide gates suit on-pace runners on big tracks)
+- Weight carried relative to rivals (every 1kg ≈ 1 length over 1200m)
+- Jockey quality and track record at the venue
+- Trainer strike rate at track and in last 14 days
+- Class shift (dropping in class is a big positive signal)
+- Track condition suitability based on breeding and past wet/dry form
+- Rail position effect on the draw
+- Gear changes (blinkers first time = positive for some types)
+- Market movement (horses that have shortened from open are being supported)
+- Sectional times and race tempo from last start
+
+Return ONLY a raw valid JSON object — no markdown fences, no backticks, no explanation before or after:
+
+{
+  "track": "Full Track Name",
+  "date": "Day DD Month YYYY",
+  "state": "VIC",
+  "trackCondition": "Good 4",
+  "weather": "Sunny 22°C",
+  "totalPrizemoney": "$280,000",
+  "sourcesSearched": ["racenet.com.au","tab.com.au","racing.com","punters.com.au"],
+  "analystNote": "Overview of day's card in 1-2 sentences.",
+  "races": [
+    {
+      "raceNumber": 1,
+      "raceTime": "12:10",
+      "raceName": "Exact Official Race Name",
+      "distance": "1200m",
+      "raceClass": "Maiden Plate",
+      "prizemoney": "$25,000",
+      "trackRail": "True",
+      "paceMap": "Genuine pace, should suit on-pace runners",
+      "rsi": 72,
+      "rsiNote": "Consistent class, clear form lines",
+      "horses": [
+        {
+          "position": 1,
+          "name": "Horse Name",
+          "barrier": 4,
+          "jockey": "J. Smith",
+          "trainer": "D. Hayes",
+          "weight": "57.5kg",
+          "age": "4yo",
+          "sex": "G",
+          "recentForm": "1-2x1-3-1",
+          "lastStart": "Won 1400m Good4 Caulfield 7d ago",
+          "gearChanges": "Blinkers on",
+          "winPct": 38,
+          "marketOdds": "$4.20",
+          "modelOdds": "$3.00",
+          "value": "OVERS",
+          "confidence": "HIGH",
+          "tip": "Dominant last-start winner, drops in class, rails draw suits"
+        }
+      ]
+    }
+  ]
+}
+
+STRICT RULES:
+- RSI 0–100: 85+ = banker; 65–84 = solid; 45–64 = open; below 45 = very open/unpredictable
+- value field: "OVERS" when modelOdds shorter than marketOdds (bet value exists), "UNDERS" when modelOdds longer, "FAIR" if within 15%
+- winPct across all horses in a race should sum to ~105% (bookmaker overround)
+- confidence: "HIGH" / "MEDIUM" / "LOW"
+- List EVERY accepted runner in predicted finishing order, position 1 = your top pick
+- If fields are not yet declared, still return valid JSON but include "error" field at top level with explanation
+- Use REAL horse names, jockeys, trainers — never fabricate names`;
+
+const LOAD_STEPS = [
+  '🔍 Searching racenet.com.au for declared fields & acceptances…',
+  '📋 Cross-referencing Racing Australia official acceptances…',
+  '💹 Fetching live TAB win market odds for all runners…',
+  '📊 Pulling last 10 starts form for every accepted runner…',
+  '👤 Checking trainer 14-day form & jockey bookings…',
+  '🌿 Verifying track condition, rail position & weather…',
+  '🗺 Building speed maps & pace scenarios per race…',
+  '📰 Scanning Punters.com.au & Sky Racing tips…',
+  '🧮 Calculating win probabilities & model odds…',
+  '⚖ Identifying OVERS value bets & UNDERS overlay horses…',
+  '✅ Finalising tips, RSI scores & confidence ratings…',
+];
+
+function rsiCol(v){return v>=75?'var(--green)':v>=50?'var(--yellow)':'var(--red)'}
+function valCol(v){return v==='OVERS'?'var(--green)':v==='UNDERS'?'var(--red)':'var(--yellow)'}
+function medCol(p){return p===1?'#FFD700':p===2?'#C0C0C0':p===3?'#CD7F32':null}
+function confCol(c){return c==='HIGH'?'var(--green)':c==='MEDIUM'?'var(--yellow)':'var(--red)'}
+
+// Init
+document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
+document.getElementById('headerDate').textContent = new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).toUpperCase();
+
+// Build track buttons
+const grid = document.getElementById('trackGrid');
+TRACKS.forEach(t => {
+  const b = document.createElement('div');
+  b.className = 'track-btn';
+  b.dataset.name = t.name;
+  b.innerHTML = `<div class="track-btn-name">${t.name}</div><div class="track-btn-state">${t.state}</div>`;
+  b.onclick = () => {
+    document.querySelectorAll('.track-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById('trackInput').value = t.name;
+    fetchTips();
+  };
+  grid.appendChild(b);
+});
+
+document.getElementById('trackInput').addEventListener('keydown', e => { if(e.key==='Enter') fetchTips(); });
+
+function renderRaces(races) {
+  const el = document.getElementById('racesList');
+  el.innerHTML = '';
+  races.forEach((race, i) => {
+    const card = document.createElement('div');
+    card.className = 'race-card';
+    const rc = rsiCol(race.rsi||50);
+    const isOpen = i === 0;
+    card.innerHTML = `
+      <div class="race-header${isOpen?' open':''}" onclick="toggleRace(this)">
+        <div class="r-num">R${race.raceNumber}</div>
+        <div class="r-info">
+          <div class="r-name">${race.raceTime?`<span class="r-time">${race.raceTime}</span>`:''}${race.raceName||'Race '+race.raceNumber}</div>
+          <div class="r-sub">${[race.distance,race.raceClass,race.prizemoney,race.trackRail?'Rail: '+race.trackRail:'',race.paceMap].filter(Boolean).join(' &middot; ')}</div>
+        </div>
+        <div class="r-rsi">
+          <div class="rsi-lbl">RACE STABILITY INDEX</div>
+          <div class="rsi-row">
+            <div class="rsi-bg"><div class="rsi-fill" style="width:${race.rsi||0}%;background:${rc};box-shadow:0 0 6px ${rc}55"></div></div>
+            <span class="rsi-num" style="color:${rc}">${race.rsi||'—'}</span>
+          </div>
+          ${race.rsiNote?`<div class="rsi-note">${race.rsiNote}</div>`:''}
+        </div>
+        <div class="chevron${isOpen?' open':''}">▼</div>
+      </div>
+      <div class="race-body${isOpen?'':' hidden'}">
+        <div class="tbl-head">
+          <div class="th">POS</div>
+          <div class="th">HORSE / CONNECTIONS</div>
+          <div class="th c">FORM</div>
+          <div class="th c">WIN %</div>
+          <div class="th c">MARKET</div>
+          <div class="th c">MODEL</div>
+          <div class="th c">VALUE</div>
+        </div>
+        ${(race.horses||[]).map(h=>renderHorse(h)).join('')}
+      </div>`;
+    el.appendChild(card);
+  });
+}
+
+function renderHorse(h) {
+  const mc = medCol(h.position);
+  const wp = h.winPct||0;
+  const wc = wp>=30?'var(--green)':wp>=15?'var(--yellow)':'var(--muted)';
+  const vc = valCol(h.value);
+  const rowBL = mc?`border-left-color:${mc}`:'';
+  const rowBG = mc?`background:linear-gradient(90deg,${mc}0e,transparent)`:'';
+  const badgeS = mc?`background:${mc};color:#07070e`:`background:var(--surface);color:var(--dim)`;
+  return `<div class="h-row" style="${rowBL};${rowBG}"
+    onmouseenter="this.style.background='${mc?`linear-gradient(90deg,${mc}20,rgba(255,255,255,.04))`:'rgba(255,255,255,.04)'}'"
+    onmouseleave="this.style.background='${mc?`linear-gradient(90deg,${mc}0e,transparent)`:''}'">
+    <div class="pos-badge" style="${badgeS}">${h.position}</div>
+    <div>
+      <div class="h-name">${h.name||'—'}${h.barrier?`<span class="h-barrier">B${h.barrier}</span>`:''}</div>
+      <div class="h-meta">${[h.jockey,h.trainer,h.weight,h.age&&h.sex?h.age+' '+h.sex:''].filter(Boolean).join(' · ')}</div>
+      ${h.gearChanges?`<div class="h-gear">⚙ ${h.gearChanges}</div>`:''}
+      ${h.lastStart?`<div class="h-gear" style="color:#667799">↩ ${h.lastStart}</div>`:''}
+      ${h.tip?`<div class="h-tip">${h.tip}</div>`:''}
+    </div>
+    <div class="cell"><div class="cell-lbl">FORM</div><div class="form-str">${h.recentForm||'—'}</div></div>
+    <div class="cell"><div class="cell-lbl">WIN %</div><div class="pct-val" style="color:${wc}">${wp}%</div></div>
+    <div class="cell"><div class="cell-lbl">MARKET</div><div class="odds-val" style="color:var(--text)">${h.marketOdds||'—'}</div></div>
+    <div class="cell"><div class="cell-lbl">MODEL</div><div class="odds-val" style="color:var(--gold)">${h.modelOdds||'—'}</div></div>
+    <div class="cell">
+      <div class="val-badge" style="background:${vc}18;color:${vc};border:1px solid ${vc}33">${h.value||'—'}</div>
+      ${h.confidence?`<div class="conf-lbl" style="color:${confCol(h.confidence)}">${h.confidence}</div>`:''}
+    </div>
+  </div>`;
+}
+
+function toggleRace(hdr) {
+  const body = hdr.nextElementSibling;
+  const chev = hdr.querySelector('.chevron');
+  const opening = body.classList.contains('hidden');
+  body.classList.toggle('hidden');
+  hdr.classList.toggle('open', opening);
+  chev.classList.toggle('open', opening);
+}
+
+async function fetchTips() {
+  const track = document.getElementById('trackInput').value.trim();
+  const date  = document.getElementById('dateInput').value;
+  if (!track) return;
+
+  const btn = document.getElementById('goBtn');
+  btn.disabled = true; btn.textContent = 'LOADING…';
+  document.getElementById('loadingEl').classList.remove('hidden');
+  document.getElementById('errorEl').classList.add('hidden');
+  document.getElementById('resultsEl').classList.add('hidden');
+  document.getElementById('loadingTitle').textContent = `RESEARCHING ${track.toUpperCase()}`;
+
+  const stepsEl = document.getElementById('loadingSteps');
+  stepsEl.innerHTML = '';
+  LOAD_STEPS.forEach((s,i) => {
+    const d = document.createElement('div');
+    d.className = 'loading-step';
+    d.textContent = s;
+    d.style.animationDelay = `${i * 1.3}s`;
+    stepsEl.appendChild(d);
+  });
+
+  const userMsg = `Research and provide complete race-by-race tips for:\n\nTrack: ${track}\nDate: ${date}\n\nMandatory research steps:\n1. Search racenet.com.au for all declared fields and acceptances for this meeting\n2. Search tab.com.au for current live win odds on every runner\n3. Search racing.com for form, sectionals and race replays\n4. Search punters.com.au for expert form notes and tips\n5. Search for track condition, rail position and weather for this day\n6. Check recent form for every runner (last 5-10 starts, wins at distance/track)\n7. Check trainer 14-day form stats and jockey booking quality\n8. Build speed maps for each race to identify likely race tempo\n9. Calculate win probabilities, model odds, and identify OVERS value bets\n\nReturn every race on the card with every accepted runner in predicted finishing order. Include RSI for each race and value ratings for every runner.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 8000,
+        system: SYSTEM,
+        tools: [{type:'web_search_20250305',name:'web_search'}],
+        messages: [{role:'user',content:userMsg}]
+      })
+    });
+
+    const json = await res.json();
+    if (json.error) throw new Error(json.error.message);
+
+    const text = (json.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n');
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('No structured race data returned. Fields may not yet be declared for this meeting.');
+
+    const data = JSON.parse(match[0]);
+    if (data.error) throw new Error(data.error);
+
+    // Populate header
+    document.getElementById('resTrack').textContent = data.track || track;
+    const metaEl = document.getElementById('resMeta');
+    const pills = [
+      data.date && `<span>${data.date}</span>`,
+      data.state && `<span class="pill">${data.state}</span>`,
+      data.trackCondition && `<span class="pill gold">🌿 ${data.trackCondition}</span>`,
+      data.weather && `<span class="pill">🌤 ${data.weather}</span>`,
+      data.totalPrizemoney && `<span class="pill gold">💰 ${data.totalPrizemoney}</span>`,
+    ].filter(Boolean);
+    metaEl.innerHTML = pills.join('');
+
+    if (data.analystNote) {
+      const an = document.getElementById('analystNote');
+      an.textContent = '💬 ' + data.analystNote;
+      an.classList.remove('hidden');
+    }
+
+    const races = data.races || [];
+    const totalRunners = races.reduce((a,r)=>(a+(r.horses||[]).length),0);
+    const bankers = races.filter(r=>(r.rsi||0)>=75).length;
+    const overs = races.reduce((a,r)=>(a+(r.horses||[]).filter(h=>h.value==='OVERS'&&h.position===1).length),0);
+    document.getElementById('statsRow').innerHTML = `
+      <div class="stat-box"><div class="stat-num">${races.length}</div><div class="stat-lbl">RACES</div></div>
+      <div class="stat-box"><div class="stat-num">${totalRunners}</div><div class="stat-lbl">RUNNERS</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--green)">${overs}</div><div class="stat-lbl">VALUE TIPS</div></div>
+      <div class="stat-box"><div class="stat-num">${bankers}</div><div class="stat-lbl">BANKERS</div></div>`;
+
+    renderRaces(races);
+
+    const sb = document.getElementById('srcBanner');
+    if (data.sourcesSearched?.length) {
+      sb.innerHTML = `<span style="font-family:'Barlow Condensed',sans-serif;letter-spacing:1px">SOURCES SEARCHED</span>${data.sourcesSearched.map(s=>`<span class="src-chip">${s}</span>`).join('')}`;
+    } else { sb.innerHTML = ''; }
+
+    document.getElementById('loadingEl').classList.add('hidden');
+    document.getElementById('resultsEl').classList.remove('hidden');
+    document.getElementById('resultsEl').scrollIntoView({behavior:'smooth',block:'start'});
+
+  } catch(e) {
+    document.getElementById('loadingEl').classList.add('hidden');
+    document.getElementById('errorEl').classList.remove('hidden');
+    document.getElementById('errorMsg').textContent = e.message;
+  }
+
+  btn.disabled = false; btn.textContent = 'ANALYSE →';
+}
+</script>
+</body>
+</html>
