@@ -216,6 +216,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .imdot.sim{background:var(--green);box-shadow:0 0 5px var(--green)}
 .imdot.paste{background:var(--purple);box-shadow:0 0 5px var(--purple)}
 .imdot.ai{background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 1.1s ease-in-out infinite}
+.imdot.fetch{background:var(--amber);box-shadow:0 0 6px var(--amber);animation:blink 1.4s ease-in-out infinite}
 .ib{border-radius:5px;padding:3px 9px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;cursor:pointer;transition:all .2s;border:1px solid}
 .ib.paste{background:var(--pbg);border-color:var(--pbdr);color:var(--purple)}
 .ib.clear{background:var(--rbg);border-color:var(--rbdr);color:var(--red);display:none}
@@ -399,7 +400,7 @@ table.rt tbody tr.place-row{background:rgba(45,212,191,.03)}
         <div class="iwrap">
           <div class="irow">
             <textarea id="inp" rows="1"
-              placeholder='Type "Model Flemington Saturday" to simulate, or paste a real race card below'
+              placeholder='Type a track + date (e.g. "Flemington Saturday") to fetch real fields — or paste a race card'
               onkeydown="hk(event)" oninput="onInp(this)"></textarea>
             <button id="sbtn" onclick="doSubmit()">
               <svg width="15" height="15" viewBox="0 0 16 16"><path d="M14.5 8L2 14l2.5-6H14.5zm0 0L2 2l2.5 6H14.5z"/></svg>
@@ -491,7 +492,32 @@ function calcRSI(runners){
   return Math.round(Math.min(95,Math.max(42,oRSI*0.6+wRSI*0.4-pen)));
 }
 function isWinLock(r,rsi){return r.pos===1&&rsi>=67;}
-function isPlaceLock(r,fs,rsi){return r.pos<=3&&rsi>=62&&r.winPct>=(100/fs)*1.25;}
+function isPlaceLock(r,fs,rsi){
+  const avg=100/fs;
+  // Strict: must be a genuine standout in top 3, not just above average
+  // winPct must be at least 1.8x average (was 1.25x) — real top-3 certainty
+  // RSI must be 68+ (was 62) — only stable races, not open ones
+  // pos must be 2 or 3 (pos 1 becomes win lock, not place lock)
+  return r.pos>=2&&r.pos<=3&&rsi>=68&&r.winPct>=(avg*1.8);
+}
+// Per-race place lock limiter — call after collecting all place locks for a race
+function limitPlaceLocks(placeLockList){
+  // Max 1 place lock per race under normal conditions
+  // Max 2 only if both have very high win% (both >= 15% in a normal field)
+  const byRace={};
+  for(const pl of placeLockList){
+    if(!byRace[pl.raceNum])byRace[pl.raceNum]=[];
+    byRace[pl.raceNum].push(pl);
+  }
+  const result=[];
+  for(const raceNum of Object.keys(byRace)){
+    const picks=byRace[raceNum].sort((a,b)=>b.winPct-a.winPct);
+    // Only take top 2 at most, and second must be genuinely strong (>= 14%)
+    const allowed=picks.filter((p,i)=>i===0||(i===1&&p.winPct>=14));
+    result.push(...allowed.slice(0,2));
+  }
+  return result;
+}
 
 // SIMULATE
 function simulateMeeting(track,date){
@@ -778,6 +804,73 @@ Return ONLY valid JSON. No markdown, no explanation:
   return parsed;
 }
 
+
+// AI FETCH ENGINE — searches for real runners from just a track + date
+async function fetchRaceCard(query, stepCb){
+  const key=getKey(); if(!key) return null;
+
+  const sys=`You are Betrich, an expert Australian racing analyst. The user has given you a track name and date. You must:
+
+1. Use web_search to find the ACTUAL race fields for that meeting. Search:
+   - "[Track] [Date] race fields barriers" 
+   - "[Track] [Date] runners jockeys weights"
+   - "TAB [Track] [Date] form guide"
+   - "Racing Australia [Track] [Date] acceptances"
+   Try multiple search queries until you have found the real runners for as many races as possible.
+
+2. For EACH horse you find, also search for their recent form, track record, and any key angles (class drop, wet track form, trainer/jockey booking).
+
+3. Build the complete race card from your findings — real horse names, real barriers, real weights, real jockeys, real trainers, real market odds (search for current TAB odds if available).
+
+4. Apply the full Betrich research protocol:
+   - Weight speed/class 40%, track affinity 25%, market 15%, trainer/jockey 10%, recency 10%
+   - Identify value bets where model disagrees with market
+   - Be confident — name the winner per race with specific reasoning
+   - RSI based on odds gap between 1st and 2nd favourite
+   - Win% per race must sum to exactly 100%
+
+If you cannot find real runners for a race, skip that race entirely — do NOT invent horses.
+
+Return ONLY valid JSON in exactly this format:
+{"track":"Flemington","date":"Saturday 7 March 2026","condition":"Good 4","mode":"real","races":[{"raceNum":1,"raceName":"Race Name","distance":"1200m","raceType":"BM78","condition":"Good 4","pace":"Fast","rsi":76,"analysis":"Specific analysis with horse names and research.","riskFactor":"One risk sentence.","runners":[{"pos":1,"horse":"Actual Horse Name","barrier":3,"weight":"57kg","jockey":"J. McDonald","trainer":"C. Waller","form":"1-2-1-3-x","marketOdds":2.80,"winPct":33.5,"fairOdds":2.99,"value":"Overs","researchNotes":"Specific finding from research."}]}]}`;
+
+  stepCb('Searching for real race fields...');
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:14000,system:sys,
+      tools:[{type:'web_search_20250305',name:'web_search'}],
+      messages:[{role:'user',content:'Find the real race fields and model this meeting: '+query+'. Search TAB, Racing Australia, and form guides. Return JSON only.'}]})
+  });
+  if(!resp.ok){
+    const e=await resp.json().catch(()=>({}));
+    if(resp.status===401)throw new Error('Invalid API key. Check your key.');
+    if(resp.status===429)throw new Error('API rate limit. Wait a moment.');
+    throw new Error(e.error?.message||'API error '+resp.status);
+  }
+  stepCb('Fetching runners, barriers, weights and odds...');
+  const data=await resp.json();
+  const searchCount=data.content.filter(b=>b.type==='tool_use'&&b.name==='web_search').length;
+  if(searchCount>0)stepCb('Completed '+searchCount+' searches — building race card...');
+  const fullText=data.content.map(b=>b.type==='text'?b.text:'').filter(Boolean).join('\n');
+  let js=fullText.trim().replace(/^\`\`\`(?:json)?\s*/i,'').replace(/\s*\`\`\`$/,'').trim();
+  const s=js.indexOf('{'),en=js.lastIndexOf('}');
+  if(s===-1||en===-1)throw new Error('Could not find real race fields for "'+query+'". Try being more specific, e.g. "Flemington Saturday 8 March".');
+  const parsed=JSON.parse(js.slice(s,en+1));
+  if(!parsed.races||!Array.isArray(parsed.races)||parsed.races.length===0)throw new Error('No race fields found for "'+query+'". Try a different date or track name.');
+  for(const race of parsed.races){
+    const tot=race.runners.reduce((a,b)=>a+(b.winPct||0),0);
+    if(Math.abs(tot-100)>0.5){const sc=100/tot;race.runners.forEach(r=>r.winPct=parseFloat((r.winPct*sc).toFixed(1)));const d=parseFloat((100-race.runners.reduce((a,b)=>a+b.winPct,0)).toFixed(1));race.runners[0].winPct=parseFloat((race.runners[0].winPct+d).toFixed(1));}
+    race.runners.forEach(r=>{r.fairOdds=parseFloat((100/r.winPct).toFixed(2));r.marketOdds=parseFloat(r.marketOdds)||r.fairOdds;const g=r.marketOdds-r.fairOdds;r.value=g>0.28?'Overs':g<-0.28?'Unders':'Fair';r.isReal=true;r.weight=r.weight||'57kg';});
+    race.runners.sort((a,b)=>a.pos-b.pos);
+    race.rsi=calcRSI(race.runners);
+  }
+  parsed._searchCount=searchCount;
+  parsed.aiMode=true;
+  parsed.fetchMode=true;
+  return parsed;
+}
+
 // CHAT STATE
 const CHATS=['real','VIC','NSW','WA','SA','TAS','QLD','LOCKS','PLACE'];
 const chatHistory={};CHATS.forEach(c=>chatHistory[c]=[]);
@@ -819,7 +912,7 @@ function renderHistory(id){
 }
 
 function emptyScreen(id){
-  if(id==='real')return `<div class="wlc"><div class="wchip"><div class="epulse"></div><span>AI RESEARCH ENGINE \u00b7 STATE ROUTING \u00b7 AUTO LOCKS</span></div><h1>Real Data In.<br/><em>Researched Cards Out.</em></h1><p class="wsub">Add your Anthropic API key to enable Research Mode \u2014 Claude searches the web for every horse before modelling. Or use the local engine without a key.</p><div class="wmodes"><div class="wmode sim" onclick="fillQ('Model Flemington Saturday')"><div class="mico">&#127922;</div><div class="mtit">Simulate a Meeting</div><div class="mdesc">AI-simulated race card \u2014 no API key needed</div></div><div class="wmode paste" onclick="loadExample()"><div class="mico">&#128302;</div><div class="mtit">Paste Real Data</div><div class="mdesc">Paste runners \u2014 AI researches every horse via live web search</div></div></div></div>`;
+  if(id==='real')return `<div class="wlc"><div class="wchip"><div class="epulse"></div><span>AI FETCH · RESEARCH ENGINE · STATE ROUTING · AUTO LOCKS</span></div><h1>Just Type the Track.<br/><em>AI Finds the Field.</em></h1><p class="wsub">With an API key — just type a track and date like <strong style="color:var(--green)">"Flemington Saturday"</strong> and Betrich searches TAB and Racing Australia for the real fields, then researches every horse. No copying, no pasting required.</p><div class="wmodes"><div class="wmode sim" onclick="fillQ('Flemington Saturday')"><div class="mico">&#128269;</div><div class="mtit">Fetch Real Meeting</div><div class="mdesc">Type track + date — AI finds real runners automatically (API key required)</div></div><div class="wmode paste" onclick="loadExample()"><div class="mico">&#128203;</div><div class="mtit">Paste Race Card</div><div class="mdesc">Paste runners manually if you have them — AI researches every horse</div></div></div></div>`;
   const meta=STATE_META[id];
   if(id==='LOCKS')return `<div class="ch-empty"><div class="che-ico">&#128274;</div><div class="che-title">Win Locks</div><p class="che-sub">High-confidence win picks (RSI \u2265 67) will appear here automatically after any race card is run.</p><div class="che-hint">Paste race data in Real Data to populate locks</div></div>`;
   if(id==='PLACE')return `<div class="ch-empty"><div class="che-ico">&#127919;</div><div class="che-title">Place Locks</div><p class="che-sub">High-confidence top-3 picks will appear here automatically after any race card is run.</p><div class="che-hint">Paste race data in Real Data to populate place locks</div></div>`;
@@ -831,13 +924,28 @@ function fillQ(t){$('inp').value=t;onInp($('inp'));$('inp').focus();}
 function hk(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSubmit();}}
 function onInp(el){
   el.style.height='auto';el.style.height=Math.min(el.scrollHeight,200)+'px';
-  const isR=detectMode(el.value)==='real',ai=isR&&hasKey();
-  el.classList.toggle('paste-mode',isR);
-  $('imdot').className='imdot '+(ai?'ai':isR?'paste':'sim');
-  $('imtxt').textContent=ai?'AI RESEARCH MODE':isR?'REAL DATA MODE':'SIMULATE MODE';
-  $('clrbtn').style.display=isR?'block':'none';
+  const mode=detectMode(el.value);
+  const isFetch=mode==='fetch',isR=mode==='real',ai=(isR||isFetch)&&hasKey();
+  el.classList.toggle('paste-mode',isR||isFetch);
+  $('imdot').className='imdot '+(isFetch&&ai?'ai':ai?'ai':isR?'paste':isFetch?'fetch':'sim');
+  $('imtxt').textContent=isFetch&&ai?'AI FETCH MODE — will search for real runners':isFetch?'FETCH MODE (add API key for real runners)':ai?'AI RESEARCH MODE':isR?'REAL DATA MODE':'SIMULATE MODE';
+  $('clrbtn').style.display=(isR||isFetch)?'block':'none';
 }
-function detectMode(t){if(t.includes('|'))return'real';if(t.split('\n').filter(l=>l.trim()).length>3&&t.match(/\d{1,2}[\.\)]\s+[A-Z]/))return'real';return'sim';}
+function detectMode(t){
+  // 'fetch' = user typed a track+date — AI will search for the real field itself
+  // 'real'  = user pasted actual runner data
+  // 'sim'   = simulate with local engine
+  if(t.includes('|'))return'real';
+  if(t.split('\n').filter(l=>l.trim()).length>3&&t.match(/\d{1,2}[\.\)]\s+[A-Z]/))return'real';
+  // Fetch mode: short query mentioning a known track or "race" keyword without pipe data
+  const low=t.toLowerCase().trim();
+  const trackKeywords=['flemington','caulfield','moonee valley','randwick','rosehill','eagle farm','doomben','morphettville','ascot','belmont','gold coast','sandown','geelong','ballarat','pakenham','launceston','hobart','kembla','hawkesbury','warwick farm','newcastle'];
+  const hasTrack=trackKeywords.some(k=>low.includes(k));
+  const hasDate=/saturday|sunday|monday|tuesday|wednesday|thursday|friday|today|tomorrow|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|\d{1,2}\/\d{1,2}/.test(low);
+  const isShort=t.trim().split('\n').length<=3&&t.trim().length<120;
+  if(isShort&&(hasTrack||hasDate))return'fetch';
+  return'sim';
+}
 function doClear(){$('inp').value='';onInp($('inp'));}
 function togglePaste(){if(currentChat!=='real'){switchChat('real');return;}pasteOpen=!pasteOpen;$('ppanel').style.display=pasteOpen?'':'none';}
 function loadExample(){fillQ("Race 1 \u2014 1100m TAB Handicap \u2014 Good 4 \u2014 Flemington\n1. Legacy Bound | 8 | 61 | Logan Bates | R. Griffiths | x-1-4-3-x | 3.00\n2. Vangogh Bankcheque | 7 | 54 | Jamie Melham | L. Kennewell | 1-3-x-x-x | 3.10\n3. Military Tycoon | 1 | 54.5 | D.W. Stackhouse | C. Maher | 9-6-x-2-7 | 4.60\n4. Burma Star | 4 | 56.5 | Hugh Bowman | C. Waller | 1-2-1-6-x | 8.50\n5. Shining Smile | 6 | 58.5 | Jackson Radley | B. Hayes | 5-4-3-8-x | 11.00\n6. Go Left | 5 | 54 | Luke Cartwright | P. Moody | 1-1-2-x-x | 27.00");if(pasteOpen)togglePaste();}
@@ -874,9 +982,11 @@ function pushLocks(meeting,isAI){
       chatHistory['LOCKS'].push({type:'ai',html:buildLockCard(wl,race,meeting,'win',isAI),who:'Betrich \u2192 Locks'});
       addedWin++;
     }
-    for(const pl of pls){
+    // Max 2 place locks per race, sorted by win%, second must be >= 14%
+    const plsCapped = pls.sort((a,b)=>b.winPct-a.winPct).filter((p,i)=>i===0||(i===1&&p.winPct>=14)).slice(0,2);
+    for(const pl of plsCapped){
       allPlaceLocks.push({...pl,raceNum:race.raceNum,raceName:race.raceName,distance:race.distance,rsi:race.rsi,track:meeting.track});
-      chatHistory['PLACE'].push({type:'ai',html:buildLockCard(pl,race,meeting,'place',isAI),who:'Betrich \u2192 Place Locks'});
+      chatHistory['PLACE'].push({type:'ai',html:buildLockCard(pl,race,meeting,'place',isAI),who:'Betrich → Place Locks'});
       addedPlace++;
     }
   }
@@ -949,12 +1059,14 @@ async function doSubmit(){
   uDiv.innerHTML='<div class="mwho">You</div><div class="bbu">'+esc(preview)+'</div>';
   $('msgs').appendChild(uDiv);scrollBot();
 
-  const isReal=detectMode(txt)==='real',useAI=isReal&&hasKey();
-  const steps=useAI
-    ?['Connecting to AI Research Engine...','Extracting every runner from race card...','Searching recent form & speed data per horse...','Checking track & distance records at this venue...','Researching trainer stable form & strike rates...','Investigating jockey bookings & significance...','Checking wet track form and gear changes...','Detecting class movement and market shifts...','Building confidence-weighted win model...','Calculating RSI and identifying locks...','Routing card to state channel...','Rendering fully researched race card...']
-    :isReal
-      ?['Parsing race card data...','Extracting runners, barriers and weights...','Running barrier advantage model...','Computing form-weighted probabilities...','Calculating odds-driven RSI...','Identifying locks and place locks...','Routing to state channel...','Rendering race card...']
-      :['Parsing meeting request...','Seeding generation engine...','Building simulated field...','Running barrier and weight model...','Computing win probabilities...','Calculating RSI...','Rendering simulated card...'];
+  const _mode=detectMode(txt),isReal=_mode==='real',isFetch=_mode==='fetch',useAI=(isReal||isFetch)&&hasKey();
+  const steps=isFetch&&useAI
+    ?['Connecting to AI Fetch Engine...','Searching TAB and Racing Australia for fields...','Finding real runners, barriers and weights...','Searching market odds and form guides...','Researching every horse found...','Checking track & distance records...','Analysing trainer and jockey bookings...','Building win model from real data...','Calculating RSI and identifying locks...','Routing to state channel...','Rendering fetched race card...']
+    :useAI
+      ?['Connecting to AI Research Engine...','Extracting every runner from race card...','Searching recent form & speed data per horse...','Checking track & distance records at this venue...','Researching trainer stable form & strike rates...','Investigating jockey bookings & significance...','Checking wet track form and gear changes...','Detecting class movement and market shifts...','Building confidence-weighted win model...','Calculating RSI and identifying locks...','Routing card to state channel...','Rendering fully researched race card...']
+      :isReal
+        ?['Parsing race card data...','Extracting runners, barriers and weights...','Running barrier advantage model...','Computing form-weighted probabilities...','Calculating odds-driven RSI...','Identifying locks and place locks...','Routing to state channel...','Rendering race card...']
+        :['Parsing meeting request...','Seeding generation engine...','Building simulated field...','Running barrier and weight model...','Computing win probabilities...','Calculating RSI...','Rendering simulated card...'];
 
   addStepMsg();
   let si=0;
@@ -962,7 +1074,11 @@ async function doSubmit(){
 
   let meeting=null,errMsg=null;
   try{
-    if(useAI){
+    if(isFetch&&useAI){
+      // FETCH MODE: AI searches for real runners from just a track + date query
+      meeting=await fetchRaceCard(txt,(msg)=>{addStep(msg,si++,true);});
+      if(!meeting)throw new Error('Could not find real race fields. Try: "Flemington Saturday 8 March" or paste the data directly.');
+    }else if(isReal&&useAI){
       meeting=await callBetrichAI(txt,(msg)=>{addStep(msg,si++,true);});
       if(!meeting)throw new Error('AI returned no data. Try again.');
       meeting.mode='real';meeting.aiMode=true;
@@ -1004,8 +1120,12 @@ async function doSubmit(){
 function renderCard(m){
   const isAI=!!m.aiMode,isReal=m.mode==='real';
   const mode=isAI?'ai':isReal?'real':'sim';
-  let h=`<div class="rctop"><div><div class="rctitle">&#127943; ${esc(m.track)}</div><div class="rcdate">${esc(m.date)} &middot; Track: ${esc(m.condition)}</div></div><span class="rcpill ${mode}">${m.races.length} RACES &middot; ${isAI?'AI RESEARCHED':isReal?'REAL DATA':'SIMULATED'}</span></div>`;
-  const srchBadge = isAI && m._searchCount ? `&#128302; AI Researched \u2014 ${m._searchCount} web searches performed` : '&#128302; AI Researched \u2014 live web search on every horse';
+  let h=`<div class="rctop"><div><div class="rctitle">&#127943; ${esc(m.track)}</div><div class="rcdate">${esc(m.date)} &middot; Track: ${esc(m.condition)}</div></div><span class="rcpill ${mode}">${m.races.length} RACES &middot; ${m.fetchMode?'AI FETCHED':isAI?'AI RESEARCHED':isReal?'REAL DATA':'SIMULATED'}</span></div>`;
+  const srchBadge = m.fetchMode
+    ? `&#128269; AI Fetched real field \u2014 ${m._searchCount||0} searches`
+    : isAI && m._searchCount
+      ? `&#128302; AI Researched \u2014 ${m._searchCount} searches`
+      : '&#128302; AI Researched \u2014 live web search on every horse';
   h+=`<div class="dbadge ${mode}">${isAI?srchBadge:isReal?'&#9889; Real data \u2014 modelled by Betrich local engine':'&#127922; Simulated by Betrich engine'}</div>`;
 
   for(const race of m.races){
@@ -1038,7 +1158,7 @@ function renderCard(m){
     if(race.analysis)h+=`<p class="atxt">${esc(race.analysis)}</p>`;
     h+=`</div></div>`;
   }
-  h+=`<p class="disc">Betrich uses ${isAI?'AI-powered live web research':'internal modeling logic'}. Not betting advice. For entertainment only.</p>`;
+  h+=`<p class="disc">Betrich uses ${m.fetchMode?'AI to fetch real fields and research every horse':isAI?'AI-powered live web research':'internal modeling logic'}. Not betting advice. For entertainment only.</p>`;
   return h;
 }
 
