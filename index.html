@@ -110,6 +110,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .ci.s-intl.active{background:rgba(59,130,246,.1);color:#60a5fa;border-color:rgba(96,165,250,.3)}
 .ci.s-locks.active{background:var(--goldbg);color:var(--gold);border-color:var(--goldbdr)}
 .ci.s-place.active{background:var(--tealbg);color:var(--teal);border-color:var(--tealbdr)}
+.ci.s-freddie.active{background:rgba(255,200,0,.1);color:#ffd700;border-color:rgba(255,200,0,.3)}
+.ci.s-freddie.new-content .ci-dot{background:#ffd700;box-shadow:0 0 6px #ffd700}
+.ci.s-freddie .ci-badge{background:rgba(255,200,0,.1);border:1px solid rgba(255,200,0,.25);color:#ffd700}
 /* Unread dot */
 .ci .ci-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;display:none}
 .ci.new-content .ci-dot{display:block;background:var(--green);box-shadow:0 0 5px var(--green);animation:blink 1.5s ease-in-out infinite}
@@ -577,6 +580,7 @@ table.rt tbody tr.place-row{background:rgba(45,212,191,.03)}
         <div class="sl" style="margin-top:4px">Pick Channels <span class="sl-badge">Auto-Populated</span></div>
         <div class="ci s-locks" id="ci-LOCKS" onclick="switchChat('LOCKS')"><span class="ci-ico">&#128274;</span><span class="ci-name">Locks</span><span class="ci-dot"></span><span class="ci-badge" id="badge-LOCKS">&#8212;</span></div>
         <div class="ci s-place" id="ci-PLACE" onclick="switchChat('PLACE')"><span class="ci-ico">&#127919;</span><span class="ci-name">Place Locks</span><span class="ci-dot"></span><span class="ci-badge" id="badge-PLACE">&#8212;</span></div>
+        <div class="ci s-freddie" id="ci-FREDDIE" onclick="switchChat('FREDDIE')"><span class="ci-ico">&#11088;</span><span class="ci-name">Freddie's Tips</span><span class="ci-dot"></span><span class="ci-badge" id="badge-FREDDIE">&#8212;</span></div>
 
       </div>
       <div id="side-foot">
@@ -710,6 +714,7 @@ const STATE_META = {
   INTL:{ico:'&#127758;',label:'International'},
   LOCKS:{ico:'&#128274;',label:'Win Locks'},
   PLACE:{ico:'&#127919;',label:'Place Locks'},
+  FREDDIE:{ico:'&#11088;',label:"Freddie's Tips"},
 };
 function detectState(track, richText){
   // Normalise: strip HTML entities, lowercase
@@ -762,7 +767,14 @@ function calcRSI(runners){
   const pen=Math.max(0,(runners.filter(r=>r.winPct>=7).length-2)*2.5);
   return Math.round(Math.min(95,Math.max(42,oRSI*0.6+wRSI*0.4-pen)));
 }
-function isWinLock(r,rsi){return r.pos===1&&rsi>=67;}
+function isWinLock(r,rsi,fs){
+  const avg=100/fs;
+  // STRICT: dominant market leader in a clear race at realistic odds
+  // RSI 82+ = race structure heavily skewed to one horse
+  // winPct 2.8x average = e.g. 28%+ in a 10-horse field (not just any fav)
+  // marketOdds <= 5.00 = genuine short-priced banker, not a 10-1 roughie
+  return r.pos===1 && rsi>=82 && r.winPct>=(avg*2.8) && (r.marketOdds||99)<=5.00;
+}
 function isPlaceLock(r,fs,rsi){
   const avg=100/fs;
   // Strict: must be a genuine standout in top 3, not just above average
@@ -771,6 +783,15 @@ function isPlaceLock(r,fs,rsi){
   // pos must be 2 or 3 (pos 1 becomes win lock, not place lock)
   return r.pos>=2&&r.pos<=3&&rsi>=68&&r.winPct>=(avg*1.8);
 }
+function isFreddieTip(r,rsi,fs){
+  const avg=100/fs;
+  // ABSOLUTE BANKER tier — should only fire a handful of times per week
+  // RSI 88+ = race is essentially uncompetitive, one horse dominates
+  // winPct 3.5x average = e.g. 35%+ in a 10-horse field
+  // marketOdds <= 3.50 = the market agrees this is a genuine banker
+  return r.pos===1 && rsi>=88 && r.winPct>=(avg*3.5) && (r.marketOdds||99)<=3.50;
+}
+
 // Per-race place lock limiter — call after collecting all place locks for a race
 function limitPlaceLocks(placeLockList){
   // Max 1 place lock per race under normal conditions
@@ -1151,7 +1172,7 @@ Return ONLY valid JSON in exactly this format:
 }
 
 // CHAT STATE
-const CHATS=['real','VIC','NSW','WA','SA','TAS','QLD','NZ','INTL','LOCKS','PLACE'];
+const CHATS=['real','VIC','NSW','WA','SA','TAS','QLD','NZ','INTL','LOCKS','PLACE','FREDDIE'];
 const chatHistory={};CHATS.forEach(ch=>chatHistory[ch]=[]);
 let currentChat='real',busy=false,pasteOpen=false;
 let allWinLocks=[],allPlaceLocks=[];
@@ -1228,7 +1249,7 @@ function switchChat(id){
   $('ci-'+id)?.classList.remove('new-content');
   const isReal=id==='real',meta=STATE_META[id];
   $('ctb-ico').innerHTML=isReal?'&#128172;':(meta?.ico||'&#128203;');
-  $('ctb-name').textContent=isReal?'Real Data':(id==='LOCKS'?'Win Locks':id==='PLACE'?'Place Locks':id+' \u2014 '+(meta?.label||id));
+  $('ctb-name').textContent=isReal?'Real Data':(id==='LOCKS'?'Win Locks':id==='PLACE'?'Place Locks':id==='FREDDIE'?"Freddie's Tips":id+' — '+(meta?.label||id));
   $('ctb-sub').textContent=isReal?'ACTIVE INPUT CHAT':'AUTO-POPULATED \u00b7 READ ONLY';
   $('ctb-ro').classList.toggle('show',!isReal);
   $('izone').style.display=isReal?'':'none';
@@ -1258,6 +1279,7 @@ function emptyScreen(id){
   if(id==='LOCKS')return `<div class="ch-empty"><div class="che-ico">&#128274;</div><div class="che-title">Win Locks</div><p class="che-sub">High-confidence win picks (RSI ≥ 67) appear here automatically. Cards persist across sessions.</p><div class="che-hint">Paste race data in Real Data to populate locks</div></div>`;
   if(id==='PLACE')return `<div class="ch-empty"><div class="che-ico">&#127919;</div><div class="che-title">Place Locks</div><p class="che-sub">High-confidence top-3 picks appear here automatically. Cards persist across sessions.</p><div class="che-hint">Paste race data in Real Data to populate place locks</div></div>`;
   if(id==='NZ')return `<div class="ch-empty"><div class="che-ico">&#127722;</div><div class="che-title">New Zealand Racing</div><p class="che-sub">Race cards from NZ tracks (Ellerslie, Trentham, Te Rapa, Riccarton etc.) route here automatically. Cards persist across sessions.</p><div class="che-hint">Switch to Real Data → paste NZ race data → return here</div></div>`;
+  if(id==='FREDDIE')return `<div class="ch-empty"><div class="che-ico">&#11088;</div><div class="che-title">Freddie's Tips</div><p class="che-sub">Only the absolute cream — horses the AI identifies as near-certainties. RSI 88+, dominant win%, short market price. Expect a handful per week, not per day.</p><div class="che-hint">Populated automatically — no action needed</div></div>`;
   if(id==='INTL')return `<div class="ch-empty"><div class="che-ico">&#127758;</div><div class="che-title">International Racing</div><p class="che-sub">Any race card from outside Australia and New Zealand routes here automatically — UK, Ireland, France, USA, Japan, Hong Kong, Dubai and more. Cards persist across sessions.</p><div class="che-hint">Switch to Real Data → paste international race data → return here</div></div>`;
   return `<div class="ch-empty"><div class="che-ico">${meta.ico}</div><div class="che-title">${meta.label} Racing</div><p class="che-sub">No cards yet. Paste a race card in <strong>Real Data</strong> — if the track is in ${meta.label} it will appear here automatically. Cards persist across sessions.</p><div class="che-hint">Switch to Real Data → paste data → return here</div></div>`;
 }
@@ -1322,18 +1344,27 @@ function pushToState(meeting,cardHtml){
 
 // PUSH TO LOCKS / PLACE CHANNELS
 function pushLocks(meeting,isAI){
-  let addedWin=0,addedPlace=0;
+  let addedWin=0,addedPlace=0,addedFreddie=0;
   for(const race of meeting.races){
     const fs=race.runners.length;
-    const wl=race.runners.find(r=>isWinLock(r,race.rsi));
-    const pls=race.runners.filter(r=>isPlaceLock(r,fs,race.rsi)&&!(isWinLock(r,race.rsi)));
+    const wl=race.runners.find(r=>isWinLock(r,race.rsi,fs));
+    const ft=race.runners.find(r=>isFreddieTip(r,race.rsi,fs));
+    const pls=race.runners.filter(r=>isPlaceLock(r,fs,race.rsi)&&!isWinLock(r,race.rsi,fs));
+
     if(wl){
       allWinLocks.push({...wl,raceNum:race.raceNum,raceName:race.raceName,distance:race.distance,rsi:race.rsi,track:meeting.track,analysis:race.analysis});
-      chatHistory['LOCKS'].push({type:'ai',html:buildLockCard(wl,race,meeting,'win',isAI),who:'Betrich \u2192 Locks'});
+      chatHistory['LOCKS'].push({type:'ai',html:buildLockCard(wl,race,meeting,'win',isAI),who:'Betrich → Locks'});
       addedWin++;
     }
-    // Max 2 place locks per race, sorted by win%, second must be >= 14%
-    const plsCapped = pls.sort((a,b)=>b.winPct-a.winPct).filter((p,i)=>i===0||(i===1&&p.winPct>=14)).slice(0,2);
+    if(ft){
+      chatHistory['FREDDIE'].push({type:'ai',html:buildFreddieCard(ft,race,meeting,isAI),who:"Freddie's Tips"});
+      const fb=$('badge-FREDDIE'),fi=$('ci-FREDDIE');
+      if(fb)fb.textContent=chatHistory['FREDDIE'].length;
+      if(fi){fi.classList.add('lit');if(currentChat!=='FREDDIE')fi.classList.add('new-content');}
+      if(currentChat==='FREDDIE')renderHistory('FREDDIE');
+      addedFreddie++;
+    }
+    const plsCapped=pls.sort((a,b)=>b.winPct-a.winPct).filter((p,i)=>i===0||(i===1&&p.winPct>=14)).slice(0,2);
     for(const pl of plsCapped){
       allPlaceLocks.push({...pl,raceNum:race.raceNum,raceName:race.raceName,distance:race.distance,rsi:race.rsi,track:meeting.track});
       chatHistory['PLACE'].push({type:'ai',html:buildLockCard(pl,race,meeting,'place',isAI),who:'Betrich → Place Locks'});
@@ -1352,7 +1383,7 @@ function pushLocks(meeting,isAI){
     if(item){item.classList.add('lit');if(currentChat!=='PLACE')item.classList.add('new-content');}
     if(currentChat==='PLACE')renderHistory('PLACE');
   }
-  if(addedWin>0||addedPlace>0)saveChats();
+  saveChats();
 }
 
 function buildLockCard(runner,race,meeting,type,isAI){
@@ -1391,6 +1422,54 @@ function buildLockCard(runner,race,meeting,type,isAI){
   return html;
 }
 
+
+// FREDDIE'S TIPS CARD — absolute banker tier
+function buildFreddieCard(runner,race,meeting,isAI){
+  const vl=(runner.value||'').toLowerCase();
+  const vc=vl==='overs'?'vo':vl==='unders'?'vu':'vf';
+  const conf=runner.winPct>=40?'VERY HIGH':runner.winPct>=32?'HIGH':'STRONG';
+  const src=isAI?'AI RESEARCHED':'LOCAL MODEL';
+  const note=runner.researchNotes||race.analysis||'';
+
+  return `<div style="background:var(--bg2);border:1px solid rgba(255,215,0,.25);border-left:3px solid #ffd700;border-radius:var(--r2);padding:18px 20px;margin-bottom:10px;animation:rise .3s ease">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div style="font-weight:800;font-size:16px;color:var(--text)">${esc(runner.horse)}</div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;
+        padding:3px 9px;border-radius:4px;background:rgba(255,215,0,.08);
+        border:1px solid rgba(255,215,0,.25);color:#ffd700">&#11088; FREDDIE TIP</span>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:12px">
+      ${esc(meeting.track)} &middot; R${race.raceNum} &middot; ${esc(race.distance)} &middot; ${esc(race.raceType)} &middot; ${src}
+    </div>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:10px">
+      <tr>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);border-bottom:1px solid var(--border);width:80px">Confidence</td>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;border-bottom:1px solid var(--border);color:#ffd700;font-weight:700">${conf}</td>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);border-bottom:1px solid var(--border);width:80px">Win %</td>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;border-bottom:1px solid var(--border);color:var(--green);font-weight:700">${runner.winPct.toFixed(1)}%</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);border-bottom:1px solid var(--border)">Mkt $</td>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;border-bottom:1px solid var(--border)"><span class="vb ${vc}">$${runner.marketOdds}</span></td>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);border-bottom:1px solid var(--border)">RSI</td>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;border-bottom:1px solid var(--border);color:var(--text)">${race.rsi}</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);border-bottom:1px solid var(--border)">Barrier</td>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;border-bottom:1px solid var(--border)">${runner.barrier||'?'}</td>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);border-bottom:1px solid var(--border)">Weight</td>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;border-bottom:1px solid var(--border)">${esc(runner.weight||'?')}</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim)">Jockey</td>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px">${esc(runner.jockey||'?')}</td>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--dim)">Form</td>
+        <td style="padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px">${esc(runner.form||'?')}</td>
+      </tr>
+    </table>
+    ${note?`<div style="font-size:12px;color:var(--muted);line-height:1.75;padding-top:10px;border-top:1px solid var(--border)">${esc(note)}</div>`:''}
+  </div>`;
+}
 
 // MAIN SUBMIT
 async function doSubmit(){
